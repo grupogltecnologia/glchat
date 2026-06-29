@@ -1,0 +1,8666 @@
+<?php
+// Tela extraída do n8n. Próximo passo: separar CSS/JS e substituir chamadas por APIs PHP.
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etapas do Quadro - IA Chatconversa</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="shortcut icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="apple-touch-icon" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <!-- Font Awesome (igual crm.html) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans (igual crm.html) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <style>
+        .main-content,
+        .admin-main-content,
+        .main-content-wrapper {
+            max-width: none !important;
+            width: 100% !important;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+        }
+
+        :root {
+            --brand-50: rgba(108, 99, 255, 0.1);
+            --brand-500: #6C63FF;
+            --surface: #fbfcfd;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.03);
+            --shadow-softer: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        body {
+            background: #f8fafc;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #18181b;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e2e8f0;
+        }
+
+        /* ====== DARK MODE - Kanban ====== */
+        body.dark-mode .main-content {
+            background: transparent;
+        }
+
+        body.dark-mode .board-header {
+            background: #1A202C;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+        }
+
+        body.dark-mode .header-back-btn {
+            background: rgba(51, 65, 85, 0.65);
+            color: #cbd5e1;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+        }
+
+        body.dark-mode .header-back-btn:hover {
+            background: rgba(71, 85, 105, 0.75);
+            color: #f8fafc;
+            border-color: rgba(100, 116, 139, 0.55);
+        }
+
+        body.dark-mode .header-back-btn i {
+            color: inherit;
+        }
+
+        body.dark-mode .header-content h1,
+        body.dark-mode .header h1 {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .header-content p,
+        body.dark-mode .header p {
+            color: #64748b;
+        }
+
+        body.dark-mode .header-pipeline-value {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .header-pipeline-label {
+            color: #64748b;
+        }
+
+        body.dark-mode .header-search input {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(71, 85, 105, 0.4);
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .header-search input::placeholder {
+            color: #64748b;
+        }
+
+        body.dark-mode .etapa-column {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        body.dark-mode .etapa-header {
+            background: rgba(30, 41, 59, 0.4);
+            border-bottom-color: rgba(71, 85, 105, 0.3);
+        }
+
+        body.dark-mode .etapa-nome {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .etapa-count {
+            background: rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .etapa-action-btn:hover {
+            background: rgba(51, 65, 85, 0.5);
+        }
+
+        body.dark-mode .etapa-nome.editing {
+            background: rgba(255, 255, 255, 0.06);
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .etapa-empty-state i {
+            color: #475569;
+        }
+
+        body.dark-mode .etapa-empty-state span {
+            color: #64748b;
+        }
+
+        /* Cards dark mode */
+        body.dark-mode .card-item {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-left: 4px solid #f59e0b;
+        }
+
+        body.dark-mode .card-item:hover {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: rgba(108, 99, 255, 0.3);
+            border-left-color: #6C63FF;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        body.dark-mode .card-contato {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .card-contato div[style] {
+            background: rgba(51, 65, 85, 0.8) !important;
+            border-color: rgba(71, 85, 105, 0.6) !important;
+            color: #cbd5e1 !important;
+        }
+
+        body.dark-mode .card-valor {
+            color: #5ee99a;
+        }
+
+        body.dark-mode .card-observacoes {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(71, 85, 105, 0.3);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .card-observacoes::before {
+            color: #475569;
+        }
+
+        body.dark-mode .card-tarefas {
+            border-top-color: rgba(71, 85, 105, 0.3);
+        }
+
+        body.dark-mode .card-tarefas-badge {
+            background: rgba(217, 119, 6, 0.12);
+            color: #fbbf24;
+            border-color: rgba(217, 119, 6, 0.25);
+        }
+
+        body.dark-mode .card-data {
+            color: #64748b;
+        }
+
+        body.dark-mode .card-delete-icon {
+            color: #64748b;
+        }
+
+        body.dark-mode .card-delete-icon:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        body.dark-mode .card-whatsapp-icon {
+            background: rgba(108, 99, 255, 0.12);
+            color: #6C63FF;
+        }
+
+        body.dark-mode .card-whatsapp-icon:hover {
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        /* Botão adicionar card dark mode */
+        body.dark-mode .btn-adicionar-card {
+            border-color: rgba(71, 85, 105, 0.4);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .btn-adicionar-card:hover {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: #6C63FF;
+            color: #6C63FF;
+        }
+
+        /* Skeleton dark mode */
+        body.dark-mode .skeleton-etapa-column {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        /* Modal dark mode */
+        body.dark-mode .modal {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        body.dark-mode .modal-content {
+            background: #1e293b;
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        body.dark-mode .modal-header-section {
+            border-bottom-color: rgba(71, 85, 105, 0.3);
+        }
+
+        body.dark-mode .modal h3 {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .modal-subtitle {
+            color: #64748b;
+        }
+
+        body.dark-mode .modal-close-btn {
+            background: rgba(51, 65, 85, 0.5);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .modal-close-btn:hover {
+            background: rgba(51, 65, 85, 0.8);
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .modal-section-divider {
+            border-top-color: rgba(71, 85, 105, 0.3);
+        }
+
+        body.dark-mode .form-group-modal label {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .form-group-modal input[type="text"],
+        body.dark-mode .form-group-modal input[type="number"],
+        body.dark-mode .form-group-modal textarea,
+        body.dark-mode .form-group-modal select {
+            background: rgba(15, 23, 42, 0.5);
+            border-color: rgba(71, 85, 105, 0.4);
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .form-group-modal input:focus,
+        body.dark-mode .form-group-modal textarea:focus,
+        body.dark-mode .form-group-modal select:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        body.dark-mode .form-group-modal input::placeholder,
+        body.dark-mode .form-group-modal textarea::placeholder {
+            color: #475569;
+        }
+
+        body.dark-mode .form-group-modal .input-icon {
+            color: #475569;
+        }
+
+        body.dark-mode .modal-body-section {
+            background: transparent;
+        }
+
+        body.dark-mode .modal-footer {
+            background: #1e293b;
+            border-top-color: rgba(71, 85, 105, 0.3);
+        }
+
+        body.dark-mode .btn-modal-cancel {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .btn-modal-cancel:hover {
+            background: rgba(51, 65, 85, 0.5);
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .btn-modal-create:disabled {
+            background: rgba(51, 65, 85, 0.5);
+            color: #475569;
+        }
+
+        body.dark-mode .tarefa-item {
+            background: rgba(217, 119, 6, 0.08);
+            border-color: rgba(217, 119, 6, 0.2);
+        }
+
+        body.dark-mode .tarefa-item input[type="text"],
+        body.dark-mode .tarefa-item input[type="date"] {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .btn-add-tarefa {
+            background: rgba(108, 99, 255, 0.1);
+            color: #5ee99a;
+        }
+
+        body.dark-mode .btn-add-tarefa:hover {
+            background: rgba(108, 99, 255, 0.18);
+        }
+
+        /* Toast dark mode */
+        body.dark-mode .toast-notification {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        /* Empty state dark mode */
+        body.dark-mode .empty-state h3 {
+            color: #64748b;
+        }
+
+        body.dark-mode .empty-state p {
+            color: #475569;
+        }
+
+        /* ====== DARK MODE - Sidebar (padrão #1A202C, sem override) ====== */
+
+        body.dark-mode .sidebar-nav-divider {
+            background: rgba(71, 85, 105, 0.3);
+        }
+
+        /* ====== DARK MODE - Textos mais legíveis ====== */
+        body.dark-mode .btn-adicionar-card {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .card-data {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .header-pipeline-value {
+            color: #f1f5f9 !important;
+        }
+
+        body.dark-mode .header-pipeline-label {
+            color: #94a3b8 !important;
+        }
+
+        body.dark-mode .etapa-count {
+            background: rgba(51, 65, 85, 0.8);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .header-breadcrumb,
+        body.dark-mode .header-breadcrumb .highlight {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .header-search i {
+            color: #64748b;
+        }
+
+        body.dark-mode .btn-nova-etapa,
+        body.dark-mode .header-actions button {
+            background: #6C63FF;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - igual crm.html */
+        .sidebar {
+            width: 72px;
+            overflow: hidden;
+            background: #1A202C;
+            border-right: none;
+            transition: width 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .sidebar.sidebar-expanded {
+            width: 250px;
+            overflow: visible;
+            transition-duration: 0s;
+        }
+
+        .sidebar-header {
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-height: 96px;
+        }
+
+        .sidebar-logo-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 40px;
+            min-width: 32px;
+            flex-shrink: 0;
+            transition: width 0.3s ease, min-width 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-logo-link,
+        .sidebar.sidebar-expanded .sidebar-logo-link,
+        .sidebar.mobile-open .sidebar-logo-link {
+            width: 100%;
+            min-width: 180px;
+            justify-content: center;
+            padding: 0 16px;
+        }
+
+        .sidebar-logo-img {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            object-fit: contain;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-logo-img,
+        .sidebar.sidebar-expanded .sidebar-logo-img,
+        .sidebar.mobile-open .sidebar-logo-img {
+            width: auto;
+            max-width: 100%;
+            height: 45px;
+            min-width: 0;
+        }
+
+        .sidebar-menu {
+            padding: 4px 0;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .sidebar-nav-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 4px 16px;
+            flex-shrink: 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            margin: 2px 10px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            white-space: nowrap;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .menu-item .menu-text {
+            margin-left: 0;
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            flex: 0;
+            transition: opacity 0.2s ease, margin-left 0.2s ease, width 0.2s ease;
+        }
+
+        .sidebar:hover .menu-item,
+        .sidebar.sidebar-expanded .menu-item,
+        .sidebar.mobile-open .menu-item {
+            justify-content: flex-start;
+            padding: 10px 12px;
+        }
+
+        .sidebar:hover .menu-item .menu-text,
+        .sidebar.sidebar-expanded .menu-item .menu-text,
+        .sidebar.mobile-open .menu-item .menu-text {
+            margin-left: 16px;
+            opacity: 1;
+            width: auto;
+            flex: 1;
+            min-width: 0;
+            flex-shrink: 0;
+            overflow: visible;
+        }
+
+        .menu-item:hover {
+            background: rgba(108, 99, 255, 0.14);
+            color: #fff;
+        }
+
+        .menu-item.active {
+            background: rgba(108, 99, 255, 0.18);
+            color: #fff;
+        }
+
+        .menu-item-admin { font-weight: 700 !important; }
+
+        .menu-icon {
+            width: 25px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-icon svg {
+            width: 16px;
+            height: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon svg {
+            transform: scale(1.1);
+        }
+
+        .menu-icon .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded', sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: normal;
+            font-style: normal;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-item:hover .menu-icon .material-symbols-rounded {
+            transform: scale(1.1);
+        }
+
+        .menu-badge-novidade {
+            display: none;
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #6C63FF;
+            color: #fff;
+            border: none;
+            flex-shrink: 0;
+        }
+
+        .sidebar:hover .menu-badge-novidade,
+        .sidebar.sidebar-expanded .menu-badge-novidade,
+        .sidebar.mobile-open .menu-badge-novidade {
+            display: inline-block;
+        }
+
+        .menu-badge-admin {
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #6C63FF;
+            color: #fff;
+            display: none;
+        }
+
+        .sidebar:hover .menu-badge-admin,
+        .sidebar.sidebar-expanded .menu-badge-admin,
+        .sidebar.mobile-open .menu-badge-admin { display: inline-block; }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid #e5e5e5;
+            padding: 10px 0;
+            flex-shrink: 0;
+        }
+
+        .version-text {
+            color: rgba(148, 163, 184, 0.9);
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 8px 12px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .sidebar:hover .version-text,
+        .sidebar.sidebar-expanded .version-text {
+            opacity: 1;
+        }
+
+        .logout-item {
+            color: #ff6b6b !important;
+        }
+
+        .logout-item:hover {
+            background: rgba(255, 107, 107, 0.1) !important;
+            color: #ff6b6b !important;
+        }
+
+        /* Ícones do menu: mesmas escalas que chat.html em telas baixas */
+        @media (max-height: 800px) {
+            .menu-icon { width: 26px; }
+            .menu-icon svg { width: 18px; height: 18px; }
+            .menu-icon .material-symbols-rounded { font-size: 18px; }
+        }
+        @media (max-height: 700px) {
+            .menu-icon { width: 22px; }
+            .menu-icon svg { width: 16px; height: 16px; }
+            .menu-icon .material-symbols-rounded { font-size: 16px; }
+        }
+        @media (max-height: 600px) {
+            .menu-icon { width: 20px; }
+            .menu-icon svg { width: 14px; height: 14px; }
+            .menu-icon .material-symbols-rounded { font-size: 14px; }
+        }
+
+        /* Dark Mode Toggle Switch - igual crm.html */
+        .theme-toggle-item { cursor: default; }
+        .theme-toggle-item:hover { background: transparent !important; color: inherit !important; }
+        .theme-switch {
+            display: none;
+            position: relative;
+            width: 44px;
+            height: 24px;
+            margin-left: auto;
+        }
+        .sidebar:hover .theme-switch,
+        .sidebar.sidebar-expanded .theme-switch,
+        .sidebar.mobile-open .theme-switch { display: inline-block; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .theme-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #444;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        .theme-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        .theme-switch input:checked + .slider { background-color: #22c55e; }
+        .theme-switch input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            padding: 20px 30px 30px;
+            overflow-x: auto;
+            margin-left: 72px;
+        }
+
+        /* Barra de cabeçalho do board (igual gemini) */
+        .board-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            padding: 10px 32px;
+            margin: -18px -30px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .header {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: none;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #9ca3af;
+            box-shadow: 0 4px 12px rgba(148, 163, 184, 0.18);
+            transition: all 0.2s ease;
+        }
+
+        .header-back-btn:hover {
+            background: #e5e7eb;
+            color: #111827;
+            transform: translateY(-1px);
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-bottom: 4px;
+        }
+
+        .header-content p {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .header-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #9ca3af;
+        }
+
+        .header-breadcrumb span.highlight {
+            color: var(--brand-500);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-pipeline {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 16px;
+        }
+
+        .header-pipeline-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #9ca3af;
+        }
+
+        .header-pipeline-value {
+            font-size: 1.125rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .header-search {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .header-search {
+                display: block;
+                position: relative;
+            }
+        }
+
+        .header-search input {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 10px 12px 10px 40px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #111827;
+            outline: none;
+            width: 260px;
+        }
+
+        .header-search input::placeholder {
+            color: #9ca3af;
+            font-weight: 600;
+        }
+
+        .header-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-criar-etapa {
+            padding: 10px 20px;
+            background: #6C63FF;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-criar-etapa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.45);
+        }
+
+        /* Kanban Board */
+        .kanban-board {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding: 24px 24px 24px 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .kanban-board::-webkit-scrollbar {
+            display: none;
+        }
+        .kanban-board {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Etapa (Column) - Design Gemini */
+        .etapa-column {
+            min-width: 320px;
+            max-width: 320px;
+            background: rgba(241, 245, 249, 0.5);
+            border-radius: 24px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .etapa-column.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+
+        .etapa-column.drag-over {
+            border-color: #6C63FF;
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .etapa-column.creating {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .etapa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 0;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 24px 24px 0 0;
+            gap: 10px;
+        }
+
+        .etapa-loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #6C63FF;
+            font-size: 0.9rem;
+        }
+
+        .etapa-loading-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(108, 99, 255, 0.2);
+            border-top: 2px solid #6C63FF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .etapa-nome {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0f172a;
+            flex: 1;
+            cursor: pointer;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .etapa-actions {
+            display: none;
+            gap: 8px;
+            align-items: center;
+            margin-left: 0;
+            transition: opacity 0.2s;
+        }
+
+        .etapa-header:hover .etapa-actions {
+            display: flex;
+        }
+
+        .etapa-header:hover .etapa-count {
+            display: none;
+        }
+
+        .etapa-action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .etapa-action-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .etapa-action-btn.edit svg {
+            width: 16px;
+            height: 16px;
+            stroke: #6C63FF;
+        }
+
+        .etapa-action-btn.delete svg {
+            width: 16px;
+            height: 16px;
+            stroke: #ff4444;
+        }
+
+        .etapa-action-btn.tag svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            color: #64748b;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        .etapa-action-btn.tag:hover svg {
+            color: #475569;
+        }
+
+        body.dark-mode .etapa-action-btn.tag svg {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .etapa-action-btn.tag:hover svg {
+            color: #cbd5e1;
+        }
+
+        .crm-etapas-etiqueta-modal-desc {
+            margin: 0;
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        body.dark-mode .crm-etapas-etiqueta-modal-desc {
+            color: #94a3b8;
+        }
+
+        #crmEtapasEtiquetaEtapaBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 200px;
+        }
+
+        #crmEtapasEtiquetaEtapaBtn .crm-etapas-etiqueta-btn-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            flex-shrink: 0;
+        }
+
+        .etapa-nome.editing {
+            background: #ffffff;
+            border: 1px solid #6C63FF;
+            border-radius: 8px;
+            padding: 8px 12px;
+            outline: none;
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: text;
+        }
+
+        .etapa-nome[contenteditable="true"] {
+            outline: none;
+        }
+
+
+        .etapa-count {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .etapa-cards {
+            flex: 1;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .etapa-cards.drag-over {
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 8px;
+            min-height: 150px;
+        }
+
+        .btn-adicionar-card {
+            margin: 4px 12px 12px;
+            padding: 10px;
+            background: transparent;
+            border: 1.5px dashed #d1d5db;
+            border-radius: 16px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-adicionar-card:hover {
+            background: #ffffff;
+            border-color: #6C63FF;
+            color: #6C63FF;
+        }
+
+        /* Card - Design Gemini */
+        .card-item {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #f59e0b;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .card-whatsapp-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+        }
+
+        .card-item:hover .card-whatsapp-icon {
+            opacity: 1;
+        }
+
+        .card-whatsapp-icon:hover {
+            opacity: 1;
+            transform: scale(1.05);
+            background: #6C63FF;
+            color: #fff;
+        }
+        
+        .card-whatsapp-icon:hover svg {
+            fill: #ffffff;
+        }
+
+        body.light-mode .card-whatsapp-icon {
+            opacity: 0;
+        }
+
+        body.light-mode .card-item:hover .card-whatsapp-icon {
+            opacity: 1;
+        }
+
+        .card-delete-icon {
+            position: absolute;
+            top: 12px;
+            right: 44px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            border-radius: 8px;
+        }
+
+        .card-item:hover .card-delete-icon {
+            opacity: 1;
+        }
+
+        .card-delete-icon:hover {
+            opacity: 1;
+            color: #ef4444;
+            background: #fef2f2;
+        }
+
+        body.light-mode .card-delete-icon {
+            opacity: 0;
+        }
+
+        body.light-mode .card-item:hover .card-delete-icon {
+            opacity: 1;
+        }
+
+        .card-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            border-color: #a7f3d0;
+            border-left-color: #6C63FF;
+        }
+
+        .card-item.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+
+        .card-contato {
+            font-size: 0.875rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-valor {
+            font-size: 1.125rem;
+            color: #6C63FF;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .card-observacoes {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+            font-style: italic;
+            margin-bottom: 8px;
+            padding: 8px 10px 8px 16px;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-observacoes::before {
+            content: '\201C';
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            font-style: normal;
+        }
+
+        .card-tarefas {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .card-tarefas-badge {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.625rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-data {
+            font-size: 0.625rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-top: 0;
+        }
+
+        /* Empty state dentro da coluna */
+        .etapa-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+            gap: 8px;
+            opacity: 0.5;
+        }
+
+        .etapa-empty-state i {
+            font-size: 1.8rem;
+            color: #cbd5e1;
+        }
+
+        .etapa-empty-state span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Loading */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(108, 99, 255, 0.2);
+            border-top: 4px solid #6C63FF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* Skeleton loading - 3 colunas de etapas com animação piscando */
+        .loading-container.skeleton-loading {
+            display: flex !important;
+            flex-direction: row;
+            gap: 20px;
+            padding: 0;
+            min-height: auto;
+            align-items: stretch;
+            justify-content: flex-start;
+            overflow-x: auto;
+        }
+
+        .skeleton-etapa-column {
+            min-width: 320px;
+            max-width: 320px;
+            background: rgba(241, 245, 249, 0.5);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            border-radius: 24px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .skeleton-etapa-column .skeleton-header {
+            height: 24px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            animation: skeleton-pulse 1.2s ease-in-out infinite;
+        }
+
+        .skeleton-etapa-column .skeleton-card {
+            height: 80px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            animation: skeleton-pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes skeleton-pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .skeleton-etapa-column:nth-child(1) .skeleton-header,
+        .skeleton-etapa-column:nth-child(1) .skeleton-card { animation-delay: 0s; }
+        .skeleton-etapa-column:nth-child(2) .skeleton-header,
+        .skeleton-etapa-column:nth-child(2) .skeleton-card { animation-delay: 0.15s; }
+        .skeleton-etapa-column:nth-child(3) .skeleton-header,
+        .skeleton-etapa-column:nth-child(3) .skeleton-card { animation-delay: 0.3s; }
+
+        body.light-mode .skeleton-etapa-column {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .skeleton-etapa-column .skeleton-header,
+        body.light-mode .skeleton-etapa-column .skeleton-card {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 0;
+            max-width: 560px;
+            width: 92%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: transparent; }
+        .modal-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .modal-header-section {
+            padding: 32px 32px 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .modal-body-section {
+            padding: 24px 32px;
+        }
+
+        .modal-section-title {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section-title.green { color: #6C63FF; }
+        .modal-section-title.blue { color: #3b82f6; }
+        .modal-section-title.orange { color: #f59e0b; }
+
+        .modal-section-divider {
+            border: none;
+            border-top: 1px solid #f1f5f9;
+            margin: 0;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            background: #f8fafc;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .modal-close-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .modal h3 {
+            color: #0f172a;
+            margin-bottom: 4px;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .modal h3 + p, .modal-subtitle {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .form-group-modal {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group-modal label {
+            display: block;
+            color: #0f172a;
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .form-group-modal label .required {
+            color: #ef4444;
+            margin-left: 2px;
+        }
+
+        .form-group-modal .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group-modal .input-icon {
+            position: absolute;
+            left: 14px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .form-group-modal input[type="text"],
+        .form-group-modal input[type="number"],
+        .form-group-modal textarea,
+        .form-group-modal select {
+            width: 100%;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: #0f172a;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-group-modal .has-icon {
+            padding-left: 42px !important;
+        }
+
+        .form-group-modal textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group-modal select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .form-group-modal input[type="text"]:focus,
+        .form-group-modal input[type="number"]:focus,
+        .form-group-modal textarea:focus,
+        .form-group-modal select:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group-modal input[type="text"]::placeholder,
+        .form-group-modal input[type="number"]::placeholder,
+        .form-group-modal textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .contact-search {
+            position: relative;
+        }
+
+        .contact-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .contact-search-results.show {
+            display: block;
+        }
+
+        .contact-result-item {
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-result-item:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .contact-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-result-name {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .contact-result-phone {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .tarefas-section {
+            margin-top: 20px;
+        }
+
+        .tarefa-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px 14px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+        }
+
+        .tarefa-item input[type="text"],
+        .tarefa-item input[type="date"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 0;
+            color: #0f172a;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+        }
+        
+        .tarefa-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            accent-color: #22c55e;
+            cursor: pointer;
+        }
+
+        .btn-remove-tarefa {
+            background: none;
+            border: none;
+            color: #d97706;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            width: 24px;
+            height: 24px;
+            font-size: 0.85rem;
+        }
+
+        .btn-remove-tarefa:hover {
+            color: #ef4444;
+        }
+
+        .btn-remove-tarefa svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .btn-add-tarefa {
+            background: rgba(108, 99, 255, 0.08);
+            border: none;
+            color: #6C63FF;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 12px;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-add-tarefa:hover {
+            background: rgba(108, 99, 255, 0.15);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 20px 32px 28px;
+            border-top: 1px solid #f1f5f9;
+            background: #ffffff;
+            border-radius: 0 0 24px 24px;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .btn-modal-cancel {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .btn-modal-cancel:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .btn-modal-create {
+            background: #6C63FF;
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-modal-create:hover {
+            background: #6C63FF;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-modal-create:disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast-notification {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px 20px;
+            color: white;
+            backdrop-filter: blur(10px);
+            min-width: 300px;
+            max-width: 400px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+
+        .toast-notification.success {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+
+        .toast-notification.error {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .toast-notification.info {
+            border-color: #0076FE;
+            background: rgba(0, 118, 254, 0.2);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 5px;
+            left: 20px;
+            z-index: 10001;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .mobile-menu-toggle.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: transparent;
+        }
+
+        .mobile-menu-toggle svg {
+            width: 20px;
+            height: 20px;
+            color: #6C63FF;
+        }
+
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Botão de fechar para mobile */
+        .mobile-close-btn {
+            display: none;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: #6C63FF;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-close-btn:hover {
+            background: rgba(108, 99, 255, 0.2);
+            color: #6C63FF;
+        }
+
+        .mobile-close-btn svg {
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            /* Mobile Menu Toggle - Sempre visível no mobile */
+            .mobile-menu-toggle {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+
+            /* Sidebar Mobile - Desabilitar hover completamente */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                width: 250px;
+                height: 100vh;
+                z-index: 9999;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+                /* IMPORTANTE: Desabilitar hover no mobile */
+                pointer-events: none;
+            }
+
+            .sidebar.mobile-open {
+                left: 0;
+                width: 250px;
+                pointer-events: auto; /* Reabilitar quando aberto */
+            }
+
+            .sidebar.mobile-open .menu-text {
+                opacity: 1 !important;
+            }
+
+            .sidebar.mobile-open .sidebar-logo {
+                opacity: 1 !important;
+            }
+
+            .sidebar.mobile-open .version-text {
+                opacity: 1 !important;
+            }
+
+            /* DESABILITAR TODOS OS HOVER NO MOBILE */
+            .sidebar:hover {
+                width: 250px !important;
+                left: -250px !important; /* Manter fora da tela */
+            }
+
+            .menu-item:hover {
+                background: transparent !important;
+                color: #ccc !important;
+            }
+
+            .menu-item:hover .menu-icon svg {
+                transform: none !important;
+            }
+
+            .menu-item:hover .menu-icon .material-symbols-rounded {
+                transform: none !important;
+            }
+
+            .main-content {
+                padding: 20px;
+                margin-left: 0;
+            }
+
+            .kanban-board {
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 16px;
+            }
+
+            .etapa-column {
+                min-width: 300px;
+                max-width: 300px;
+                flex: 0 0 300px;
+            }
+
+            .mobile-menu-toggle {
+                top: 15px;
+                left: 15px;
+                padding: 10px;
+                background: rgba(0, 0, 0, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                backdrop-filter: blur(10px);
+            }
+
+            .mobile-menu-toggle svg {
+                width: 20px;
+                height: 20px;
+                color: #6C63FF;
+            }
+
+            .mobile-menu-toggle:hover {
+                background: rgba(108, 99, 255, 0.2);
+                border-color: rgba(108, 99, 255, 0.3);
+            }
+
+            /* Mostrar botão de fechar apenas no mobile */
+            .mobile-close-btn {
+                display: flex;
+            }
+
+            .mobile-close-btn:hover {
+                background: rgba(108, 99, 255, 0.2);
+            }
+        }
+
+        /* Light Mode Styles */
+        body.light-mode {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            color: #333;
+        }
+
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .menu-item {
+            color: #666;
+        }
+
+        body.light-mode .menu-item:hover {
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+        }
+
+        body.light-mode .menu-item.active {
+            background: rgba(108, 99, 255, 0.15);
+            color: #6C63FF;
+        }
+        body.menu-oculta-chat [data-menu-id="chat"] { display: none !important; }
+        body.menu-oculta-agentes-ia [data-menu-id="agentes-ia"] { display: none !important; }
+        body.menu-oculta-crm [data-menu-id="crm"] { display: none !important; }
+        body.menu-oculta-conexoes [data-menu-id="conexoes"] { display: none !important; }
+        body.menu-oculta-disparos [data-menu-id="disparos"] { display: none !important; }
+        body.menu-oculta-contatos [data-menu-id="contatos"] { display: none !important; }
+        body.menu-oculta-listas [data-menu-id="listas"] { display: none !important; }
+        body.menu-oculta-ajuda [data-menu-id="ajuda"] { display: none !important; }
+        body.menu-oculta-configuracoes [data-menu-id="configuracoes"] { display: none !important; }
+
+        body.light-mode .menu-badge-admin {
+            background: #6C63FF;
+            color: #fff;
+        }
+        body.light-mode .version-text {
+            color: #999;
+        }
+
+        body.light-mode .menu-badge-novidade {
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        body.light-mode .sidebar-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .logout-item {
+            color: #ff6b6b !important;
+        }
+
+        body.light-mode .logout-item:hover {
+            background: rgba(255, 107, 107, 0.15) !important;
+            color: #ff6b6b !important;
+        }
+
+        body.light-mode .theme-switch .slider {
+            background-color: #ccc;
+        }
+
+        body.light-mode .theme-switch input:checked + .slider {
+            background-color: #6C63FF;
+        }
+
+        body.light-mode .theme-switch .slider:before {
+            background-color: white;
+        }
+
+        body.light-mode .header h1,
+        body.light-mode .header-content h1 {
+            color: #222;
+        }
+
+        body.light-mode .header p,
+        body.light-mode .header-content p {
+            color: #666;
+        }
+
+        body.light-mode .etapa-column {
+            background: rgba(241, 245, 249, 0.5);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        body.light-mode .card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        body.light-mode .card:hover {
+            border-color: rgba(108, 99, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.15);
+        }
+
+        body.light-mode .card-title {
+            color: #222;
+        }
+
+        body.light-mode .card-description {
+            color: #666;
+        }
+
+        body.light-mode .modal-content {
+            background: #ffffff;
+            border-color: #e2e8f0;
+        }
+
+        body.light-mode .modal-title {
+            color: #6C63FF;
+        }
+
+        body.light-mode .modal h3 {
+            color: #222;
+        }
+
+        body.light-mode .form-group label {
+            color: #333;
+        }
+
+        body.light-mode .form-group input,
+        body.light-mode .form-group textarea,
+        body.light-mode .form-group select {
+            background: #ffffff !important;
+            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+            border-radius: 8px !important;
+            color: #333 !important;
+            outline: none !important;
+            box-shadow: none !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        body.light-mode .form-group input::placeholder,
+        body.light-mode .form-group textarea::placeholder {
+            color: #999;
+        }
+
+        body.light-mode .form-group input:focus,
+        body.light-mode .form-group textarea:focus,
+        body.light-mode .form-group select:focus {
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2) !important;
+            outline: none !important;
+        }
+
+        body.light-mode .toast-notification {
+            background: rgba(108, 99, 255, 0.15);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            color: #6C63FF;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-mode .toast-notification.success {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+
+        body.light-mode .toast-notification.error {
+            background: rgba(255, 68, 68, 0.15);
+            border-color: rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+
+        body.light-mode .toast-notification.info {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+
+        body.light-mode .btn-secondary {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+
+        body.light-mode .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Etapa Column - Light Mode */
+        body.light-mode .etapa-column {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        body.light-mode .etapa-column.drag-over {
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.2) !important;
+        }
+
+        body.light-mode .etapa-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode .etapa-nome {
+            color: #222 !important;
+        }
+
+        body.light-mode .etapa-nome.editing {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid #6C63FF !important;
+            color: #222 !important;
+        }
+
+        body.light-mode .etapa-count {
+            background: rgba(108, 99, 255, 0.15) !important;
+            color: #6C63FF !important;
+        }
+
+        body.light-mode .etapa-action-btn {
+            background: transparent !important;
+        }
+
+        body.light-mode .etapa-action-btn:hover {
+            background: rgba(0, 0, 0, 0.05) !important;
+        }
+
+        body.light-mode .etapa-loading {
+            color: #6C63FF !important;
+        }
+
+        /* Card Item - Light Mode */
+        body.light-mode .card-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #f59e0b;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        body.light-mode .card-item:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            border-color: #a7f3d0;
+            border-left-color: #6C63FF;
+        }
+
+        body.light-mode .card-contato {
+            color: #0f172a;
+        }
+
+        body.light-mode .card-valor {
+            color: #6C63FF;
+        }
+
+        body.light-mode .card-observacoes {
+            color: #64748b;
+        }
+
+        body.light-mode .card-data {
+            color: #94a3b8;
+        }
+
+        body.light-mode .card-tarefas {
+            border-top: 1px solid #f1f5f9;
+        }
+
+        body.light-mode .card-tarefas-badge {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        /* Button Adicionar Card - Light Mode */
+        body.light-mode .btn-adicionar-card {
+            background: transparent;
+            border: 1.5px dashed #d1d5db;
+            color: #9ca3af;
+        }
+
+        body.light-mode .btn-adicionar-card:hover {
+            background: #ffffff;
+            border-color: #6C63FF;
+            color: #6C63FF;
+        }
+
+        /* Empty State - Light Mode */
+        body.light-mode .empty-state {
+            color: #999 !important;
+        }
+
+        body.light-mode .empty-state h3 {
+            color: #666 !important;
+        }
+
+        body.light-mode .empty-state p {
+            color: #999 !important;
+        }
+
+        /* Loading - Light Mode */
+        body.light-mode .loading-text {
+            color: #999 !important;
+        }
+
+        /* Modal - Light Mode */
+        /* Light mode modal - já é branco por padrão, apenas ajustar overlay */
+        body.light-mode .modal {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        /* Contact Search Results - Light Mode */
+        body.light-mode .contact-search-results {
+            background: #ffffff !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode .contact-result-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        body.light-mode .contact-result-item:hover {
+            background: rgba(108, 99, 255, 0.08) !important;
+        }
+
+        body.light-mode .contact-result-name {
+            color: #222 !important;
+        }
+
+        body.light-mode .contact-result-phone {
+            color: #999 !important;
+        }
+
+        /* Tarefas Section - Light Mode */
+        body.light-mode .tarefa-item {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode .tarefa-item input[type="text"],
+        body.light-mode .tarefa-item input[type="date"] {
+            background: #ffffff !important;
+            border: 1px solid rgba(0, 0, 0, 0.15) !important;
+            color: #333 !important;
+        }
+
+        body.light-mode .tarefa-item input[type="text"]:focus,
+        body.light-mode .tarefa-item input[type="date"]:focus {
+            border-color: #6C63FF !important;
+        }
+
+        body.light-mode .btn-remove-tarefa {
+            color: #ff6b6b !important;
+        }
+
+        body.light-mode .btn-remove-tarefa:hover {
+            background: rgba(255, 107, 107, 0.15) !important;
+        }
+
+        body.light-mode .btn-add-tarefa {
+            background: rgba(108, 99, 255, 0.1) !important;
+            border: 1px solid rgba(108, 99, 255, 0.3) !important;
+            color: #6C63FF !important;
+        }
+
+        body.light-mode .btn-add-tarefa:hover {
+            background: rgba(108, 99, 255, 0.15) !important;
+        }
+
+        /* Modal Buttons - Light Mode */
+        body.light-mode .btn-modal-cancel {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.15) !important;
+            color: #333 !important;
+        }
+
+        body.light-mode .btn-modal-cancel:hover {
+            background: rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode .btn-modal-create:disabled {
+            background: #ccc !important;
+            cursor: not-allowed !important;
+        }
+
+        /* Scrollbar - Light Mode */
+        body.light-mode .kanban-board::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05) !important;
+        }
+
+        body.light-mode .kanban-board::-webkit-scrollbar-thumb {
+            background: rgba(108, 99, 255, 0.2) !important;
+        }
+
+        body.light-mode .kanban-board::-webkit-scrollbar-thumb:hover {
+            background: rgba(108, 99, 255, 0.3) !important;
+        }
+
+        /* Sidebar Header - Light Mode (sem linha) */
+        body.light-mode .sidebar-header {
+            border-bottom: none !important;
+        }
+
+        /* Divider entre Contatos e Ajuda no Light Mode */
+        body.light-mode .sidebar-nav-divider {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        /* Main Content - Light Mode */
+        body.light-mode .main-content {
+            color: #333 !important;
+        }
+
+        /* Etapa Cards Container - Light Mode */
+        body.light-mode .etapa-cards.drag-over {
+            background: rgba(108, 99, 255, 0.08) !important;
+        }
+
+        /* Modal Detalhes Card - Light Mode */
+        body.light-mode #modalDetalhesCard .modal-content {
+            background: rgba(255, 255, 255, 0.98) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: #333 !important;
+        }
+
+        /* Estilos para elementos dinâmicos do modal de detalhes - Light Mode */
+        body.light-mode #cardDetalhesContent .form-group-modal {
+            margin-bottom: 20px;
+        }
+
+        body.light-mode #cardDetalhesContent .form-group-modal label {
+            color: #333 !important;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Inputs e textarea no modal de detalhes - Light Mode */
+        body.light-mode #cardDetalhesContent input[type="text"],
+        body.light-mode #cardDetalhesContent textarea {
+            background: #ffffff !important;
+            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+            color: #333 !important;
+        }
+
+        body.light-mode #cardDetalhesContent input[type="text"]:focus,
+        body.light-mode #cardDetalhesContent textarea:focus {
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2) !important;
+            outline: none !important;
+        }
+
+        body.light-mode #cardDetalhesContent input[type="text"]::placeholder,
+        body.light-mode #cardDetalhesContent textarea::placeholder {
+            color: #999 !important;
+        }
+
+        /* Inputs e textarea no modal de detalhes - Dark Mode */
+        #cardDetalhesContent input[type="text"]:focus,
+        #cardDetalhesContent textarea:focus {
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2) !important;
+            outline: none !important;
+        }
+
+        /* Divs de conteúdo no modal de detalhes - sobrescrevendo estilos inline */
+        body.light-mode #cardDetalhesContent div[style*="background: rgba(255,255,255,0.05)"],
+        body.light-mode #cardDetalhesContent div[style*="background:rgba(255,255,255,0.05)"] {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: #222 !important;
+        }
+
+        /* Sobrescrever cores de texto inline */
+        body.light-mode #cardDetalhesContent div[style*="color: white"],
+        body.light-mode #cardDetalhesContent div[style*="color:white"],
+        body.light-mode #cardDetalhesContent span[style*="color: white"],
+        body.light-mode #cardDetalhesContent span[style*="color:white"] {
+            color: #222 !important;
+        }
+
+        body.light-mode #cardDetalhesContent div[style*="color: #6C63FF"],
+        body.light-mode #cardDetalhesContent div[style*="color:#6C63FF"] {
+            color: #6C63FF !important;
+        }
+
+        body.light-mode #cardDetalhesContent div[style*="color: #aaa"],
+        body.light-mode #cardDetalhesContent div[style*="color:#aaa"],
+        body.light-mode #cardDetalhesContent div[style*="color: #888"],
+        body.light-mode #cardDetalhesContent div[style*="color:#888"] {
+            color: #666 !important;
+        }
+
+        /* Tarefas no modal de detalhes - Light Mode */
+        body.light-mode #cardDetalhesContent div[style*="padding: 12px"][style*="background: rgba(255,255,255,0.05)"] {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: #333 !important;
+        }
+
+        body.light-mode #cardDetalhesContent span[style*="color: white"][style*="text-decoration"] {
+            color: #666 !important;
+        }
+
+        body.light-mode #cardDetalhesContent span[style*="opacity: 0.6"] {
+            color: #999 !important;
+        }
+
+        /* Checkbox customizado nas tarefas - Light Mode */
+        body.light-mode #cardDetalhesContent input[type="checkbox"][style*="border: 2px solid"] {
+            border-color: #ccc !important;
+        }
+
+        body.light-mode #cardDetalhesContent input[type="checkbox"]:checked[style*="background"] {
+            border-color: #6C63FF !important;
+            background: #6C63FF !important;
+        }
+
+        /* Botão de data nas tarefas - Light Mode */
+        body.light-mode #cardDetalhesContent button[style*="color: #888"] {
+            color: #666 !important;
+        }
+
+        body.light-mode #cardDetalhesContent button[onmouseover*="#6C63FF"]:hover {
+            color: #6C63FF !important;
+        }
+
+        /* Input de data nas tarefas - Light Mode */
+        body.light-mode #cardDetalhesContent input[type="date"] {
+            background: #ffffff !important;
+            border: 1px solid rgba(0, 0, 0, 0.15) !important;
+            border-radius: 6px !important;
+            color: #333 !important;
+        }
+
+        body.light-mode #cardDetalhesContent input[type="date"]:focus {
+            border-color: #6C63FF !important;
+            outline: none !important;
+        }
+
+        /* Span de data nas tarefas - Light Mode */
+        body.light-mode #cardDetalhesContent span[style*="color: #888"][style*="font-size: 0.85rem"] {
+            color: #666 !important;
+        }
+
+        /* Disparos no modal de detalhes - Light Mode */
+        body.light-mode #cardDetalhesContent div[style*="padding: 10px"][style*="background: rgba(255,255,255,0.05)"] {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode #cardDetalhesContent div[style*="color: white"][style*="font-size"] {
+            color: #222 !important;
+        }
+
+        body.light-mode #cardDetalhesContent div[style*="color: #888"][style*="font-size: 0.85rem"] {
+            color: #666 !important;
+        }
+
+        /* Data de criação - Light Mode */
+        body.light-mode #cardDetalhesContent div[style*="color: #888"][style*="padding: 10px"] {
+            color: #666 !important;
+        }
+
+        /* Texto com pre-wrap (observações) - Light Mode */
+        body.light-mode #cardDetalhesContent div[style*="white-space: pre-wrap"] {
+            color: #333 !important;
+        }
+
+        /* Modal detalhes do card — UX alinhada ao restante do CRM */
+        #modalDetalhesCard .modal-content.modal-detalhes-shell {
+            padding: 0;
+            max-width: 520px;
+        }
+
+        #modalDetalhesCard .modal-detalhes-header {
+            padding: 28px 56px 20px 32px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        body.dark-mode #modalDetalhesCard .modal-detalhes-header {
+            border-bottom-color: rgba(71, 85, 105, 0.35);
+        }
+
+        #modalDetalhesCard .modal-detalhes-body {
+            padding: 24px 32px 12px;
+        }
+
+        #modalDetalhesCard .modal-detalhes-body > .modal-section-title:first-child {
+            margin-top: 0;
+        }
+
+        #modalDetalhesCard .modal-footer {
+            margin-top: 0;
+        }
+
+        #modalDetalhesCard .detalhes-contato-hint {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin: 0 0 10px;
+            line-height: 1.45;
+        }
+
+        body.dark-mode #modalDetalhesCard .detalhes-contato-hint {
+            color: #94a3b8;
+        }
+
+        .detalhes-contato-resumo {
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        body.dark-mode .detalhes-contato-resumo {
+            border-color: rgba(71, 85, 105, 0.45);
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .detalhes-contato-resumo--legacy {
+            border-color: rgba(245, 158, 11, 0.35);
+            background: rgba(254, 243, 199, 0.35);
+        }
+
+        body.dark-mode .detalhes-contato-resumo--legacy {
+            border-color: rgba(251, 191, 36, 0.35);
+            background: rgba(120, 53, 15, 0.2);
+        }
+
+        .detalhes-contato-resumo-titulo {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #64748b;
+            margin: 0 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body.dark-mode .detalhes-contato-resumo-titulo {
+            color: #94a3b8;
+        }
+
+        .detalhes-contato-resumo-dl {
+            margin: 0;
+            display: grid;
+            gap: 10px;
+        }
+
+        .detalhes-contato-resumo-dl > div {
+            display: grid;
+            grid-template-columns: 88px 1fr;
+            gap: 10px;
+            align-items: baseline;
+        }
+
+        @media (max-width: 420px) {
+            .detalhes-contato-resumo-dl > div {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detalhes-contato-resumo-dl dt {
+            margin: 0;
+            font-weight: 700;
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+
+        body.dark-mode .detalhes-contato-resumo-dl dt {
+            color: #94a3b8;
+        }
+
+        .detalhes-contato-resumo-dl dd {
+            margin: 0;
+            color: #0f172a;
+            font-size: 0.875rem;
+            word-break: break-word;
+        }
+
+        body.dark-mode .detalhes-contato-resumo-dl dd {
+            color: #f1f5f9;
+        }
+
+        .detalhes-contato-resumo-placeholder {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .detalhes-contato-resumo-placeholder {
+            color: #94a3b8;
+        }
+
+        .detalhes-contato-resumo-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .detalhes-contato-resumo-header .detalhes-contato-resumo-titulo {
+            margin: 0;
+            flex: 1;
+        }
+
+        .detalhes-contato-edit-btn {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .detalhes-contato-edit-btn:hover {
+            background: rgba(108, 99, 255, 0.12);
+            border-color: rgba(108, 99, 255, 0.45);
+            color: #6C63FF;
+        }
+
+        body.dark-mode .detalhes-contato-edit-btn {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .detalhes-contato-edit-btn:hover {
+            background: rgba(108, 99, 255, 0.15);
+            border-color: rgba(108, 99, 255, 0.4);
+            color: #6C63FF;
+        }
+
+        .contatos-lista-scroll {
+            max-height: 260px;
+            overflow-y: auto;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            margin-top: 4px;
+        }
+
+        body.dark-mode .contatos-lista-scroll {
+            border-color: rgba(71, 85, 105, 0.45);
+            background: rgba(15, 23, 42, 0.45);
+        }
+
+        .contatos-lista-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .contatos-lista-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .contatos-lista-scroll::-webkit-scrollbar-thumb {
+            background: rgba(71, 85, 105, 0.55);
+        }
+
+        .contato-item-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            border: none;
+            border-bottom: 1px solid #e2e8f0;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            -webkit-tap-highlight-color: rgba(108, 99, 255, 0.2);
+        }
+
+        body.dark-mode .contato-item-row {
+            border-bottom-color: rgba(71, 85, 105, 0.35);
+        }
+
+        .contato-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .contato-item-row:hover {
+            background: rgba(108, 99, 255, 0.08);
+        }
+
+        body.dark-mode .contato-item-row:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .contato-item-row:focus {
+            outline: none;
+        }
+
+        .contato-item-row:focus-visible {
+            outline: 2px solid #6C63FF;
+            outline-offset: -2px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .contato-item-row.selected {
+            background: rgba(108, 99, 255, 0.2);
+            box-shadow: inset 4px 0 0 0 #6C63FF;
+            border: 1px solid rgba(108, 99, 255, 0.45);
+            border-bottom: 1px solid rgba(108, 99, 255, 0.35);
+            margin: 0 -1px;
+            padding-left: 13px;
+        }
+
+        body.dark-mode .contato-item-row.selected {
+            background: rgba(108, 99, 255, 0.18);
+            border-color: rgba(108, 99, 255, 0.5);
+        }
+
+        body.light-mode .contato-item-row.selected {
+            background: rgba(220, 252, 231, 0.95);
+            border-color: #6C63FF;
+        }
+
+        .contato-item-row-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .contato-item-row .contato-item-check {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #6C63FF;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .contato-item-row.selected .contato-item-check {
+            display: flex;
+        }
+
+        .contato-item-row .contato-item-nome {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        body.dark-mode .contato-item-row .contato-item-nome {
+            color: #f1f5f9;
+        }
+
+        .contato-item-row .contato-item-tel {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-variant-numeric: tabular-nums;
+        }
+
+        body.dark-mode .contato-item-row .contato-item-tel {
+            color: #94a3b8;
+        }
+
+        .contato-item-row.contato-item--legacy .contato-item-nome {
+            color: #d97706;
+        }
+
+        body.dark-mode .contato-item-row.contato-item--legacy .contato-item-nome {
+            color: #fbbf24;
+        }
+
+        .contatos-lista-empty,
+        .contatos-lista-loading {
+            padding: 22px 16px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .contatos-lista-empty,
+        body.dark-mode .contatos-lista-loading {
+            color: #94a3b8;
+        }
+
+        #cardDetalhesContent .detalhes-tarefa-row {
+            padding: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        body.dark-mode #cardDetalhesContent .detalhes-tarefa-row {
+            background: rgba(15, 23, 42, 0.45);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        #cardDetalhesContent .detalhes-info-box {
+            color: #64748b;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode #cardDetalhesContent .detalhes-info-box {
+            color: #94a3b8;
+            background: rgba(15, 23, 42, 0.45);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        #cardDetalhesContent .detalhes-disparo-card {
+            padding: 12px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        body.dark-mode #cardDetalhesContent .detalhes-disparo-card {
+            background: rgba(15, 23, 42, 0.45);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        #cardDetalhesContent .detalhes-disparo-card .detalhes-disparo-titulo {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        body.dark-mode #cardDetalhesContent .detalhes-disparo-card .detalhes-disparo-titulo {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode #cardDetalhesContent #detalhesCardValorInput {
+            color: #6C63FF !important;
+        }
+
+        #cardDetalhesContent .detalhes-tarefa-row .tarefa-descricao-text {
+            color: #0f172a;
+        }
+
+        body.dark-mode #cardDetalhesContent .detalhes-tarefa-row .tarefa-descricao-text {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode #cardDetalhesContent #camposNovaTarefa {
+            background: rgba(15, 23, 42, 0.55) !important;
+            border-color: rgba(71, 85, 105, 0.45) !important;
+        }
+
+        body.dark-mode #cardDetalhesContent .detalhes-tarefa-row input[type="date"],
+        body.dark-mode #cardDetalhesContent #camposNovaTarefa input[type="text"],
+        body.dark-mode #cardDetalhesContent #camposNovaTarefa input[type="date"] {
+            background: rgba(15, 23, 42, 0.5) !important;
+            border: 1px solid rgba(71, 85, 105, 0.4) !important;
+            border-radius: 8px !important;
+            padding: 8px 10px !important;
+            color: #f1f5f9 !important;
+        }
+
+        #cardDetalhesContent .detalhes-tarefa-row input[type="date"] {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 6px 10px;
+            color: #0f172a;
+        }
+
+        /* Detalhe do contato (popup alinhado a contatos.html) */
+        .detalhes-contato-acoes-btns {
+            display: flex;
+            flex-shrink: 0;
+            gap: 6px;
+            align-items: flex-start;
+        }
+
+        #crmEtapasContactDetailOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 12000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #crmEtapasContactDetailOverlay.active {
+            display: flex;
+        }
+
+        #crmEtapasNotaCompletaOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 12010;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #crmEtapasNotaCompletaOverlay.active { display: flex; }
+        #crmEtapasNotaCompletaOverlay .ce-cd-modal-box {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            width: min(520px, calc(100vw - 40px));
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        #crmEtapasCampoValorOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 12015;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #crmEtapasCampoValorOverlay.show { display: flex; }
+
+        #crmEtapasContactDetailOverlay .ce-cd-modal-box {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            width: min(560px, calc(100vw - 40px));
+            max-width: 560px;
+            min-height: min(520px, 82vh);
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        #crmEtapasContactDetailOverlay .ce-cd-modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        #crmEtapasContactDetailOverlay .ce-cd-header-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        #crmEtapasContactDetailOverlay .ce-cd-modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #18181b;
+            margin: 0;
+        }
+
+        #crmEtapasContactDetailOverlay .ce-cd-header-sub {
+            margin: 6px 0 0 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        #crmEtapasContactDetailOverlay .ce-cd-modal-close {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 1.5rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        #crmEtapasContactDetailOverlay .ce-cd-modal-close:hover {
+            color: #374151;
+        }
+
+        #crmEtapasContactDetailOverlay .contact-detail-modal-scroll {
+            flex: 1;
+            min-height: min(360px, 50vh);
+            overflow-y: auto;
+            padding: 0 24px 8px;
+        }
+
+        #crmEtapasContactDetailOverlay .ce-cd-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .contact-detail-hero {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0 20px;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+
+        .contact-detail-hero-avatar {
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-detail-hero-avatar.has-photo {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .contact-detail-hero-avatar.contato {
+            background: rgba(108, 99, 255, 0.12);
+            color: #6C63FF;
+        }
+
+        .contact-detail-hero-avatar.grupo {
+            background: rgba(139, 92, 246, 0.12);
+            color: #7c3aed;
+        }
+
+        .contact-detail-hero-text .tipo-pill {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .contact-detail-hero-text .tipo-pill.contato {
+            background: rgba(108, 99, 255, 0.12);
+            color: #6C63FF;
+        }
+
+        .contact-detail-hero-text .tipo-pill.grupo {
+            background: rgba(139, 92, 246, 0.12);
+            color: #7c3aed;
+        }
+
+        .contact-detail-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+        }
+
+        .contact-detail-card-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 0 0 12px 0;
+        }
+
+        .contact-detail-card-hint {
+            margin: 0 0 12px 0;
+            font-size: 0.85rem;
+            color: #6b7280;
+            line-height: 1.45;
+        }
+
+        .contact-detail-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .contact-detail-row {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 10px 14px;
+            align-items: start;
+            font-size: 0.9rem;
+        }
+
+        .contact-detail-row .cdr-k {
+            margin: 0;
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .contact-detail-row .cdr-v {
+            margin: 0;
+            color: #18181b;
+            word-break: break-word;
+        }
+
+        .contact-detail-row .cdr-v a {
+            color: #6C63FF;
+            font-weight: 500;
+        }
+
+        .contact-detail-etiquetas-wrap { position: relative; margin-top: 4px; }
+        .contact-detail-etiquetas-bar { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px; }
+        .contact-detail-etiquetas-chips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; min-width: 0; align-items: center; }
+        .contact-detail-etiquetas-empty-hint { font-size: 0.88rem; color: #9ca3af; line-height: 1.4; }
+        .contact-detail-etiqueta-chip { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 5px 6px 5px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; border: 1px solid transparent; }
+        .contact-detail-etiqueta-chip-remove {
+            display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; margin: 0 2px 0 0;
+            border: none; border-radius: 50%; background: rgba(0, 0, 0, 0.08); color: #000; cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; opacity: 0.75;
+        }
+        .contact-detail-etiqueta-chip-remove:hover { opacity: 1; background: rgba(0, 0, 0, 0.14); color: #000; }
+        .contact-detail-etiqueta-add {
+            flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px dashed rgba(108, 99, 255, 0.45);
+            background: rgba(108, 99, 255, 0.08); color: #6C63FF; font-size: 1.35rem; font-weight: 300; line-height: 1; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s, transform 0.15s;
+        }
+        .contact-detail-etiqueta-add:hover { background: rgba(108, 99, 255, 0.16); border-color: #6C63FF; transform: scale(1.04); }
+        .contact-detail-etiqueta-add[aria-expanded="true"] { border-style: solid; background: rgba(108, 99, 255, 0.2); color: #6C63FF; }
+        .contact-detail-etiqueta-picker {
+            position: absolute; left: 0; right: 0; top: calc(100% + 10px); z-index: 12010; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
+            box-shadow: 0 16px 48px rgba(15, 23, 42, 0.14); padding: 14px; max-height: 300px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .contact-detail-etiqueta-picker[hidden] { display: none !important; }
+        .contact-detail-etiqueta-picker-head { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin: 0; }
+        .contact-detail-etiqueta-picker-list { overflow-y: auto; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; max-height: 220px; }
+        .contact-detail-etiqueta-pick-row {
+            display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 11px 12px; border: 1px solid #e5e7eb; border-radius: 10px;
+            background: #fafafa; cursor: pointer; font-family: inherit; font-size: 0.9rem; font-weight: 500; color: #374151; transition: background 0.15s, border-color 0.15s;
+        }
+        .contact-detail-etiqueta-pick-row:hover { background: rgba(108, 99, 255, 0.07); border-color: rgba(108, 99, 255, 0.35); }
+        .contact-detail-etiqueta-pick-row.is-on { background: rgba(108, 99, 255, 0.11); border-color: rgba(108, 99, 255, 0.45); }
+        .contact-detail-etiqueta-pick-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .contact-detail-etiqueta-pick-label { flex: 1; min-width: 0; }
+        .contact-detail-etiqueta-pick-check { width: 22px; flex-shrink: 0; text-align: center; font-weight: 700; color: #6C63FF; font-size: 0.95rem; }
+        .contact-detail-link-new {
+            margin-top: 8px; background: none; border: none; padding: 8px 0; font-size: 0.88rem; font-weight: 600; color: #6C63FF;
+            cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .contact-detail-link-new:hover { text-decoration: underline; }
+        .contact-detail-etiqueta-picker .contact-detail-link-new { margin-top: 4px; }
+        .contact-detail-etiqueta-empty { padding: 12px; text-align: center; color: #9ca3af; font-size: 0.88rem; line-height: 1.45; }
+
+        .contact-detail-cp-bar { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px; margin-top: 4px; }
+        .contact-detail-cp-list { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+        .contact-detail-cp-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #fff; border: 1px solid #e5e7eb; font-size: 0.88rem; }
+        .contact-detail-cp-row-k { font-weight: 600; color: #374151; margin: 0 0 4px 0; }
+        .contact-detail-cp-row-v { margin: 0; color: #18181b; word-break: break-word; }
+        .contact-detail-cp-actions { display: flex; flex-shrink: 0; align-items: flex-start; gap: 6px; }
+        .contact-detail-cp-edit { flex-shrink: 0; border: none; background: rgba(0,0,0,0.06); width: 28px; height: 28px; border-radius: 8px; cursor: pointer; color: #64748b; font-size: 0.85rem; line-height: 1; }
+        .contact-detail-cp-edit:hover { background: rgba(108, 99, 255, 0.15); color: #6C63FF; }
+        .contact-detail-cp-remove { flex-shrink: 0; border: none; background: rgba(0,0,0,0.06); width: 28px; height: 28px; border-radius: 8px; cursor: pointer; color: #64748b; font-size: 1.1rem; line-height: 1; }
+        .contact-detail-cp-remove:hover { background: rgba(239,68,68,0.15); color: #b91c1c; }
+        .contact-detail-cp-add { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px dashed rgba(108, 99, 255, 0.45); background: rgba(108, 99, 255, 0.08); color: #6C63FF; font-size: 1.35rem; font-weight: 300; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+        .contact-detail-cp-add:hover { background: rgba(108, 99, 255, 0.16); border-color: #6C63FF; }
+        .contact-detail-scroll-max-5-cp { max-height: 22.5rem; overflow-y: auto; padding-right: 6px; -webkit-overflow-scrolling: touch; }
+
+        .contact-detail-crm-item {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: #fff;
+        }
+        .contact-detail-crm-toprow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .contact-detail-crm-meta--grow { flex: 1; min-width: 0; margin: 0; }
+        .contact-detail-crm-open-etapas {
+            flex-shrink: 0; width: 36px; height: 36px; padding: 0; border: 1px solid #e5e7eb; border-radius: 10px;
+            background: #f9fafb; color: #4b5563; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .contact-detail-crm-open-etapas .material-symbols-rounded { font-size: 20px; line-height: 1; }
+        .contact-detail-crm-open-etapas:hover { background: rgba(108, 99, 255, 0.1); border-color: rgba(108, 99, 255, 0.35); color: #6C63FF; }
+
+        .contact-detail-crm-meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        .contact-detail-crm-scroll { display: flex; flex-direction: column; gap: 10px; max-height: 30rem; overflow-y: auto; padding-right: 6px; -webkit-overflow-scrolling: touch; }
+        .contact-detail-crm-scroll .contact-detail-crm-item { margin-bottom: 0; align-self: flex-start; width: 100%; }
+
+        .contact-detail-notas-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .contact-detail-notas-scroll { display: flex; flex-direction: column; gap: 14px; max-height: 32rem; overflow-y: auto; padding-right: 6px; -webkit-overflow-scrolling: touch; }
+
+        .contact-detail-notas-empty {
+            margin: 0;
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .contact-detail-crm-empty {
+            margin: 0;
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .contact-detail-sticky-note {
+            padding: 14px 16px 16px 16px;
+            border-radius: 12px;
+            background: #ffedd5;
+            border: 2px solid #ea580c;
+            box-shadow: 0 1px 2px rgba(234, 88, 12, 0.12);
+        }
+
+        .contact-detail-note-conexao {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #9a3412;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .contact-detail-note-conexao-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ea580c;
+            flex-shrink: 0;
+        }
+
+        .contact-detail-note-body {
+            margin: 0;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: #431407;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .contact-detail-note-body--clamped { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+        .contact-detail-note-expand { margin-top: 8px; padding: 6px 10px; border: none; border-radius: 8px; background: rgba(234, 88, 12, 0.2); color: #7c2d12; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+        .contact-detail-note-expand:hover { background: rgba(234, 88, 12, 0.32); }
+        .contact-detail-nota-completa-pre { margin: 0; font-size: 0.92rem; line-height: 1.55; white-space: pre-wrap; word-break: break-word; color: #18181b; max-height: min(60vh, 28rem); overflow-y: auto; }
+
+        @keyframes contact-detail-msk-pulse {
+            0%, 100% { opacity: 0.38; }
+            50% { opacity: 0.92; }
+        }
+
+        .contact-detail-msk {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px 4px 12px;
+            align-items: stretch;
+            min-height: 132px;
+        }
+
+        .contact-detail-msk-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            max-width: 88%;
+        }
+
+        .contact-detail-msk-row.is-sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+            max-width: 82%;
+        }
+
+        .contact-detail-msk-avatar {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.09);
+            animation: contact-detail-msk-pulse 1.2s ease-in-out infinite;
+        }
+
+        .contact-detail-msk-bubble {
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.09);
+            animation: contact-detail-msk-pulse 1.2s ease-in-out infinite;
+        }
+
+        .contact-detail-msk-row.is-received .contact-detail-msk-bubble {
+            border-bottom-left-radius: 5px;
+        }
+
+        .contact-detail-msk-row.is-sent .contact-detail-msk-bubble {
+            border-bottom-right-radius: 5px;
+        }
+
+        .contact-detail-msk-bubble--sm {
+            width: min(120px, 55%);
+            height: 36px;
+        }
+
+        .contact-detail-msk-bubble--md {
+            width: min(200px, 72%);
+            height: 44px;
+        }
+
+        .contact-detail-msk-bubble--lg {
+            width: min(260px, 85%);
+            height: 52px;
+        }
+
+        #crmEtapasContactDetailConversarBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #crmEtapasConversaConexaoModal .crm-etapas-conexao-modal-content {
+            max-width: 440px;
+        }
+
+        #crmEtapasConversaConexaoModal .modal-body-section {
+            padding-top: 4px;
+        }
+
+        #crmEtapasConversaConexaoModal .modal-subtitle {
+            margin-bottom: 2px;
+        }
+
+        body.dark-mode #crmEtapasConversaConexaoModal .form-group-modal select {
+            background: #0f172a;
+            color: #f8fafc;
+            border-color: #475569;
+        }
+
+        body.dark-mode #crmEtapasConversaConexaoModal .form-group-modal select:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+
+        body.dark-mode #crmEtapasConversaConexaoModal .form-group-modal select option {
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        body.dark-mode #crmEtapasContactDetailOverlay .ce-cd-modal-box {
+            background: #1e293b;
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+        body.dark-mode #crmEtapasNotaCompletaOverlay .ce-cd-modal-box {
+            background: #1e293b;
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        body.dark-mode #crmEtapasContactDetailOverlay .ce-cd-modal-title {
+            color: #f8fafc;
+        }
+
+        body.dark-mode #crmEtapasContactDetailOverlay .ce-cd-header-sub {
+            color: #94a3b8;
+        }
+
+        body.dark-mode #crmEtapasContactDetailOverlay .ce-cd-modal-header,
+        body.dark-mode #crmEtapasContactDetailOverlay .ce-cd-modal-footer {
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        body.dark-mode #crmEtapasContactDetailOverlay .ce-cd-modal-close {
+            color: #64748b;
+        }
+
+        body.dark-mode #crmEtapasContactDetailOverlay .ce-cd-modal-close:hover {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .contact-detail-header-sub,
+        body.dark-mode .contact-detail-card-title {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .contact-detail-card-hint {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .contact-detail-card {
+            background: rgba(30, 41, 59, 0.45);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        body.dark-mode .contact-detail-row .cdr-k {
+            color: #64748b;
+        }
+
+        body.dark-mode .contact-detail-row .cdr-v {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .contact-detail-etiquetas-empty-hint { color: #94a3b8; }
+        body.dark-mode .contact-detail-etiqueta-chip-remove { background: rgba(255, 255, 255, 0.12); color: #000; }
+        body.dark-mode .contact-detail-etiqueta-chip-remove:hover { background: rgba(255, 255, 255, 0.2); color: #000; }
+        body.dark-mode .contact-detail-etiqueta-add { border-color: rgba(108, 99, 255, 0.4); background: rgba(108, 99, 255, 0.12); color: #6C63FF; }
+        body.dark-mode .contact-detail-etiqueta-picker { background: #1e293b; border-color: rgba(71, 85, 105, 0.5); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45); }
+        body.dark-mode .contact-detail-etiqueta-picker-head { color: #94a3b8; }
+        body.dark-mode .contact-detail-etiqueta-pick-row { background: rgba(15, 23, 42, 0.6); border-color: rgba(71, 85, 105, 0.45); color: #e2e8f0; }
+        body.dark-mode .contact-detail-etiqueta-pick-row:hover { background: rgba(108, 99, 255, 0.1); border-color: rgba(108, 99, 255, 0.4); }
+        body.dark-mode .contact-detail-etiqueta-pick-row.is-on { background: rgba(108, 99, 255, 0.15); border-color: rgba(108, 99, 255, 0.5); }
+        body.dark-mode .contact-detail-etiqueta-empty { color: #94a3b8; }
+        body.dark-mode .contact-detail-cp-row { background: rgba(15, 23, 42, 0.55); border-color: rgba(71, 85, 105, 0.45); }
+        body.dark-mode .contact-detail-cp-row-k { color: #e2e8f0; }
+        body.dark-mode .contact-detail-cp-row-v { color: #f1f5f9; }
+        body.dark-mode .contact-detail-cp-edit { background: rgba(255,255,255,0.08); color: #94a3b8; }
+        body.dark-mode .contact-detail-cp-remove { background: rgba(255,255,255,0.08); color: #94a3b8; }
+        body.dark-mode .contact-detail-cp-add { border-color: rgba(108, 99, 255, 0.4); background: rgba(108, 99, 255, 0.12); color: #6C63FF; }
+
+        body.dark-mode .contact-detail-hero {
+            border-bottom-color: rgba(71, 85, 105, 0.4);
+        }
+
+        body.dark-mode .contact-detail-crm-item {
+            background: rgba(15, 23, 42, 0.4);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        body.dark-mode .contact-detail-crm-meta {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .contact-detail-notas-empty,
+        body.dark-mode .contact-detail-crm-empty {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .contact-detail-sticky-note {
+            background: rgba(249, 230, 188, 0.12);
+            border-color: #ca8a03;
+            box-shadow: none;
+        }
+
+        body.dark-mode .contact-detail-note-conexao {
+            color: #fbbf24;
+        }
+
+        body.dark-mode .contact-detail-note-conexao-dot {
+            background: #ca8a03;
+        }
+
+        body.dark-mode .contact-detail-note-body {
+            color: #f9e6bc;
+        }
+        body.dark-mode .contact-detail-note-expand { background: rgba(251, 146, 60, 0.2); color: #fed7aa; }
+        body.dark-mode .contact-detail-note-expand:hover { background: rgba(251, 146, 60, 0.32); }
+        body.dark-mode .contact-detail-nota-completa-pre { color: #f1f5f9; }
+
+        body.dark-mode .contact-detail-msk-avatar,
+        body.dark-mode .contact-detail-msk-bubble {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* === Dropdowns: fundo branco e texto preto (light e dark) === */
+        body.light-mode select,
+        body.dark-mode select,
+        body:not(.light-mode) select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select option,
+        body.dark-mode select option,
+        body:not(.light-mode) select option,
+        body.light-mode select optgroup,
+        body.dark-mode select optgroup,
+        body:not(.light-mode) select optgroup {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.light-mode select[class],
+        body.dark-mode select[class],
+        body:not(.light-mode) select[class] {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select[class] option,
+        body.dark-mode select[class] option,
+        body:not(.light-mode) select[class] option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.dark-mode .contact-detail-etiqueta-picker,
+        body:not(.light-mode) .contact-detail-etiqueta-picker {
+            background: #ffffff !important;
+            border-color: rgba(0, 0, 0, 0.15) !important;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12) !important;
+        }
+        body.dark-mode .contact-detail-etiqueta-picker-head,
+        body:not(.light-mode) .contact-detail-etiqueta-picker-head {
+            color: #000000 !important;
+        }
+    </style>
+    <script type="module">
+        // Importar Supabase via CDN ESM
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
+        
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://qlennkosykcblbhpbmqt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5NjY3MjQsImV4cCI6MjA4MzU0MjcyNH0.r_A91BCKivKMPqraRBvFn30ln-G1us1_Q7m6kDCeeN0';
+        
+        // Criar cliente Supabase e disponibilizar globalmente
+        window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: false
+            }
+        });
+        window.dispatchEvent(new Event('supabase-ready'));
+        console.log('✅ Supabase inicializado globalmente');
+    </script>
+    <style>
+        .toast-container {
+            position: fixed !important;
+            top: max(20px, env(safe-area-inset-top, 0px)) !important;
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) !important;
+            z-index: 200100 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 8px !important;
+            width: min(380px, calc(100vw - 28px)) !important;
+            pointer-events: none !important;
+            box-sizing: border-box !important;
+        }
+        .toast-notification {
+            pointer-events: auto !important;
+            margin: 0 !important;
+            padding: 10px 14px 10px 0 !important;
+            border-radius: 12px !important;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+            font-size: 13px !important;
+            line-height: 1.35 !important;
+            letter-spacing: -0.01em !important;
+            font-weight: 400 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0 !important;
+            opacity: 0 !important;
+            transform: translateY(-8px) scale(0.98) !important;
+            transition: opacity 0.22s ease, transform 0.22s ease !important;
+            color: rgba(0, 0, 0, 0.88) !important;
+            background: rgba(255, 255, 255, 0.76) !important;
+            backdrop-filter: saturate(180%) blur(22px) !important;
+            -webkit-backdrop-filter: saturate(180%) blur(22px) !important;
+            border: 1px solid rgba(0, 0, 0, 0.09) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04) inset !important;
+            max-width: none !important;
+        }
+        .toast-notification.show {
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+        }
+        .toast-notification::before {
+            content: '' !important;
+            align-self: stretch !important;
+            width: 4px !important;
+            min-height: 2.5em !important;
+            margin: 6px 12px 6px 8px !important;
+            border-radius: 3px !important;
+            flex-shrink: 0 !important;
+            background: rgba(0, 122, 255, 0.95) !important;
+        }
+        .toast-notification.info::before { background: rgba(0, 122, 255, 0.95) !important; }
+        .toast-notification.success::before { background: rgba(52, 199, 89, 0.95) !important; }
+        .toast-notification.error::before { background: rgba(255, 59, 48, 0.95) !important; }
+        .toast-notification .toast-message {
+            flex: 1 !important;
+            min-width: 0 !important;
+            word-break: break-word !important;
+            padding-right: 4px !important;
+        }
+        body.dark-mode .toast-notification {
+            color: rgba(255, 255, 255, 0.92) !important;
+            background: rgba(44, 44, 46, 0.78) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 0 0.5px rgba(255, 255, 255, 0.06) inset !important;
+        }
+        body.dark-mode .toast-notification.info::before { background: rgba(10, 132, 255, 0.95) !important; }
+        body.dark-mode .toast-notification.success::before { background: rgba(48, 209, 88, 0.95) !important; }
+        body.dark-mode .toast-notification.error::before { background: rgba(255, 69, 58, 0.95) !important; }
+    </style>
+    <link rel="stylesheet" href="dropdowns-global.css">
+    <script src="/hublabel/public/assets/js/supabase-compat.js"></script>
+</head>
+<body>
+    <!-- Tema antes da primeira pintura: evita flash claro (cookie darkMode, mesma lógica que getCookie) -->
+    <script>
+    (function () {
+        var dark = false;
+        try {
+            var s = '; ' + document.cookie;
+            var parts = s.split('; darkMode=');
+            if (parts.length === 2) dark = parts.pop().split(';').shift() === 'true';
+        } catch (e) {}
+        document.body.classList.remove('dark-mode', 'light-mode');
+        document.body.classList.add(dark ? 'dark-mode' : 'light-mode');
+    })();
+    </script>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileMenu()"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <!-- Botão de fechar mobile -->
+            <button class="mobile-close-btn" id="mobileCloseBtn" onclick="closeMobileMenu()" aria-label="Fechar menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo-link" onclick="return false;">
+                    <img class="sidebar-logo-img" src="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/logo" alt="IA Chatconversa" onerror="this.src='https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon'">
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item" data-menu-id="dashboard" onclick="navigateToPage('/hublabel/public/hublabel/public/dashboard')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">analytics</span>
+                    </span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="chat" onclick="navigateToPage('/hublabel/public/hublabel/public/chat')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+                    </span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="agentes-ia" onclick="navigateToPage('/hublabel/public/hublabel/public/agentes-ia')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">network_intel_node</span>
+                    </span>
+                    <span class="menu-text">Agentes IA</span>
+                </a>
+                <a href="#" class="menu-item active" data-menu-id="crm" onclick="navigateToPage('/hublabel/public/hublabel/public/crm')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">view_kanban</span>
+                    </span>
+                    <span class="menu-text">CRM</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="conexoes" onclick="navigateToPage('/hublabel/public/hublabel/public/conexoes')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">qr_code</span>
+                    </span>
+                    <span class="menu-text">Conexões</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="disparos" onclick="navigateToPage('/hublabel/public/hublabel/public/disparos')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+                    </span>
+                    <span class="menu-text">Disparos</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="contatos" onclick="navigateToPage('/hublabel/public/hublabel/public/contatos')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">contacts</span>
+                    </span>
+                    <span class="menu-text">Contatos</span>
+                </a>
+                <div class="sidebar-nav-divider"></div>
+                <a href="#" class="menu-item" data-menu-id="ajuda" onclick="navigateToPage('/hublabel/public/ajuda')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">help</span>
+                    </span>
+                    <span class="menu-text">Ajuda</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="configuracoes" onclick="navigateToPage('/hublabel/public/hublabel/public/configuracoes')">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Configurações</span>
+                </a>
+                <a href="#" id="menu-item-admin" class="menu-item menu-item-admin" style="display: none;" onclick="if(typeof navigateToPage==='function'){navigateToPage('/hublabel/public/hublabel/public/adminpannel');return false;}">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">admin_panel_settings</span>
+                    </span>
+                    <span class="menu-text">Administração</span>
+                    <span class="menu-badge-admin">Admin</span>
+                </a>
+            </nav>
+            <div class="version-text" id="versaoAtualTexto">Versão atual: -</div>
+            <div class="sidebar-footer">
+                <!-- Dark Mode Toggle -->
+                <div class="menu-item theme-toggle-item" onclick="event.stopPropagation();">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text" id="themeToggleText">Modo Escuro</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="darkModeToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#" class="menu-item logout-item" onclick="logout()">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Sair</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="board-header">
+            <div class="header">
+                <div class="header-left">
+                    <button class="header-back-btn" onclick="navigateToPage('/hublabel/public/hublabel/public/crm')">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div>
+                        <div class="header-breadcrumb">
+                            <span>CRM</span>
+                            <span>/</span>
+                            <span class="highlight" id="quadroBreadcrumbTipo">PIPELINE</span>
+                        </div>
+                        <div class="header-content">
+                            <h1 id="quadroNome">Etapas do Quadro</h1>
+                            <p>Gerencie as etapas e cards do seu quadro CRM</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-pipeline">
+                        <p class="header-pipeline-label">Pipeline</p>
+                        <p class="header-pipeline-value" id="pipelineValorTopo">R$ 0,00</p>
+                    </div>
+                    <div class="header-search">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="buscarLeadInput" placeholder="Buscar lead...">
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-criar-etapa" onclick="criarNovaEtapa()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Nova Etapa
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Loading State (skeleton 3 colunas - animação piscando) -->
+            <div class="loading-container skeleton-loading" id="loadingContainer">
+                <div class="skeleton-etapa-column">
+                    <div class="skeleton-header" style="width: 70%;"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+                <div class="skeleton-etapa-column">
+                    <div class="skeleton-header" style="width: 60%;"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+                <div class="skeleton-etapa-column">
+                    <div class="skeleton-header" style="width: 75%;"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+            </div>
+
+            <!-- Kanban Board -->
+            <div class="kanban-board" id="kanbanBoard" style="display: none;"></div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <h3>Nenhuma etapa criada ainda</h3>
+                <p>Clique em "Nova Etapa" para criar sua primeira etapa.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Criar Card -->
+    <div class="modal" id="modalCriarCard">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="fecharModalCriarCard()">
+                <i class="fa-solid fa-xmark" style="font-size:16px"></i>
+            </button>
+
+            <!-- Header -->
+            <div class="modal-header-section">
+                <h3>Novo Card</h3>
+                <p class="modal-subtitle">ADICIONAR AO FUNIL</p>
+            </div>
+
+            <!-- Seção: Dados do Contato -->
+            <div class="modal-body-section">
+                <div class="modal-section-title green">
+                    <i class="fa-solid fa-address-card"></i> CONTATO
+                </div>
+
+                <div class="form-group-modal">
+                    <label>Contato <span class="required">*</span></label>
+                    <p class="detalhes-contato-hint">Busque e selecione um contato da base. Toque no lápis para trocar depois de escolher.</p>
+                    <div id="criarContatosPickerBlock">
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                            <input type="text" id="criarContatosBusca" class="has-icon" placeholder="Buscar por nome ou telefone..." autocomplete="off" />
+                        </div>
+                        <input type="hidden" id="criarContatoId" value="" />
+                        <input type="hidden" id="criarContatoTelefone" value="" />
+                        <div id="criarContatosLista" class="contatos-lista-scroll" role="listbox" aria-label="Lista de contatos para novo card"></div>
+                    </div>
+                    <div id="criarContatoResumo" class="detalhes-contato-resumo detalhes-contato-resumo--empty">
+                        <div class="detalhes-contato-resumo-header">
+                            <p class="detalhes-contato-resumo-titulo"><i class="fa-solid fa-id-card"></i> Contato selecionado</p>
+                            <button type="button" id="criarContatoTrocarBtn" class="detalhes-contato-edit-btn" title="Trocar contato" aria-label="Trocar contato" style="display: none;">
+                                <i class="fa-solid fa-pencil"></i>
+                            </button>
+                        </div>
+                        <div id="criarContatoResumoInner" class="detalhes-contato-resumo-inner">
+                            <p class="detalhes-contato-resumo-placeholder">Selecione um contato na lista acima.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="modal-section-divider">
+
+            <!-- Seção: Detalhes do Negócio -->
+            <div class="modal-body-section">
+                <div class="modal-section-title blue">
+                    <i class="fa-solid fa-briefcase"></i> DETALHES DO NEGÓCIO
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Valor</label>
+                        <input type="text" id="cardValorInput" placeholder="R$ 0,00">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Etapa (Coluna)</label>
+                        <select id="cardEtapaSelect"></select>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="modal-section-divider">
+
+            <!-- Seção: Anotações e Tarefas -->
+            <div class="modal-body-section">
+                <div class="modal-section-title orange">
+                    <i class="fa-solid fa-list-check"></i> ANOTAÇÕES E TAREFAS
+                </div>
+
+                <div class="form-group-modal">
+                    <label>Observações</label>
+                    <textarea id="cardObservacoesInput" placeholder="Detalhes importantes sobre este lead..."></textarea>
+                </div>
+
+                <div class="tarefas-section">
+                    <label style="display:block;color:#0f172a;font-size:0.875rem;margin-bottom:10px;font-weight:700;">Tarefas</label>
+                    <div id="tarefasContainer"></div>
+                    <button type="button" class="btn-add-tarefa" onclick="adicionarTarefa()">
+                        <i class="fa-solid fa-plus" style="font-size:11px"></i>
+                        Adicionar Tarefa
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="fecharModalCriarCard()">Cancelar</button>
+                <button class="btn-modal-create" onclick="salvarCard()">
+                    <i class="fa-solid fa-check"></i> Criar Card
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes Card -->
+    <div class="modal" id="modalDetalhesCard">
+        <div class="modal-content modal-detalhes-shell">
+            <button type="button" class="modal-close-btn" onclick="fecharModalDetalhesCard()" aria-label="Fechar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-detalhes-header">
+                <p class="modal-subtitle">Detalhes do negócio</p>
+                <h3 id="cardDetalhesTitulo">Card</h3>
+            </div>
+            <div id="cardDetalhesContent" class="modal-detalhes-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="fecharModalDetalhesCard()">Fechar</button>
+                <button type="button" class="btn-modal-create" onclick="salvarCardDetalhes()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Card -->
+    <div class="modal" id="modalEditarCard">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="fecharModalEditarCard()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <h3>Editar Card</h3>
+            
+            <div class="form-group-modal">
+                <label>Contato <span class="required">*</span></label>
+                <p class="detalhes-contato-hint">Busque e selecione um contato. Com um contato já escolhido, use o lápis para trocar.</p>
+                <div id="editarContatosPickerBlock">
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                        <input type="text" id="editarContatosBusca" class="has-icon" placeholder="Buscar por nome ou telefone..." autocomplete="off" />
+                    </div>
+                    <input type="hidden" id="editarContatoId" value="" />
+                    <input type="hidden" id="editarContatoTelefone" value="" />
+                    <div id="editarContatosLista" class="contatos-lista-scroll" role="listbox" aria-label="Lista de contatos ao editar card"></div>
+                </div>
+                <div id="editarContatoResumo" class="detalhes-contato-resumo detalhes-contato-resumo--empty">
+                    <div class="detalhes-contato-resumo-header">
+                        <p class="detalhes-contato-resumo-titulo"><i class="fa-solid fa-id-card"></i> Contato selecionado</p>
+                        <button type="button" id="editarContatoTrocarBtn" class="detalhes-contato-edit-btn" title="Trocar contato" aria-label="Trocar contato" style="display: none;">
+                            <i class="fa-solid fa-pencil"></i>
+                        </button>
+                    </div>
+                    <div id="editarContatoResumoInner" class="detalhes-contato-resumo-inner">
+                        <p class="detalhes-contato-resumo-placeholder">Selecione um contato na lista para ver nome, telefone e e-mail.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group-modal">
+                <label>Valor</label>
+                <input type="text" id="editarCardValorInput" placeholder="R$ 0,00">
+            </div>
+
+            <div class="form-group-modal">
+                <label>Observações</label>
+                <textarea id="editarCardObservacoesInput" placeholder="Digite as observações"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="fecharModalEditarCard()">Cancelar</button>
+                <button class="btn-modal-create" onclick="salvarEdicaoCard()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup detalhes do contato (mesmo conteúdo base que contatos.html) -->
+    <div id="crmEtapasContactDetailOverlay" onclick="if (event.target === this) fecharCrmEtapasContactDetailModal();">
+        <div class="ce-cd-modal-box" onclick="event.stopPropagation();">
+            <div class="ce-cd-modal-header">
+                <div class="ce-cd-header-main">
+                    <h2 class="ce-cd-modal-title" id="crmEtapasContactDetailTitle">Contato</h2>
+                    <p class="ce-cd-header-sub" id="crmEtapasContactDetailSubtitle"></p>
+                </div>
+                <button type="button" class="ce-cd-modal-close" onclick="fecharCrmEtapasContactDetailModal();" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="contact-detail-modal-scroll" id="crmEtapasContactDetailBody"></div>
+            <div class="ce-cd-modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="fecharCrmEtapasContactDetailModal();">Fechar</button>
+                <button type="button" class="btn-modal-create" id="crmEtapasContactDetailConversarBtn" onclick="void crmEtapasContactDetailIrConversar();">Conversar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="crmEtapasNotaCompletaOverlay" onclick="if (event.target === this) crmEtapasCloseNotaCompleta();">
+        <div class="ce-cd-modal-box" onclick="event.stopPropagation();" style="max-width:520px;max-height:86vh;">
+            <div class="ce-cd-modal-header">
+                <div class="ce-cd-header-main">
+                    <h2 class="ce-cd-modal-title" id="crmEtapasNotaCompletaTitle">Nota</h2>
+                </div>
+                <button type="button" class="ce-cd-modal-close" onclick="crmEtapasCloseNotaCompleta();" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="contact-detail-modal-scroll" style="padding-top:16px;">
+                <pre class="contact-detail-nota-completa-pre" id="crmEtapasNotaCompletaBody"></pre>
+            </div>
+            <div class="ce-cd-modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="crmEtapasCloseNotaCompleta();">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="crmEtapasCampoValorOverlay" onclick="if (event.target === this) crmEtapasCloseCampoValorModal();">
+        <div class="modal-content crm-etapas-conexao-modal-content" onclick="event.stopPropagation();">
+            <button type="button" class="modal-close-btn" onclick="crmEtapasCloseCampoValorModal();" aria-label="Fechar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-header-section">
+                <p class="modal-subtitle">CAMPOS PERSONALIZADOS</p>
+                <h3 id="crmEtapasCampoValorModalTitle">Atribuir campo</h3>
+            </div>
+            <div class="modal-body-section">
+                <div class="form-group-modal">
+                    <label for="crmEtapasCampoValorSelect">Campo</label>
+                    <select id="crmEtapasCampoValorSelect" onchange="crmEtapasOnCampoValorSelectChange()"></select>
+                </div>
+                <div class="form-group-modal">
+                    <label for="crmEtapasCampoValorInputText" id="crmEtapasCampoValorLabel">Valor</label>
+                    <div id="crmEtapasCampoValorDynamicMount">
+                        <input type="text" id="crmEtapasCampoValorInputText" placeholder="Digite o valor">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="crmEtapasCloseCampoValorModal();">Cancelar</button>
+                <button type="button" class="btn-modal-create" id="crmEtapasCampoValorSaveBtn" onclick="crmEtapasSaveCampoValorModal();">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="crmEtapasConversaConexaoModal" onclick="if(event.target===this) window.closeCrmEtapasConversaConexaoModal();">
+        <div class="modal-content crm-etapas-conexao-modal-content" onclick="event.stopPropagation();">
+            <button type="button" class="modal-close-btn" onclick="window.closeCrmEtapasConversaConexaoModal();" aria-label="Fechar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-header-section">
+                <p class="modal-subtitle">MÚLTIPLAS CONEXÕES</p>
+                <h3>Com qual conexão deseja conversar?</h3>
+            </div>
+            <div class="modal-body-section">
+                <div class="form-group-modal">
+                    <label for="crmEtapasConversaConexaoSelect">Conexão</label>
+                    <select id="crmEtapasConversaConexaoSelect"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="window.closeCrmEtapasConversaConexaoModal();">Cancelar</button>
+                <button type="button" class="btn-modal-create" onclick="window.confirmCrmEtapasConversaConexaoModal();">Ir para conversa</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="crmEtapasEtiquetaEtapaModal" onclick="if (event.target === this) crmEtapasFecharModalEtiquetaEtapa();">
+        <div class="modal-content crm-etapas-conexao-modal-content" onclick="event.stopPropagation();">
+            <button type="button" class="modal-close-btn" onclick="crmEtapasFecharModalEtiquetaEtapa();" aria-label="Fechar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-header-section">
+                <p class="modal-subtitle">ETIQUETAS</p>
+                <h3>Adicionar etiqueta</h3>
+                <p class="crm-etapas-etiqueta-modal-desc">Adicionar etiquetas a todos contatos dessa etapa.</p>
+            </div>
+            <div class="modal-body-section">
+                <div class="form-group-modal">
+                    <label for="crmEtapasEtiquetaEtapaNomeInput">Nome da etiqueta</label>
+                    <input type="text" id="crmEtapasEtiquetaEtapaNomeInput" placeholder="Nome da etiqueta" autocomplete="off">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-cancel" id="crmEtapasEtiquetaEtapaCancelBtn" onclick="crmEtapasFecharModalEtiquetaEtapa();">Cancelar</button>
+                <button type="button" class="btn-modal-create" id="crmEtapasEtiquetaEtapaBtn" onclick="void crmEtapasSubmitEtiquetaEtapa();">
+                    <span id="crmEtapasEtiquetaEtapaBtnText">Adicionar etiqueta</span>
+                    <span id="crmEtapasEtiquetaEtapaBtnSpinner" class="crm-etapas-etiqueta-btn-spinner" style="display: none;" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Exclusão Etapa -->
+    <div class="modal" id="modalExcluirEtapa">
+        <div class="modal-content" style="border: 2px solid #ff4444; background: rgba(255, 68, 68, 0.1);">
+            <button class="modal-close-btn" onclick="fecharModalExcluirEtapa()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <h3 style="color: #ff4444;">Tem certeza que deseja excluir essa etapa?</h3>
+            <p style="color: #ccc; margin: 15px 0;">Ao clicar em confirmar essa etapa e todos os cards serão excluídos</p>
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="fecharModalExcluirEtapa()">Cancelar</button>
+                <button class="btn-modal-create" onclick="confirmarExcluirEtapa()" style="background: #ff4444; border-color: #ff4444;">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções utilitárias (copiadas de outras páginas)
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        /** Obtém o quadroId apenas da URL (?quadroId=). */
+        function getQuadroIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('quadroId');
+            return (id != null && id !== '') ? id : null;
+        }
+
+        /** Deep link: abrir modal do card (?cardId=), usado pelo chat / detalhes do contato. */
+        function getCardIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('cardId');
+            return (id != null && id !== '') ? id : null;
+        }
+
+        // Flag global para indicar que o status está bloqueado (evita toasts)
+        let statusBloqueado = false;
+
+        // Função padrão para obter contaId e verificar status (padrão dashboard/hublabel/public/chat)
+        async function obterUserIdComStatus() {
+            let contaId = null;
+            
+            // Primeiro tentar obter do Supabase Auth
+            if (window.supabase) {
+                try {
+                    const { data: { user }, error: userError } = await window.supabase.auth.getUser();
+                    if (!userError && user && user.id) {
+                        console.log('✅ Usuário obtido do Supabase Auth:', user.email);
+                        
+                        // Buscar o contaId e status na tabela SAAS_Usuarios usando auth_user_id
+                        const { data: usuarioData, error: usuarioError } = await window.supabase
+                            .from('SAAS_Usuarios')
+                            .select('contaId, SAAS_Contas(status)')
+                            .eq('auth_user_id', user.id)
+                            .single();
+                        
+                        if (!usuarioError && usuarioData && usuarioData.contaId) {
+                            // Se status for false, fazer logout e redirecionar para acesso-bloqueado
+                            const status = usuarioData?.SAAS_Contas?.status;
+                        if (status === false) {
+                                console.warn('⚠️ Usuário com status inativo. Redirecionando para acesso-bloqueado.');
+                                // Redirecionar imediatamente (não aguardar)
+                                logoutAndRedirectAcessoBloqueado();
+                                // Lançar erro especial que será ignorado nos catch blocks
+                                throw new Error('STATUS_BLOQUEADO');
+                            }
+                            contaId = usuarioData.contaId;
+                            console.log('✅ UserId obtido da tabela SAAS_Usuarios:', contaId);
+                            
+                            // Salvar nos cookies para compatibilidade
+                            setCookie('userId', contaId, 7);
+                        } else {
+                            console.warn('⚠️ Usuário não encontrado na tabela SAAS_Usuarios');
+                        }
+                    }
+                } catch (error) {
+                    // Se for erro de status bloqueado, re-lançar
+                    if (error.message === 'STATUS_BLOQUEADO') {
+                        throw error;
+                    }
+                    console.error('Erro ao obter usuário do Supabase:', error);
+                }
+            }
+            
+            // Fallback: tentar obter dos cookies (compatibilidade)
+            if (!contaId) {
+                const cookieUserId = getCookie('userId');
+                if (cookieUserId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cookieUserId)) {
+                    contaId = cookieUserId;
+                    console.log('✅ UserId obtido dos cookies (fallback):', contaId);
+                }
+            }
+            
+            return contaId;
+        }
+
+        // Função legada para compatibilidade (mantida para não quebrar código existente)
+        function getSecureUserId() {
+            const contaId = getCookie('userId');
+            if (!contaId) {
+                return null;
+            }
+            return contaId;
+        }
+
+        // Logout e redirecionar para página de acesso bloqueado (quando status do usuário é false)
+        function logoutAndRedirectAcessoBloqueado() {
+            // Marcar flag imediatamente para evitar toasts
+            statusBloqueado = true;
+            
+            // Limpar dados imediatamente
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idLista=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idConexao=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idDisparo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            if (typeof clearMenuOcultarCache === 'function') clearMenuOcultarCache();
+            sessionStorage.clear();
+            localStorage.clear();
+            
+            // Redirecionar imediatamente (não aguardar signOut)
+            window.location.replace('/hublabel/public/acesso-bloqueado');
+            
+            // Fazer signOut em background (não bloqueia o redirecionamento)
+            if (window.supabase) {
+                window.supabase.auth.signOut().catch(() => {
+                    // Ignorar erros no signOut
+                });
+            }
+        }
+
+        async function carregarVersao() {
+            const el = document.getElementById('versaoAtualTexto');
+            if (!el || !window.supabase) return;
+            try {
+                const { data, error } = await window.supabase
+                    .from('SAAS_Versao')
+                    .select('versaoAtual')
+                    .order('ultimaAtualizacao', { ascending: false })
+                    .limit(1);
+                if (!error && data && data[0] && data[0].versaoAtual) {
+                    el.textContent = 'Versão atual: ' + data[0].versaoAtual;
+                }
+            } catch (e) {
+                console.warn('Não foi possível carregar a versão:', e);
+            }
+        }
+
+        async function checkAuth() {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return false; // Já foi redirecionado
+                }
+                throw error;
+            }
+            if (!contaId) {
+                window.location.href = '/hublabel/public/hublabel/public/hublabel/public/hublabel/public/login';
+                return false;
+            }
+            return true;
+        }
+
+        function navigateToPage(url) {
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                window.location.href = url;
+            } else {
+                window.location.href = url;
+            }
+        }
+
+        // Sidebar: expandir só quando o mouse está na faixa de 70px (evita abrir "perto" do menu)
+        (function() {
+            var sidebarCollapseTimer = null;
+            var SIDEBAR_EDGE = 70;
+            var SIDEBAR_EXPANDED_WIDTH = 250;
+            var COLLAPSE_DELAY_MS = 120;
+            document.addEventListener('mousemove', function(e) {
+                if (window.matchMedia('(max-width: 768px)').matches) return;
+                var sidebar = document.querySelector('.sidebar');
+                if (!sidebar || sidebar.classList.contains('mobile-open')) return;
+                var x = e.clientX;
+                if (x < SIDEBAR_EDGE) {
+                    if (sidebarCollapseTimer) { clearTimeout(sidebarCollapseTimer); sidebarCollapseTimer = null; }
+                    sidebar.classList.add('sidebar-expanded');
+                } else if (x > SIDEBAR_EXPANDED_WIDTH) {
+                    if (sidebarCollapseTimer) return;
+                    sidebarCollapseTimer = setTimeout(function() {
+                        sidebar.classList.remove('sidebar-expanded');
+                        sidebarCollapseTimer = null;
+                    }, COLLAPSE_DELAY_MS);
+                } else {
+                    if (sidebarCollapseTimer) { clearTimeout(sidebarCollapseTimer); sidebarCollapseTimer = null; }
+                }
+            });
+        })();
+
+        // ===== FUNÇÕES DO MENU MOBILE =====
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            console.log('Toggle mobile menu clicked');
+            
+            if (sidebar.classList.contains('mobile-open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+
+        function openMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            console.log('Opening mobile menu');
+            
+            sidebar.classList.add('mobile-open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Garantir que o menu seja visível
+            sidebar.style.pointerEvents = 'auto';
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            console.log('Closing mobile menu');
+            
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Garantir que o menu seja desabilitado quando fechado
+            sidebar.style.pointerEvents = 'none';
+        }
+
+        // ===== INICIALIZAÇÃO DO MENU MOBILE =====
+        function initMobileMenu() {
+            console.log('Inicializando menu mobile');
+            
+            // Fechar menu ao redimensionar para desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Corrigir cliques no mobile - usar touchend para garantir captura
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                const originalOnclick = item.getAttribute('onclick');
+                
+                if (originalOnclick) {
+                    // Adicionar listener para touchend (mobile) - mais confiável que click
+                    item.addEventListener('touchend', function(e) {
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            // Fechar menu e overlay
+                            const sidebar = document.querySelector('.sidebar');
+                            const overlay = document.getElementById('sidebarOverlay');
+                            if (sidebar) {
+                                sidebar.classList.remove('mobile-open');
+                                sidebar.style.pointerEvents = '';
+                            }
+                            if (overlay) {
+                                overlay.classList.remove('active');
+                                overlay.style.display = 'none';
+                                overlay.style.pointerEvents = 'none';
+                            }
+                            document.body.style.overflow = '';
+                            
+                            // Navegar
+                            if (originalOnclick.includes('navigateToPage')) {
+                                const urlMatch = originalOnclick.match(/navigateToPage\('([^']+)'\)/);
+                                if (urlMatch && urlMatch[1]) {
+                                    window.location.href = urlMatch[1];
+                                }
+                            } else if (originalOnclick.includes('window.open')) {
+                                const openMatch = originalOnclick.match(/window\.open\('([^']+)'/);
+                                if (openMatch && openMatch[1]) {
+                                    window.open(openMatch[1], '_blank');
+                                }
+                            } else if (originalOnclick.includes('logout')) {
+                                if (typeof logout === 'function') {
+                                    logout();
+                                }
+                            }
+                        }
+                    }, { passive: false });
+                    
+                    // Também adicionar listener para click como fallback
+                    item.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            // Fechar menu e overlay
+                            const sidebar = document.querySelector('.sidebar');
+                            const overlay = document.getElementById('sidebarOverlay');
+                            if (sidebar) {
+                                sidebar.classList.remove('mobile-open');
+                                sidebar.style.pointerEvents = '';
+                            }
+                            if (overlay) {
+                                overlay.classList.remove('active');
+                                overlay.style.display = 'none';
+                                overlay.style.pointerEvents = 'none';
+                            }
+                            document.body.style.overflow = '';
+                            
+                            // Navegar
+                            if (originalOnclick.includes('navigateToPage')) {
+                                const urlMatch = originalOnclick.match(/navigateToPage\('([^']+)'\)/);
+                                if (urlMatch && urlMatch[1]) {
+                                    window.location.href = urlMatch[1];
+                                }
+                            } else if (originalOnclick.includes('window.open')) {
+                                const openMatch = originalOnclick.match(/window\.open\('([^']+)'/);
+                                if (openMatch && openMatch[1]) {
+                                    window.open(openMatch[1], '_blank');
+                                }
+                            } else if (originalOnclick.includes('logout')) {
+                                if (typeof logout === 'function') {
+                                    logout();
+                                }
+                            }
+                        }
+                    }, { capture: true });
+                }
+            });
+            
+            // Fechar menu ao clicar no overlay
+            const overlay = document.getElementById('sidebarOverlay');
+            if (overlay) {
+                overlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeMobileMenu();
+                });
+            }
+            
+            // Prevenir propagação de eventos no sidebar
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        }
+
+        async function logout() {
+            console.log('🚪 Iniciando logout...');
+            
+            try {
+                // Fazer logout do Supabase Auth
+                if (window.supabase) {
+                    const { error } = await window.supabase.auth.signOut();
+                    if (error) {
+                        console.error('Erro ao fazer logout do Supabase:', error);
+                    } else {
+                        console.log('✅ Logout do Supabase realizado com sucesso');
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+            }
+            
+            // Limpar cookies
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            
+            // Limpar sessionStorage e localStorage
+            sessionStorage.clear();
+            localStorage.clear();
+            
+            // Redirecionar para página de login
+            window.location.href = '/hublabel/public/hublabel/public/hublabel/public/hublabel/public/login';
+        }
+
+        function showToast(message, type = 'info') {
+            if (typeof statusBloqueado !== 'undefined' && statusBloqueado) {
+                return;
+            }
+            const toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) return;
+            const cleanMessage = String(message || '').replace(/^(\u2705|\u274C|\u2139\uFE0F?|\u26A0\uFE0F?)\s*/, '');
+            const safeType = type === 'success' || type === 'error' ? type : 'info';
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification ' + safeType;
+            toast.setAttribute('role', safeType === 'error' ? 'alert' : 'status');
+            toast.setAttribute('aria-live', safeType === 'error' ? 'assertive' : 'polite');
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'toast-message';
+            messageSpan.textContent = cleanMessage;
+            toast.appendChild(messageSpan);
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 300);
+            }, 5000);
+        }
+
+        function showConfirmDialog(message) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:100000;padding:16px;';
+                const box = document.createElement('div');
+                box.style.cssText = 'width:100%;max-width:460px;background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 45px rgba(2,6,23,.3);';
+                box.innerHTML = `
+                    <h3 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;">Confirmar ação</h3>
+                    <p style="margin:0 0 18px 0;font-size:14px;line-height:1.6;color:#334155;">${String(message || '').replace(/</g, '&lt;').replace(/\n/g, '<br>')}</p>
+                    <div style="display:flex;justify-content:flex-end;gap:10px;">
+                        <button type="button" data-cancel style="border:1px solid #cbd5e1;background:#fff;color:#334155;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;">Cancelar</button>
+                        <button type="button" data-confirm style="border:0;background:#dc2626;color:#fff;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;">Confirmar</button>
+                    </div>
+                `;
+                overlay.appendChild(box);
+                document.body.appendChild(overlay);
+                const close = (value) => {
+                    overlay.remove();
+                    resolve(value);
+                };
+                overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) close(false);
+                });
+                box.querySelector('[data-cancel]').addEventListener('click', () => close(false));
+                box.querySelector('[data-confirm]').addEventListener('click', () => close(true));
+            });
+        }
+
+        // Variáveis globais
+        let etapas = [];
+        let quadroId = null;
+        let quadroNomeAtual = '';
+        let crmEtapasEtiquetaModalEtapaId = null;
+        let crmDeepLinkCardAttempted = false;
+        let etapaCriandoId = null;
+        let cardEditandoId = null;
+        let etapaAtualCriarCard = null;
+        let detalhesContatoModoTrocar = false;
+        let criarContatoModoTrocar = false;
+        let editarContatoModoTrocar = false;
+        let contatosDisponiveis = [];
+        let searchTimeout = null;
+        const CRM_ETAPAS_CHAT_PAGE_URL = '/hublabel/public/hublabel/public/chat';
+        /** Mesma chave que chat.html (CHAT_PENDING_SELECT_CONVERSA_KEY): abre conversa como clique na lista, sem ?conversa= na URL. */
+        const CRM_CHAT_PENDING_SELECT_CONVERSA_KEY = 'saas_chat_pending_select_conversa_id';
+
+        let crmEtapasContactDetailOpenedId = null;
+        let crmEtapasContactDetailContato = null;
+        let crmEtapasDetalheAllEtiquetas = {};
+        let crmEtapasConversaConexaoModalResolver = null;
+        let crmEtapasCampoValorRowId = null;
+
+        function escapeHtmlCrmEtapasCd(s) {
+            return String(s ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function formatDateCrmEtapasCd(dt) {
+            if (!dt) return '-';
+            const d = new Date(dt);
+            if (isNaN(d.getTime())) return '-';
+            return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function getDisplayPhoneCrmEtapasCd(c) {
+            if (!c) return '';
+            if (c.tipo === 'grupo') return (c.variaveis && c.variaveis.whatsappId) ? String(c.variaveis.whatsappId) : '';
+            const t = c.telefone || '';
+            if (!t) return '';
+            return t.replace(/@s\.whatsapp\.net$/i, '');
+        }
+
+        function crmEtapasCloseEtiquetaPicker() {
+            const p = document.getElementById('crmEtapasContactDetailEtiquetaPicker');
+            const b = document.getElementById('crmEtapasContactDetailEtiquetaAddBtn');
+            if (p) { p.hidden = true; p.classList.remove('open'); }
+            if (b) b.setAttribute('aria-expanded', 'false');
+        }
+
+        function fecharCrmEtapasContactDetailModal() {
+            crmEtapasCloseEtiquetaPicker();
+            crmEtapasCloseCampoValorModal();
+            crmEtapasCloseNotaCompleta();
+            document.getElementById('crmEtapasContactDetailOverlay')?.classList.remove('active');
+            crmEtapasContactDetailOpenedId = null;
+            crmEtapasContactDetailContato = null;
+        }
+
+        function crmEtapasMountCampoValorInputByTipo(tipo) {
+            const wrap = document.getElementById('crmEtapasCampoValorDynamicMount');
+            if (!wrap) return;
+            const t = String(tipo || 'texto');
+            if (t === 'boolean') {
+                wrap.innerHTML = '<select id="crmEtapasCampoValorBoolean"><option value="true">Sim</option><option value="false">Não</option></select>';
+                return;
+            }
+            if (t === 'numero') {
+                wrap.innerHTML = '<input type="number" id="crmEtapasCampoValorInputNum" step="any" placeholder="0">';
+                return;
+            }
+            if (t === 'data') {
+                wrap.innerHTML = '<input type="date" id="crmEtapasCampoValorInputDate">';
+                return;
+            }
+            wrap.innerHTML = '<input type="text" id="crmEtapasCampoValorInputText" placeholder="Digite o valor">';
+        }
+
+        function crmEtapasOnCampoValorSelectChange() {
+            const sel = document.getElementById('crmEtapasCampoValorSelect');
+            if (!sel || sel.disabled) return;
+            if (!sel.value || sel.value === '') {
+                const wrap = document.getElementById('crmEtapasCampoValorDynamicMount');
+                if (wrap) wrap.innerHTML = '<input type="text" id="crmEtapasCampoValorInputText" placeholder="Selecione um campo acima" disabled>';
+                return;
+            }
+            const opt = sel.options[sel.selectedIndex];
+            const tipo = opt ? (opt.getAttribute('data-tipo') || 'texto') : 'texto';
+            crmEtapasMountCampoValorInputByTipo(tipo);
+        }
+
+        function crmEtapasCloseCampoValorModal() {
+            crmEtapasCampoValorRowId = null;
+            const sel = document.getElementById('crmEtapasCampoValorSelect');
+            if (sel) sel.disabled = false;
+            document.getElementById('crmEtapasCampoValorOverlay')?.classList.remove('show');
+        }
+
+        async function crmEtapasOpenCampoValorModal() {
+            crmEtapasCampoValorRowId = null;
+            const modal = document.getElementById('crmEtapasCampoValorOverlay');
+            const sel = document.getElementById('crmEtapasCampoValorSelect');
+            const titleEl = document.getElementById('crmEtapasCampoValorModalTitle');
+            if (!modal || !sel || crmEtapasContactDetailOpenedId == null) return;
+            if (titleEl) titleEl.textContent = 'Atribuir campo';
+            sel.disabled = false;
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; showToast('Sessão inválida.', 'error'); return; }
+            if (!contaId) return;
+            const { data: campos, error } = await window.supabase
+                .from('SAAS_Campos_Personalizados')
+                .select('id, nome, tipo')
+                .eq('contaId', contaId)
+                .order('nome', { ascending: true });
+            if (error) { showToast('Não foi possível carregar os campos.', 'error'); return; }
+            const list = campos || [];
+            if (!list.length) { showToast('Cadastre campos em Configurações primeiro.', 'info'); return; }
+            sel.innerHTML = '<option value="" selected>Selecione um campo</option>' + list.map(c =>
+                '<option value="' + escapeHtmlCrmEtapasCd(String(c.id)) + '" data-tipo="' + escapeHtmlCrmEtapasCd(String(c.tipo || 'texto')) + '">' + escapeHtmlCrmEtapasCd(c.nome || ('Campo ' + c.id)) + '</option>'
+            ).join('');
+            crmEtapasOnCampoValorSelectChange();
+            modal.classList.add('show');
+        }
+
+        function crmEtapasEditarCampoValorFromBtn(btn) {
+            if (!btn) return;
+            const vid = Number(btn.getAttribute('data-cp-vid'));
+            const idCampo = Number(btn.getAttribute('data-cp-campo'));
+            let tipo = 'texto';
+            let rawVal = '';
+            try { tipo = decodeURIComponent(btn.getAttribute('data-cp-tipo') || 'texto'); } catch (e) {}
+            try { rawVal = decodeURIComponent(btn.getAttribute('data-cp-raw') || ''); } catch (e) {}
+            crmEtapasEditarCampoValor(vid, idCampo, tipo, rawVal);
+        }
+
+        async function crmEtapasEditarCampoValor(vid, idCampo, tipo, valorRaw) {
+            crmEtapasCampoValorRowId = vid;
+            const modal = document.getElementById('crmEtapasCampoValorOverlay');
+            const sel = document.getElementById('crmEtapasCampoValorSelect');
+            const titleEl = document.getElementById('crmEtapasCampoValorModalTitle');
+            if (!modal || !sel || crmEtapasContactDetailOpenedId == null) return;
+            sel.disabled = true;
+            if (titleEl) titleEl.textContent = 'Editar valor';
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; showToast('Sessão inválida.', 'error'); return; }
+            if (!contaId) return;
+            const { data: campos, error } = await window.supabase
+                .from('SAAS_Campos_Personalizados')
+                .select('id, nome, tipo')
+                .eq('contaId', contaId)
+                .order('nome', { ascending: true });
+            if (error) { showToast('Não foi possível abrir edição.', 'error'); sel.disabled = false; crmEtapasCampoValorRowId = null; return; }
+            sel.innerHTML = (campos || []).map(c =>
+                '<option value="' + escapeHtmlCrmEtapasCd(String(c.id)) + '" data-tipo="' + escapeHtmlCrmEtapasCd(String(c.tipo || 'texto')) + '">' + escapeHtmlCrmEtapasCd(c.nome || ('Campo ' + c.id)) + '</option>'
+            ).join('');
+            sel.value = String(idCampo);
+            crmEtapasMountCampoValorInputByTipo(tipo);
+            const t = String(tipo || 'texto');
+            const v = valorRaw == null ? '' : String(valorRaw);
+            if (t === 'boolean') {
+                const b = document.getElementById('crmEtapasCampoValorBoolean');
+                if (b) b.value = (v === 'true' || v === '1' || v.toLowerCase() === 'sim') ? 'true' : 'false';
+            } else if (t === 'numero') {
+                const n = document.getElementById('crmEtapasCampoValorInputNum');
+                if (n) n.value = v;
+            } else if (t === 'data') {
+                const d = document.getElementById('crmEtapasCampoValorInputDate');
+                if (d) d.value = v.length >= 10 ? v.slice(0, 10) : v;
+            } else {
+                const tx = document.getElementById('crmEtapasCampoValorInputText');
+                if (tx) tx.value = v;
+            }
+            modal.classList.add('show');
+        }
+
+        async function crmEtapasSaveCampoValorModal() {
+            const sel = document.getElementById('crmEtapasCampoValorSelect');
+            if (!sel || crmEtapasContactDetailOpenedId == null) return;
+            const idCampo = parseInt(sel.value, 10);
+            if (!Number.isFinite(idCampo)) { showToast('Selecione um campo.', 'error'); return; }
+            const opt = sel.options[sel.selectedIndex];
+            const tipo = opt ? (opt.getAttribute('data-tipo') || 'texto') : 'texto';
+            let valorStr = '';
+            if (tipo === 'boolean') {
+                const b = document.getElementById('crmEtapasCampoValorBoolean');
+                valorStr = b ? String(b.value) : 'false';
+            } else if (tipo === 'numero') {
+                const n = document.getElementById('crmEtapasCampoValorInputNum');
+                if (!n || n.value === '') { showToast('Informe um número.', 'error'); return; }
+                valorStr = String(n.value);
+            } else if (tipo === 'data') {
+                const d = document.getElementById('crmEtapasCampoValorInputDate');
+                if (!d || !d.value) { showToast('Informe a data.', 'error'); return; }
+                valorStr = d.value;
+            } else {
+                const t = document.getElementById('crmEtapasCampoValorInputText');
+                valorStr = (t && t.value != null) ? String(t.value).trim() : '';
+                if (!valorStr) { showToast('Informe o valor.', 'error'); return; }
+            }
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; showToast('Sessão inválida.', 'error'); return; }
+            if (!contaId) return;
+            const isEdit = crmEtapasCampoValorRowId != null;
+            const btn = document.getElementById('crmEtapasCampoValorSaveBtn');
+            if (btn) btn.disabled = true;
+            try {
+                if (isEdit) {
+                    const { error } = await window.supabase
+                        .from('SAAS_Valores_Campos_Personalizados')
+                        .update({ valor: valorStr })
+                        .eq('id', crmEtapasCampoValorRowId)
+                        .eq('contaId', contaId);
+                    if (error) throw error;
+                } else {
+                    const { error } = await window.supabase
+                        .from('SAAS_Valores_Campos_Personalizados')
+                        .upsert({ idCampo, idContato: crmEtapasContactDetailOpenedId, contaId, valor: valorStr }, { onConflict: 'idCampo,idContato' });
+                    if (error) throw error;
+                }
+                showToast('Valor salvo.', 'success');
+                crmEtapasCloseCampoValorModal();
+                await crmEtapasRefreshCamposPersonalizados(crmEtapasContactDetailOpenedId);
+            } catch (e) {
+                showToast('Não foi possível salvar.', 'error');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        async function crmEtapasRemoverCampoValor(valorId) {
+            if (!valorId) return;
+            if (!confirm('Remover este valor do campo?')) return;
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; showToast('Sessão inválida.', 'error'); return; }
+            if (!contaId) return;
+            const { error } = await window.supabase.from('SAAS_Valores_Campos_Personalizados').delete().eq('id', valorId).eq('contaId', contaId);
+            if (error) { showToast('Não foi possível remover.', 'error'); return; }
+            showToast('Valor removido.', 'success');
+            await crmEtapasRefreshCamposPersonalizados(crmEtapasContactDetailOpenedId);
+        }
+
+        function crmEtapasFormatValorCampo(tipo, valor) {
+            if (valor == null || String(valor).trim() === '') return '—';
+            const t = String(tipo || 'texto');
+            if (t === 'boolean') {
+                const s = String(valor).toLowerCase();
+                if (s === 'true' || s === '1' || s === 'sim') return 'Sim';
+                if (s === 'false' || s === '0' || s === 'nao' || s === 'não') return 'Não';
+            }
+            if (t === 'data') {
+                const d = String(valor).slice(0, 10);
+                if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+                    const [y, mo, da] = d.split('-');
+                    return da + '/' + mo + '/' + y;
+                }
+            }
+            return String(valor);
+        }
+
+        async function crmEtapasRefreshCamposPersonalizados(contatoId) {
+            const mount = document.getElementById('crmEtapasContactDetailCamposMount');
+            if (!mount || contatoId == null) return;
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; throw e; }
+            if (!contaId) { mount.innerHTML = '<p class="contact-detail-etiquetas-empty-hint">Sessão indisponível.</p>'; return; }
+            let rows = [];
+            const qEmb = await window.supabase
+                .from('SAAS_Valores_Campos_Personalizados')
+                .select('id, idCampo, valor, SAAS_Campos_Personalizados(nome, tipo)')
+                .eq('idContato', contatoId)
+                .eq('contaId', contaId);
+            if (!qEmb.error && qEmb.data) {
+                rows = (qEmb.data || []).map(r => {
+                    const rel = r.SAAS_Campos_Personalizados;
+                    const cp = rel && !Array.isArray(rel) ? rel : (Array.isArray(rel) && rel[0] ? rel[0] : null);
+                    return { id: r.id, idCampo: r.idCampo, valor: r.valor, _nome: cp ? cp.nome : null, _tipo: cp ? cp.tipo : null };
+                });
+            } else {
+                const { data: vals, error: e1 } = await window.supabase.from('SAAS_Valores_Campos_Personalizados')
+                    .select('id, idCampo, valor').eq('idContato', contatoId).eq('contaId', contaId);
+                if (e1) { mount.innerHTML = '<p class="contact-detail-etiquetas-empty-hint">Não foi possível carregar.</p>'; return; }
+                const base = vals || [];
+                if (!base.length) { mount.innerHTML = '<p class="contact-detail-etiquetas-empty-hint">Nenhum valor preenchido.</p>'; return; }
+                const ids = [...new Set(base.map(r => r.idCampo).filter(Boolean))];
+                const { data: campos } = await window.supabase.from('SAAS_Campos_Personalizados').select('id, nome, tipo').eq('contaId', contaId).in('id', ids);
+                const cmap = {};
+                (campos || []).forEach(cp => { cmap[cp.id] = cp; });
+                rows = base.map(r => ({ id: r.id, idCampo: r.idCampo, valor: r.valor, _nome: cmap[r.idCampo]?.nome || null, _tipo: cmap[r.idCampo]?.tipo || null }));
+            }
+            if (!rows.length) { mount.innerHTML = '<p class="contact-detail-etiquetas-empty-hint">Nenhum valor preenchido.</p>'; return; }
+            const sorted = rows.slice().sort((a, b) => (a._nome || '').localeCompare(b._nome || '', 'pt-BR'));
+            mount.innerHTML = sorted.map(r => {
+                const nome = r._nome || ('Campo #' + r.idCampo);
+                const tipo = r._tipo || 'texto';
+                const vid = Number(r.id);
+                const idCampoNum = Number(r.idCampo);
+                const disp = crmEtapasFormatValorCampo(tipo, r.valor);
+                const rawVal = r.valor == null ? '' : String(r.valor);
+                const encTipo = encodeURIComponent(String(tipo));
+                const encRaw = encodeURIComponent(rawVal);
+                return '<div class="contact-detail-cp-row">' +
+                    '<div><p class="contact-detail-cp-row-k">' + escapeHtmlCrmEtapasCd(nome) + '</p><p class="contact-detail-cp-row-v">' + escapeHtmlCrmEtapasCd(disp) + '</p></div>' +
+                    '<div class="contact-detail-cp-actions">' +
+                    '<button type="button" class="contact-detail-cp-edit" aria-label="Editar valor" data-cp-vid="' + vid + '" data-cp-campo="' + idCampoNum + '" data-cp-tipo="' + crmEtapasEscapeHtmlAttr(encTipo) + '" data-cp-raw="' + crmEtapasEscapeHtmlAttr(encRaw) + '" onclick="crmEtapasEditarCampoValorFromBtn(this)"><span class="material-symbols-rounded" style="font-size:18px;line-height:1" aria-hidden="true">edit</span></button>' +
+                    '<button type="button" class="contact-detail-cp-remove" aria-label="Remover valor" onclick="crmEtapasRemoverCampoValor(' + vid + ')">&times;</button>' +
+                    '</div></div>';
+            }).join('');
+        }
+
+        function crmEtapasRebuildEtiquetaMetaLocal(c) {
+            const ids = c.etiquetaIds || [];
+            const nomes = [];
+            const cores = [];
+            ids.forEach(eid => {
+                const obj = crmEtapasDetalheAllEtiquetas[String(eid)] || crmEtapasDetalheAllEtiquetas[eid];
+                const nome = obj && typeof obj === 'object' ? (obj.nome || '-') : (obj || '-');
+                const cor = obj && typeof obj === 'object' && obj.cor ? obj.cor : '#6b7280';
+                nomes.push(nome);
+                cores.push(cor);
+            });
+            c.etiquetaNomes = nomes;
+            c.etiquetaCores = cores;
+            c.etiqueta = nomes.length ? nomes.join(', ') : '-';
+        }
+
+        function crmEtapasBuildEtiquetaChipsHtml(c) {
+            const ids = c.etiquetaIds || [];
+            if (!ids.length) {
+                return '<span class="contact-detail-etiquetas-empty-hint">Nenhuma etiqueta vinculada.</span>';
+            }
+            return ids.map(eid => {
+                const obj = crmEtapasDetalheAllEtiquetas[String(eid)] || crmEtapasDetalheAllEtiquetas[eid];
+                const nome = obj && typeof obj === 'object' ? (obj.nome || 'Sem nome') : '-';
+                const cor = obj && typeof obj === 'object' && obj.cor ? String(obj.cor).trim() : '#6b7280';
+                const safeCor = /^#[0-9a-fA-F]{6}$/i.test(cor) ? cor : '#6b7280';
+                const isHex = /^#[0-9a-fA-F]{6}$/.test(safeCor);
+                const bg = isHex ? safeCor + '28' : 'rgba(107,114,128,0.2)';
+                const eidStr = String(eid);
+                return '<span class="contact-detail-etiqueta-chip etiqueta-tag" style="background:' + bg + ';color:' + safeCor + ';border-color:' + safeCor + '33">' +
+                    '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px">' + escapeHtmlCrmEtapasCd(nome) + '</span>' +
+                    '<button type="button" class="contact-detail-etiqueta-chip-remove" aria-label="Remover etiqueta" onclick="event.stopPropagation();crmEtapasContactDetailRemoveEtiquetaChip(\'' + eidStr + '\')">&times;</button>' +
+                    '</span>';
+            }).join('');
+        }
+
+        function crmEtapasBuildEtiquetaPickerRowsHTML(c) {
+            const entries = Object.keys(crmEtapasDetalheAllEtiquetas || {}).map(id => {
+                const obj = crmEtapasDetalheAllEtiquetas[id];
+                if (!obj) return null;
+                const nome = typeof obj === 'object' ? (obj.nome || 'Sem nome') : String(obj);
+                const cor = typeof obj === 'object' && obj.cor ? obj.cor : '#6b7280';
+                return { id: String(id), nome, cor };
+            }).filter(Boolean).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+            if (entries.length === 0) {
+                return '<div class="contact-detail-etiqueta-empty">Nenhuma etiqueta cadastrada na conta.</div>';
+            }
+            const idsSet = new Set((c.etiquetaIds || []).map(x => String(x)));
+            return entries.map(({ id, nome, cor }) => {
+                const on = idsSet.has(String(id));
+                const safeCor = /^#[0-9a-fA-F]{6}$/i.test(String(cor).trim()) ? String(cor).trim() : '#6b7280';
+                return '<button type="button" class="contact-detail-etiqueta-pick-row' + (on ? ' is-on' : '') + '" onclick="crmEtapasContactDetailPickerSelectEtiqueta(\'' + id + '\')">' +
+                    '<span class="contact-detail-etiqueta-pick-dot" style="background:' + escapeHtmlCrmEtapasCd(safeCor) + '"></span>' +
+                    '<span class="contact-detail-etiqueta-pick-label">' + escapeHtmlCrmEtapasCd(nome) + '</span>' +
+                    '<span class="contact-detail-etiqueta-pick-check">' + (on ? '&#10003;' : '') + '</span>' +
+                    '</button>';
+            }).join('');
+        }
+
+        function crmEtapasBuildEtiquetasWrapHTML(c) {
+            return '<div class="contact-detail-etiquetas-wrap">' +
+                '<div class="contact-detail-etiquetas-bar">' +
+                '<div id="crmEtapasContactDetailEtiquetasChips" class="contact-detail-etiquetas-chips">' + crmEtapasBuildEtiquetaChipsHtml(c) + '</div>' +
+                '<button type="button" class="contact-detail-etiqueta-add" id="crmEtapasContactDetailEtiquetaAddBtn" aria-label="Adicionar etiquetas" aria-expanded="false" onclick="event.stopPropagation();crmEtapasContactDetailToggleEtiquetaPicker()">+</button>' +
+                '</div>' +
+                '<div id="crmEtapasContactDetailEtiquetaPicker" class="contact-detail-etiqueta-picker" hidden>' +
+                '<p class="contact-detail-etiqueta-picker-head">Todas as etiquetas</p>' +
+                '<div id="crmEtapasContactDetailEtiquetaPickerList" class="contact-detail-etiqueta-picker-list"></div>' +
+                '<p class="contact-detail-card-hint" style="margin:0;font-size:0.8rem;line-height:1.45">Novas etiquetas: página <a href="/hublabel/public/hublabel/public/contatos" target="_blank" rel="noopener noreferrer">Contatos</a>.</p>' +
+                '</div></div>';
+        }
+
+        function crmEtapasContactDetailSyncEtiquetasDom() {
+            const c = crmEtapasContactDetailContato;
+            if (!c) return;
+            const chips = document.getElementById('crmEtapasContactDetailEtiquetasChips');
+            if (chips) chips.innerHTML = crmEtapasBuildEtiquetaChipsHtml(c);
+            const picker = document.getElementById('crmEtapasContactDetailEtiquetaPicker');
+            if (picker && !picker.hidden) {
+                const list = document.getElementById('crmEtapasContactDetailEtiquetaPickerList');
+                if (list) list.innerHTML = crmEtapasBuildEtiquetaPickerRowsHTML(c);
+            }
+        }
+
+        function crmEtapasContactDetailToggleEtiquetaPicker() {
+            const p = document.getElementById('crmEtapasContactDetailEtiquetaPicker');
+            const b = document.getElementById('crmEtapasContactDetailEtiquetaAddBtn');
+            if (!p) return;
+            const willOpen = p.hidden;
+            p.hidden = !willOpen;
+            if (b) b.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+            if (willOpen) {
+                const c = crmEtapasContactDetailContato;
+                const list = document.getElementById('crmEtapasContactDetailEtiquetaPickerList');
+                if (list && c) list.innerHTML = crmEtapasBuildEtiquetaPickerRowsHTML(c);
+            }
+        }
+
+        async function crmEtapasContactDetailPickerSelectEtiqueta(etiquetaIdStr) {
+            const cid = crmEtapasContactDetailOpenedId;
+            const c = crmEtapasContactDetailContato;
+            if (cid == null || !c) return;
+            const had = (c.etiquetaIds || []).some(x => String(x) === String(etiquetaIdStr));
+            const wantAdd = !had;
+            try {
+                await crmEtapasContactDetailSetEtiqueta(etiquetaIdStr, wantAdd);
+                const sid = String(etiquetaIdStr);
+                const set = new Set((c.etiquetaIds || []).map(x => String(x)));
+                if (wantAdd) set.add(sid); else set.delete(sid);
+                c.etiquetaIds = [...set].map(x => parseInt(x, 10)).filter(n => !isNaN(n));
+                crmEtapasRebuildEtiquetaMetaLocal(c);
+                crmEtapasContactDetailSyncEtiquetasDom();
+                try {
+                    const card = etapas.flatMap(e => e.cards || []).find(x => x && String(x.contatoId) === String(cid));
+                    if (card) {
+                        card.etiquetaIds = (c.etiquetaIds || []).slice();
+                        card.etiquetaNomes = (c.etiquetaNomes || []).slice();
+                        card.etiquetaCores = (c.etiquetaCores || []).slice();
+                    }
+                } catch (e2) { /* ignore */ }
+                showToast(wantAdd ? 'Etiqueta adicionada.' : 'Etiqueta removida.', 'success');
+            } catch (err) {
+                if (err && err.message !== 'STATUS_BLOQUEADO') {
+                    showToast((err && err.message) || 'Erro ao atualizar etiquetas.', 'error');
+                }
+            }
+        }
+
+        async function crmEtapasContactDetailRemoveEtiquetaChip(etiquetaIdStr) {
+            const cid = crmEtapasContactDetailOpenedId;
+            const c = crmEtapasContactDetailContato;
+            if (cid == null || !c) return;
+            const had = (c.etiquetaIds || []).some(x => String(x) === String(etiquetaIdStr));
+            if (!had) return;
+            try {
+                await crmEtapasContactDetailSetEtiqueta(etiquetaIdStr, false);
+                const set = new Set((c.etiquetaIds || []).map(x => String(x)));
+                set.delete(String(etiquetaIdStr));
+                c.etiquetaIds = [...set].map(x => parseInt(x, 10)).filter(n => !isNaN(n));
+                crmEtapasRebuildEtiquetaMetaLocal(c);
+                crmEtapasContactDetailSyncEtiquetasDom();
+                try {
+                    const card = etapas.flatMap(e => e.cards || []).find(x => x && String(x.contatoId) === String(cid));
+                    if (card) {
+                        card.etiquetaIds = (c.etiquetaIds || []).slice();
+                        card.etiquetaNomes = (c.etiquetaNomes || []).slice();
+                        card.etiquetaCores = (c.etiquetaCores || []).slice();
+                    }
+                } catch (e2) { /* ignore */ }
+                showToast('Etiqueta removida.', 'success');
+            } catch (err) {
+                if (err && err.message !== 'STATUS_BLOQUEADO') {
+                    showToast((err && err.message) || 'Erro ao remover etiqueta.', 'error');
+                }
+            }
+        }
+
+        async function crmEtapasContactDetailSetEtiqueta(etiquetaIdStr, add) {
+            const cid = crmEtapasContactDetailOpenedId;
+            const eid = parseInt(etiquetaIdStr, 10);
+            if (cid == null || isNaN(eid)) throw new Error('Dados inválidos.');
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') throw e;
+                throw e;
+            }
+            if (!contaId) throw new Error('Sessão expirada.');
+            if (add) {
+                const { error } = await window.supabase.from('SAAS_Contatos_Etiquetas').insert({
+                    contatoId: cid, etiquetaId: eid, contaId
+                });
+                if (error) throw new Error(error.message || 'Erro ao vincular etiqueta.');
+            } else {
+                const { error } = await window.supabase.from('SAAS_Contatos_Etiquetas').delete()
+                    .eq('contatoId', cid).eq('etiquetaId', eid).eq('contaId', contaId);
+                if (error) throw new Error(error.message || 'Erro ao remover etiqueta.');
+            }
+        }
+
+        async function crmEtapasFetchCrmCardsForContact(contatoId) {
+            const { data: cards, error } = await window.supabase
+                .from('SAAS_Cards_Quadros')
+                .select('id, nome, valor, observacoes, quadroId, etapaQuadroId')
+                .eq('contatoId', contatoId);
+            if (error || !cards || cards.length === 0) return [];
+            const qIds = [...new Set(cards.map(card => card.quadroId).filter(Boolean))];
+            const eIds = [...new Set(cards.map(card => card.etapaQuadroId).filter(Boolean))];
+            const qMap = {};
+            const eMap = {};
+            if (qIds.length) {
+                const { data: qs } = await window.supabase.from('SAAS_Quadros').select('id, nome').in('id', qIds);
+                (qs || []).forEach(q => { qMap[q.id] = q.nome || ('Quadro ' + q.id); });
+            }
+            if (eIds.length) {
+                const { data: es } = await window.supabase.from('SAAS_Etapas_Quadros').select('id, nome').in('id', eIds);
+                (es || []).forEach(e => { eMap[e.id] = e.nome || ('Etapa ' + e.id); });
+            }
+            return cards.map(card => ({
+                ...card,
+                quadroNome: card.quadroId != null ? (qMap[card.quadroId] || '-') : '-',
+                etapaNome: card.etapaQuadroId != null ? (eMap[card.etapaQuadroId] || '-') : '-'
+            }));
+        }
+
+        function crmEtapasFormatConexaoLabelForNota(cx, idConexao) {
+            if (cx) {
+                const n = (cx.NomeConexao || cx.instanceName || cx.Telefone || '').trim();
+                if (n) return n;
+            }
+            if (idConexao != null && idConexao !== '') return 'Conexão #' + idConexao;
+            return 'Conexão não identificada';
+        }
+
+        async function crmEtapasEscolherConversaPorConexao(conversas, contaId) {
+            const selectEl = document.getElementById('crmEtapasConversaConexaoSelect');
+            const modalEl = document.getElementById('crmEtapasConversaConexaoModal');
+            if (!selectEl || !modalEl || !Array.isArray(conversas) || conversas.length === 0) return null;
+
+            const idsConexao = [...new Set(conversas.map(c => c.idConexao).filter(id => id != null))];
+            const conexaoMap = {};
+            if (idsConexao.length) {
+                const { data: cxRows } = await window.supabase
+                    .from('SAAS_Conexões')
+                    .select('id, NomeConexao, instanceName, Telefone')
+                    .eq('contaId', contaId)
+                    .in('id', idsConexao);
+                (cxRows || []).forEach(cx => { conexaoMap[cx.id] = cx; });
+            }
+
+            selectEl.innerHTML = '';
+            conversas.forEach((conv, idx) => {
+                const option = document.createElement('option');
+                option.value = String(conv.id);
+                option.textContent = crmEtapasFormatConexaoLabelForNota(conexaoMap[conv.idConexao], conv.idConexao);
+                if (idx === 0) option.selected = true;
+                selectEl.appendChild(option);
+            });
+
+            modalEl.classList.add('show');
+            return new Promise(resolve => {
+                crmEtapasConversaConexaoModalResolver = resolve;
+            });
+        }
+
+        function closeCrmEtapasConversaConexaoModal(selectedConversationId = null) {
+            const modalEl = document.getElementById('crmEtapasConversaConexaoModal');
+            if (modalEl) modalEl.classList.remove('show');
+            if (crmEtapasConversaConexaoModalResolver) {
+                const resolver = crmEtapasConversaConexaoModalResolver;
+                crmEtapasConversaConexaoModalResolver = null;
+                resolver(selectedConversationId != null ? Number(selectedConversationId) : null);
+            }
+        }
+        window.closeCrmEtapasConversaConexaoModal = closeCrmEtapasConversaConexaoModal;
+
+        function confirmCrmEtapasConversaConexaoModal() {
+            const selectEl = document.getElementById('crmEtapasConversaConexaoSelect');
+            const selected = selectEl ? Number(selectEl.value) : null;
+            if (!selected || !Number.isFinite(selected)) {
+                showToast('Selecione uma conexão para continuar.', 'error');
+                return;
+            }
+            closeCrmEtapasConversaConexaoModal(selected);
+        }
+        window.confirmCrmEtapasConversaConexaoModal = confirmCrmEtapasConversaConexaoModal;
+
+        function crmEtapasFormatDataBrParaEtiqueta(d) {
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+        }
+
+        function crmEtapasNomeEtiquetaDefaultParaEtapa(quadroNome, etapaNome) {
+            const q = (quadroNome || '').trim() || 'CRM';
+            const e = (etapaNome || '').trim() || 'Etapa';
+            return `${q}-${e}-${crmEtapasFormatDataBrParaEtiqueta(new Date())}`;
+        }
+
+        function crmEtapasAbrirModalEtiquetaEtapa(etapaId) {
+            crmEtapasEtiquetaModalEtapaId = etapaId != null ? String(etapaId) : null;
+            const et = etapas.find(x => String(x.id) === String(etapaId));
+            const nomeEtapa = et ? (et.nome || 'Sem nome') : 'Etapa';
+            const input = document.getElementById('crmEtapasEtiquetaEtapaNomeInput');
+            const modal = document.getElementById('crmEtapasEtiquetaEtapaModal');
+            if (!input || !modal) return;
+            input.value = crmEtapasNomeEtiquetaDefaultParaEtapa(quadroNomeAtual, nomeEtapa);
+            modal.classList.add('show');
+            requestAnimationFrame(() => input.focus());
+        }
+
+        function crmEtapasFecharModalEtiquetaEtapa() {
+            const btn = document.getElementById('crmEtapasEtiquetaEtapaBtn');
+            if (btn && btn.disabled) return;
+            const modal = document.getElementById('crmEtapasEtiquetaEtapaModal');
+            if (modal) modal.classList.remove('show');
+            crmEtapasEtiquetaModalEtapaId = null;
+        }
+
+        async function crmEtapasSubmitEtiquetaEtapa() {
+            const modalEtapaId = crmEtapasEtiquetaModalEtapaId;
+            const input = document.getElementById('crmEtapasEtiquetaEtapaNomeInput');
+            const btn = document.getElementById('crmEtapasEtiquetaEtapaBtn');
+            const btnText = document.getElementById('crmEtapasEtiquetaEtapaBtnText');
+            const spinner = document.getElementById('crmEtapasEtiquetaEtapaBtnSpinner');
+            const cancelBtn = document.getElementById('crmEtapasEtiquetaEtapaCancelBtn');
+            if (!modalEtapaId || !input || !btn) return;
+            const nome = (input.value || '').trim();
+            if (!nome) {
+                showToast('Informe o nome da etiqueta.', 'error');
+                return;
+            }
+            const et = etapas.find(x => String(x.id) === String(modalEtapaId));
+            if (!et) {
+                showToast('Etapa não encontrada.', 'error');
+                return;
+            }
+            const cards = Array.isArray(et.cards) ? et.cards : [];
+            const contatoIds = [...new Set(
+                cards.map(c => (c && c.contatoId != null && c.contatoId !== '' ? Number(c.contatoId) : NaN))
+                    .filter(n => Number.isFinite(n) && n > 0)
+            )];
+
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') return;
+                showToast((e && e.message) || 'Erro de sessão.', 'error');
+                return;
+            }
+            if (!contaId) {
+                showToast('Sessão expirada.', 'error');
+                return;
+            }
+            if (!window.supabase) {
+                showToast('Supabase não disponível.', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            if (cancelBtn) cancelBtn.disabled = true;
+            if (btnText) btnText.style.visibility = 'hidden';
+            if (spinner) spinner.style.display = 'inline-block';
+
+            try {
+                const payloadEtiqueta = {
+                    nome,
+                    descricao: null,
+                    cor: '#6C63FF',
+                    contaId
+                };
+                const { data: rowEtiqueta, error: errEt } = await window.supabase
+                    .from('SAAS_Etiquetas')
+                    .insert(payloadEtiqueta)
+                    .select('id')
+                    .single();
+                if (errEt) throw new Error(errEt.message || 'Erro ao criar etiqueta.');
+                const etiquetaId = rowEtiqueta && rowEtiqueta.id;
+                if (!etiquetaId) throw new Error('Etiqueta criada sem id.');
+
+                if (contatoIds.length > 0) {
+                    const rows = contatoIds.map(contatoId => ({ contatoId, etiquetaId, contaId }));
+                    const CHUNK_INS = 250;
+                    for (let j = 0; j < rows.length; j += CHUNK_INS) {
+                        const batch = rows.slice(j, j + CHUNK_INS);
+                        const { error: insErr } = await window.supabase.from('SAAS_Contatos_Etiquetas').insert(batch);
+                        if (insErr) throw new Error(insErr.message || 'Erro ao vincular etiqueta aos contatos.');
+                    }
+                }
+
+                showToast(
+                    contatoIds.length
+                        ? `Etiqueta criada e aplicada a ${contatoIds.length} contato(s).`
+                        : 'Etiqueta criada. Não há contatos nesta etapa para vincular.',
+                    'success'
+                );
+                const modal = document.getElementById('crmEtapasEtiquetaEtapaModal');
+                if (modal) modal.classList.remove('show');
+                crmEtapasEtiquetaModalEtapaId = null;
+                await carregarEtapas();
+            } catch (err) {
+                if (err && err.message !== 'STATUS_BLOQUEADO') {
+                    showToast((err && err.message) || 'Erro ao adicionar etiqueta.', 'error');
+                }
+            } finally {
+                btn.disabled = false;
+                if (cancelBtn) cancelBtn.disabled = false;
+                if (btnText) btnText.style.visibility = '';
+                if (spinner) spinner.style.display = 'none';
+            }
+        }
+
+        async function crmEtapasFetchConversationNotasForContact(contatoId, contaId) {
+            const { data: rows, error } = await window.supabase
+                .from('SAAS_Conversas_Agentes')
+                .select('id, nota, idConexao, ultimaMensagem')
+                .eq('contaId', contaId)
+                .eq('contatoId', contatoId)
+                .not('nota', 'is', null);
+            if (error) throw error;
+            const withNota = (rows || []).filter(r => r.nota != null && String(r.nota).trim() !== '');
+            const ids = [...new Set(withNota.map(r => r.idConexao).filter(id => id != null))];
+            const cxMap = {};
+            if (ids.length > 0) {
+                const { data: cxs } = await window.supabase
+                    .from('SAAS_Conexões')
+                    .select('id, NomeConexao, instanceName, Telefone')
+                    .eq('contaId', contaId)
+                    .in('id', ids);
+                (cxs || []).forEach(cx => { cxMap[cx.id] = cx; });
+            }
+            const list = withNota.map(r => ({
+                conversaId: r.id,
+                nota: String(r.nota).trim(),
+                idConexao: r.idConexao,
+                ultimaMensagem: r.ultimaMensagem,
+                conexaoLabel: crmEtapasFormatConexaoLabelForNota(cxMap[r.idConexao], r.idConexao)
+            }));
+            list.sort((a, b) => {
+                const ta = a.ultimaMensagem ? new Date(a.ultimaMensagem).getTime() : 0;
+                const tb = b.ultimaMensagem ? new Date(b.ultimaMensagem).getTime() : 0;
+                if (tb !== ta) return tb - ta;
+                return (Number(b.conversaId) || 0) - (Number(a.conversaId) || 0);
+            });
+            return list;
+        }
+
+        function crmEtapasEscapeHtmlAttr(s) {
+            return String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+        }
+
+        function crmEtapasNotaPrecisaExpandir(texto) {
+            const t = String(texto || '');
+            if (!t.trim()) return false;
+            if (t.split(/\r?\n/).length > 3) return true;
+            return t.length > 200;
+        }
+
+        function crmEtapasOpenNotaCompletaFromBtn(btn) {
+            if (!btn) return;
+            try {
+                const t = decodeURIComponent(btn.getAttribute('data-nota-title') || 'Nota');
+                const b = decodeURIComponent(btn.getAttribute('data-nota-enc') || '');
+                crmEtapasOpenNotaCompleta(t, b);
+            } catch (e) {
+                showToast('Não foi possível abrir a nota.', 'error');
+            }
+        }
+
+        function crmEtapasOpenNotaCompleta(titulo, texto) {
+            const ov = document.getElementById('crmEtapasNotaCompletaOverlay');
+            const tEl = document.getElementById('crmEtapasNotaCompletaTitle');
+            const bEl = document.getElementById('crmEtapasNotaCompletaBody');
+            if (!ov || !tEl || !bEl) return;
+            tEl.textContent = titulo || 'Nota';
+            bEl.textContent = texto || '';
+            ov.classList.add('active');
+        }
+
+        function crmEtapasCloseNotaCompleta() {
+            document.getElementById('crmEtapasNotaCompletaOverlay')?.classList.remove('active');
+        }
+
+        function crmEtapasBuildContactDetailNotasHtml(notasList) {
+            if (!notasList || notasList.length === 0) {
+                return '<p class="contact-detail-notas-empty">Nenhuma nota registrada nas conversas vinculadas a este contato.</p>';
+            }
+            return '<div class="contact-detail-notas-scroll">' + notasList.map(n => {
+                const precisa = crmEtapasNotaPrecisaExpandir(n.nota);
+                const bodyClass = 'contact-detail-note-body' + (precisa ? ' contact-detail-note-body--clamped' : '');
+                const enc = crmEtapasEscapeHtmlAttr(encodeURIComponent(n.nota || ''));
+                const encTit = crmEtapasEscapeHtmlAttr(encodeURIComponent(n.conexaoLabel || 'Nota'));
+                const expandBtn = precisa
+                    ? '<button type="button" class="contact-detail-note-expand" data-nota-enc="' + enc + '" data-nota-title="' + encTit + '" onclick="crmEtapasOpenNotaCompletaFromBtn(this)">Expandir</button>'
+                    : '';
+                return '<article class="contact-detail-sticky-note">' +
+                    '<div class="contact-detail-note-conexao"><span class="contact-detail-note-conexao-dot" aria-hidden="true"></span>' +
+                    '<span>' + escapeHtmlCrmEtapasCd(n.conexaoLabel) + '</span></div>' +
+                    '<p class="' + bodyClass + '">' + escapeHtmlCrmEtapasCd(n.nota) + '</p>' +
+                    expandBtn +
+                    '</article>';
+            }).join('') + '</div>';
+        }
+
+        function crmEtapasBuildContactDetailFloatingSkeletonHtml() {
+            function row(side, bubbleMod) {
+                return '<div class="contact-detail-msk-row ' + side + '">' +
+                    '<div class="contact-detail-msk-avatar"></div>' +
+                    '<div class="contact-detail-msk-bubble ' + bubbleMod + '"></div></div>';
+            }
+            return '<div class="contact-detail-msk" role="status" aria-live="polite" aria-busy="true">' +
+                row('is-received', 'contact-detail-msk-bubble--md') +
+                row('is-sent', 'contact-detail-msk-bubble--sm') +
+                row('is-received', 'contact-detail-msk-bubble--lg') +
+                row('is-sent', 'contact-detail-msk-bubble--md') +
+                '</div>';
+        }
+
+        function crmEtapasBuildContactDetailCrmHtml(crmItems) {
+            if (!crmItems || crmItems.length === 0) {
+                return '<p class="contact-detail-crm-empty">Nenhum card de CRM vinculado a este contato.</p>';
+            }
+            const inner = crmItems.map(card => {
+                const valStr = card.valor != null && card.valor !== '' ? 'Valor: ' + card.valor : '';
+                const obs = card.observacoes ? escapeHtmlCrmEtapasCd(card.observacoes) : '';
+                const qid = card.quadroId;
+                const cidCard = card.id;
+                const podeAbrirQuadro = qid != null && String(qid).trim() !== '' && cidCard != null && String(cidCard).trim() !== '';
+                const btnOlho = podeAbrirQuadro
+                    ? '<button type="button" class="contact-detail-crm-open-etapas" title="Ver no quadro CRM" aria-label="Abrir este card no CRM Etapas" onclick="openContactDetailCardInCrmEtapas(' + JSON.stringify(String(qid)) + ',' + JSON.stringify(String(cidCard)) + ')"><span class="material-symbols-rounded" aria-hidden="true">visibility</span></button>'
+                    : '';
+                const linhaQuadro = 'Quadro: ' + escapeHtmlCrmEtapasCd(card.quadroNome) + ' · Etapa: ' + escapeHtmlCrmEtapasCd(card.etapaNome);
+                const primeiraLinha = btnOlho
+                    ? '<div class="contact-detail-crm-toprow"><div class="contact-detail-crm-meta contact-detail-crm-meta--grow">' + linhaQuadro + '</div>' + btnOlho + '</div>'
+                    : '<div class="contact-detail-crm-meta">' + linhaQuadro + '</div>';
+                return '<div class="contact-detail-crm-item">' +
+                    primeiraLinha +
+                    (valStr ? '<div class="contact-detail-crm-meta" style="margin-top:4px;">' + escapeHtmlCrmEtapasCd(valStr) + '</div>' : '') +
+                    (obs ? '<div class="contact-detail-crm-meta" style="margin-top:6px;">' + obs + '</div>' : '') +
+                    '</div>';
+            }).join('');
+            return '<div class="contact-detail-crm-scroll">' + inner + '</div>';
+        }
+
+        function openContactDetailCardInCrmEtapas(quadroId, cardId) {
+            const target = String(cardId || '');
+            if (!target) return;
+            let found = null;
+            for (let i = 0; i < etapas.length; i++) {
+                const cards = Array.isArray(etapas[i].cards) ? etapas[i].cards : [];
+                const c = cards.find(x => String(x.id) === target);
+                if (c) { found = c; break; }
+            }
+            if (!found) {
+                showToast('Card não encontrado no quadro atual.', 'info');
+                return;
+            }
+            fecharCrmEtapasContactDetailModal();
+            requestAnimationFrame(() => {
+                abrirModalDetalhesCard(found);
+                const safeId = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(target) : target.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+                const el = document.querySelector('.card-item[data-card-id="' + safeId + '"]');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            });
+        }
+        window.openContactDetailCardInCrmEtapas = openContactDetailCardInCrmEtapas;
+        window.crmEtapasOpenCampoValorModal = crmEtapasOpenCampoValorModal;
+        window.crmEtapasCloseCampoValorModal = crmEtapasCloseCampoValorModal;
+        window.crmEtapasOnCampoValorSelectChange = crmEtapasOnCampoValorSelectChange;
+        window.crmEtapasSaveCampoValorModal = crmEtapasSaveCampoValorModal;
+        window.crmEtapasEditarCampoValorFromBtn = crmEtapasEditarCampoValorFromBtn;
+        window.crmEtapasRemoverCampoValor = crmEtapasRemoverCampoValor;
+        window.crmEtapasOpenNotaCompletaFromBtn = crmEtapasOpenNotaCompletaFromBtn;
+        window.crmEtapasCloseNotaCompleta = crmEtapasCloseNotaCompleta;
+
+        function crmEtapasMontarShellDetalheContatoBody(c, asyncSkel) {
+            const isGrupo = c.tipo === 'grupo';
+            const phoneFull = isGrupo ? (c.variaveis && c.variaveis.whatsappId ? String(c.variaveis.whatsappId) : '') : (c.telefone || '');
+            const phoneShow = getDisplayPhoneCrmEtapasCd(c);
+            const heroTipoClass = isGrupo ? 'grupo' : 'contato';
+            const fotoPerfilUrl = c.fotoPerfil ? String(c.fotoPerfil).trim() : '';
+            const hasFotoPerfil = !!fotoPerfilUrl;
+            const heroAvatarClass = 'contact-detail-hero-avatar ' + heroTipoClass + (hasFotoPerfil ? ' has-photo' : '');
+            const heroAvatarStyle = hasFotoPerfil ? ' style="background-image:url(\'' + escapeHtmlCrmEtapasCd(fotoPerfilUrl) + '\');"' : '';
+            const fallbackOnError = "var p=this.closest('.contact-detail-hero-avatar');if(!p)return;p.style.backgroundImage='none';p.classList.remove('has-photo');var i=p.querySelector('svg');if(i)i.style.display='block';";
+            const iconSvgInner = isGrupo
+                ? '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>'
+                : '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>';
+            const lidStr = c.lid != null && c.lid !== '' && c.lid !== false ? String(c.lid) : '';
+            return (
+                '<div class="contact-detail-hero">' +
+                '<div class="' + heroAvatarClass + '"' + heroAvatarStyle + '>' +
+                '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"' + (hasFotoPerfil ? ' style="display:none;"' : '') + '>' + iconSvgInner + '</svg>' +
+                (hasFotoPerfil ? '<img src="' + escapeHtmlCrmEtapasCd(fotoPerfilUrl) + '" alt="" style="display:none;" onerror="' + fallbackOnError + '">' : '') +
+                '</div>' +
+                '<div class="contact-detail-hero-text">' +
+                '<span class="tipo-pill ' + heroTipoClass + '">' + escapeHtmlCrmEtapasCd(isGrupo ? 'Grupo' : 'Contato') + '</span>' +
+                '</div></div>' +
+                '<div class="contact-detail-card">' +
+                '<h3 class="contact-detail-card-title">Dados</h3>' +
+                '<div class="contact-detail-rows">' +
+                '<div class="contact-detail-row"><span class="cdr-k">Telefone / ID</span><span class="cdr-v">' + escapeHtmlCrmEtapasCd(phoneShow || phoneFull || '-') + '</span></div>' +
+                '<div class="contact-detail-row"><span class="cdr-k">E-mail</span><span class="cdr-v">' + escapeHtmlCrmEtapasCd(c.email || '-') + '</span></div>' +
+                '<div class="contact-detail-row"><span class="cdr-k">Criado em</span><span class="cdr-v">' + escapeHtmlCrmEtapasCd(formatDateCrmEtapasCd(c.created_at)) + '</span></div>' +
+                (lidStr ? '<div class="contact-detail-row"><span class="cdr-k">LID</span><span class="cdr-v">' + escapeHtmlCrmEtapasCd(lidStr) + '</span></div>' : '') +
+                '</div></div>' +
+                '<div class="contact-detail-card">' +
+                '<h3 class="contact-detail-card-title">Etiquetas</h3>' +
+                '<p class="contact-detail-card-hint">Etiquetas vinculadas ao contato. Toque em + para incluir ou remover.</p>' +
+                '<div id="crmEtapasContactDetailEtiquetasInner">' + crmEtapasBuildEtiquetasWrapHTML(c) + '</div></div>' +
+                '<div class="contact-detail-card">' +
+                '<h3 class="contact-detail-card-title">Campos personalizados</h3>' +
+                '<p class="contact-detail-card-hint">Valores definidos para este contato. Use + para atribuir ou alterar.</p>' +
+                '<div class="contact-detail-cp-bar">' +
+                '<div class="contact-detail-cp-list contact-detail-scroll-max-5-cp" id="crmEtapasContactDetailCamposMount">' + asyncSkel + '</div>' +
+                '<button type="button" class="contact-detail-cp-add" title="Atribuir valor" aria-label="Adicionar campo" onclick="crmEtapasOpenCampoValorModal()">+</button>' +
+                '</div></div>' +
+                '<div class="contact-detail-card">' +
+                '<h3 class="contact-detail-card-title">Notas das conversas</h3>' +
+                '<p class="contact-detail-card-hint">Notas salvas no chat, por conexão WhatsApp.</p>' +
+                '<div id="crmEtapasContactDetailNotasMount">' + asyncSkel + '</div></div>' +
+                '<div class="contact-detail-card">' +
+                '<h3 class="contact-detail-card-title">CRM</h3>' +
+                '<div id="crmEtapasContactDetailCrmMount">' + asyncSkel + '</div></div>'
+            );
+        }
+
+        async function crmEtapasContactDetailIrConversar() {
+            const c = crmEtapasContactDetailContato;
+            if (!c) return;
+            if (c.tipo === 'grupo') {
+                showToast('Conversar está disponível apenas para contatos individuais.', 'error');
+                return;
+            }
+            const card = etapas.flatMap(e => e.cards || []).find(x => String(x.id) === String(cardEditandoId));
+            const fakeCard = card || {
+                nome: c.nome,
+                nomeContato: c.nome,
+                telefone: (c.telefone || '').replace(/\D/g, ''),
+                contato: (c.telefone || '').replace(/\D/g, '')
+            };
+            try {
+                const ok = await irParaChatComContatoDoCrm(c.id, fakeCard);
+                if (ok) fecharCrmEtapasContactDetailModal();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function abrirCrmEtapasModalDetalheContato(contatoId) {
+            if (!window.supabase) {
+                showToast('Serviço indisponível.', 'error');
+                return;
+            }
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') return;
+                throw e;
+            }
+            if (!contaId) {
+                showToast('Sessão expirada.', 'error');
+                return;
+            }
+            const idNum = parseInt(String(contatoId), 10);
+            if (!Number.isFinite(idNum)) return;
+
+            const { data: row, error } = await window.supabase
+                .from('SAAS_Contatos')
+                .select('id, nome, telefone, email, created_at, variaveis, tipo, lid, fotoPerfil')
+                .eq('id', idNum)
+                .eq('contaId', contaId)
+                .maybeSingle();
+
+            if (error || !row) {
+                showToast('Contato não encontrado.', 'error');
+                return;
+            }
+
+            const [{ data: ceData }, { data: etData }] = await Promise.all([
+                window.supabase.from('SAAS_Contatos_Etiquetas').select('etiquetaId').eq('contaId', contaId).eq('contatoId', idNum),
+                window.supabase.from('SAAS_Etiquetas').select('id, nome, descricao, cor').eq('contaId', contaId)
+            ]);
+
+            crmEtapasDetalheAllEtiquetas = {};
+            if (etData && etData.length) {
+                etData.forEach(e => {
+                    crmEtapasDetalheAllEtiquetas[e.id] = { nome: e.nome || 'Sem nome', descricao: e.descricao || '', cor: e.cor || '#6b7280' };
+                });
+            }
+
+            const etiquetaIds = (ceData || []).map(r => r.etiquetaId).filter(Boolean);
+            const c = {
+                id: row.id,
+                nome: row.nome || '',
+                telefone: row.telefone || '',
+                email: row.email || '',
+                created_at: row.created_at,
+                variaveis: row.variaveis || {},
+                tipo: row.tipo || 'contato',
+                lid: row.lid,
+                fotoPerfil: row.fotoPerfil || '',
+                etiquetaIds
+            };
+            crmEtapasRebuildEtiquetaMetaLocal(c);
+            crmEtapasContactDetailOpenedId = idNum;
+            crmEtapasContactDetailContato = c;
+
+            const isGrupo = c.tipo === 'grupo';
+            const phoneShow = getDisplayPhoneCrmEtapasCd(c);
+            const titleEl = document.getElementById('crmEtapasContactDetailTitle');
+            const subEl = document.getElementById('crmEtapasContactDetailSubtitle');
+            const bodyEl = document.getElementById('crmEtapasContactDetailBody');
+            const btnConv = document.getElementById('crmEtapasContactDetailConversarBtn');
+            if (titleEl) titleEl.textContent = c.nome || 'Detalhes do contato';
+            if (subEl) {
+                const bits = [];
+                if (phoneShow) bits.push(phoneShow);
+                bits.push(isGrupo ? 'Grupo WhatsApp' : 'Contato');
+                subEl.textContent = bits.join(' · ');
+            }
+            if (btnConv) {
+                btnConv.disabled = isGrupo;
+                btnConv.title = isGrupo ? 'Chat disponível apenas para contatos individuais (não grupos).' : '';
+            }
+
+            const asyncSkel = crmEtapasBuildContactDetailFloatingSkeletonHtml();
+            if (bodyEl) bodyEl.innerHTML = crmEtapasMontarShellDetalheContatoBody(c, asyncSkel);
+
+            document.getElementById('crmEtapasContactDetailOverlay')?.classList.add('active');
+
+            const openedForId = idNum;
+            let crmItems = [];
+            let notasList = [];
+            try {
+                let cConta;
+                try {
+                    cConta = await obterUserIdComStatus();
+                } catch (e2) {
+                    if (e2.message !== 'STATUS_BLOQUEADO') throw e2;
+                    cConta = null;
+                }
+                const pCrm = crmEtapasFetchCrmCardsForContact(openedForId);
+                const pNotas = cConta ? crmEtapasFetchConversationNotasForContact(openedForId, cConta) : Promise.resolve([]);
+                [crmItems, notasList] = await Promise.all([pCrm, pNotas]);
+            } catch (e) {
+                if (e.message !== 'STATUS_BLOQUEADO') {
+                    console.warn('Detalhe contato (CRM/notas):', e);
+                }
+                crmItems = [];
+                notasList = [];
+            }
+
+            if (crmEtapasContactDetailOpenedId !== openedForId) return;
+            const camposEl = document.getElementById('crmEtapasContactDetailCamposMount');
+            const crmEl = document.getElementById('crmEtapasContactDetailCrmMount');
+            const notasEl = document.getElementById('crmEtapasContactDetailNotasMount');
+            if (camposEl) void crmEtapasRefreshCamposPersonalizados(openedForId);
+            if (crmEl) crmEl.innerHTML = crmEtapasBuildContactDetailCrmHtml(crmItems);
+            if (notasEl) notasEl.innerHTML = crmEtapasBuildContactDetailNotasHtml(notasList);
+        }
+
+        /**
+         * Com contato vinculado (contatoId): abre o chat na conversa ou cria uma nova.
+         * Retorna true se redirecionou ou exibiu erro definitivo (não abrir wa.me).
+         * Retorna false para permitir fallback wa.me.
+         */
+        async function irParaChatComContatoDoCrm(contatoId, card) {
+            if (!window.supabase || contatoId == null || Number.isNaN(Number(contatoId))) return false;
+
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') return true;
+                throw e;
+            }
+            if (!contaId) {
+                showToast('Sessão expirada. Faça login novamente.', 'error');
+                return true;
+            }
+
+            const idNum = parseInt(String(contatoId), 10);
+            const { data: c, error: cErr } = await window.supabase
+                .from('SAAS_Contatos')
+                .select('id, nome, telefone, tipo')
+                .eq('id', idNum)
+                .eq('contaId', contaId)
+                .maybeSingle();
+
+            if (cErr || !c) {
+                console.warn('CRM card: contato não encontrado para chat', cErr);
+                return false;
+            }
+            if (c.tipo === 'grupo') {
+                showToast('Abrir pelo chat não está disponível para grupos. Use o WhatsApp.', 'info');
+                return false;
+            }
+
+            const telefoneRaw = ((c.telefone || '').trim() || String(card.telefone || card.contato || '').trim());
+            if (!telefoneRaw) {
+                showToast('Contato sem telefone. Edite o cadastro do contato.', 'error');
+                return true;
+            }
+
+            const id = c.id;
+            const digits = telefoneRaw.replace(/\D/g, '');
+            const noSuffix = telefoneRaw.replace(/@s\.whatsapp\.net$/i, '').trim();
+            const telefoneVariants = [...new Set([telefoneRaw, noSuffix, digits && digits + '@s.whatsapp.net'].filter(Boolean))];
+
+            let conversaId = null;
+            const { data: byContato } = await window.supabase
+                .from('SAAS_Conversas_Agentes')
+                .select('id, idConexao, ultimaMensagem')
+                .eq('contaId', contaId)
+                .eq('contatoId', id)
+                .order('ultimaMensagem', { ascending: false, nullsFirst: false })
+                .order('id', { ascending: false });
+
+            const conversasPorConexao = [];
+            const conexoesVistas = new Set();
+            (byContato || []).forEach(conv => {
+                if (!conv || !conv.id) return;
+                const key = conv.idConexao != null ? String(conv.idConexao) : '__sem_conexao__';
+                if (conexoesVistas.has(key)) return;
+                conexoesVistas.add(key);
+                conversasPorConexao.push(conv);
+            });
+
+            if (conversasPorConexao.length === 1) {
+                conversaId = conversasPorConexao[0].id;
+            } else if (conversasPorConexao.length > 1) {
+                const selectedConversationId = await crmEtapasEscolherConversaPorConexao(conversasPorConexao, contaId);
+                if (!selectedConversationId) return true;
+                conversaId = selectedConversationId;
+            }
+
+            if (!conversaId && telefoneVariants.length) {
+                const { data: byTel } = await window.supabase
+                    .from('SAAS_Conversas_Agentes')
+                    .select('id, ultimaMensagem')
+                    .eq('contaId', contaId)
+                    .in('telefone', telefoneVariants)
+                    .order('ultimaMensagem', { ascending: false, nullsFirst: false })
+                    .limit(1);
+                if (byTel && byTel[0]?.id) conversaId = byTel[0].id;
+            }
+
+            if (!conversaId) {
+                const { data: conexoes, error: cxErr } = await window.supabase
+                    .from('SAAS_Conexões')
+                    .select('id')
+                    .eq('contaId', contaId)
+                    .order('id', { ascending: true })
+                    .limit(1);
+                if (cxErr || !conexoes || !conexoes.length) {
+                    showToast('Cadastre pelo menos uma conexão WhatsApp para iniciar conversas no chat.', 'error');
+                    return true;
+                }
+                const idConexao = conexoes[0].id;
+                const telefoneInsert = telefoneRaw.includes('@') ? telefoneRaw : (noSuffix || telefoneRaw);
+                const insertPayload = {
+                    contaId,
+                    idConexao,
+                    telefone: telefoneInsert,
+                    contatoId: id,
+                    nomeConversa: (c.nome || '').trim() || (card.nomeContato || card.nome || '').trim() || null,
+                    statusAtendimento: 'aberto',
+                    lida: true,
+                    pausado: false
+                };
+                const { data: inserted, error: insErr } = await window.supabase
+                    .from('SAAS_Conversas_Agentes')
+                    .insert(insertPayload)
+                    .select('id')
+                    .single();
+                if (insErr) {
+                    if (insErr.code === '23505') {
+                        const { data: again } = await window.supabase
+                            .from('SAAS_Conversas_Agentes')
+                            .select('id')
+                            .eq('contaId', contaId)
+                            .eq('contatoId', id)
+                            .eq('idConexao', idConexao)
+                            .maybeSingle();
+                        if (again?.id) conversaId = again.id;
+                    }
+                    if (!conversaId) {
+                        showToast('Não foi possível criar a conversa: ' + (insErr.message || 'erro'), 'error');
+                        return true;
+                    }
+                } else if (inserted?.id) {
+                    conversaId = inserted.id;
+                }
+            }
+
+            if (!conversaId) {
+                showToast('Não foi possível abrir o chat.', 'error');
+                return true;
+            }
+
+            window.location.href = CRM_ETAPAS_CHAT_PAGE_URL + '?conversa=' + encodeURIComponent(String(conversaId));
+            return true;
+        }
+
+        async function abrirChatOuWhatsappDesdeCrmCard(cardId) {
+            const card = etapas.flatMap(e => e.cards || []).find(c => String(c.id) === String(cardId));
+            if (!card) return;
+
+            const telefone = card.telefone || card.contato || '';
+            let telefoneWhatsApp = telefone ? telefone.replace(/\D/g, '') : '';
+            if (telefoneWhatsApp && !telefoneWhatsApp.startsWith('55')) {
+                telefoneWhatsApp = '55' + telefoneWhatsApp;
+            }
+
+            const rawCid = card.contatoId != null && card.contatoId !== '' ? card.contatoId : null;
+            const contatoIdVinc = rawCid != null ? Number(rawCid) : NaN;
+
+            if (Number.isFinite(contatoIdVinc)) {
+                try {
+                    const foiChat = await irParaChatComContatoDoCrm(contatoIdVinc, card);
+                    if (foiChat) return;
+                } catch (err) {
+                    console.error('Erro ao abrir chat do card:', err);
+                }
+            }
+
+            if (telefoneWhatsApp) {
+                window.open('https://wa.me/' + telefoneWhatsApp, '_blank');
+            } else {
+                showToast('Sem número para abrir o WhatsApp.', 'error');
+            }
+        }
+
+        /**
+         * Após carregar o kanban, se houver ?cardId= na URL, abre o modal de detalhes desse card (uma vez por carga).
+         */
+        function tentarAbrirCardDaUrlAposRender() {
+            if (crmDeepLinkCardAttempted) return;
+            const cardIdParam = getCardIdFromUrl();
+            if (!cardIdParam) return;
+            const target = String(cardIdParam);
+            if (!etapas || etapas.length === 0) {
+                crmDeepLinkCardAttempted = true;
+                showToast('Card não encontrado neste quadro.', 'info');
+                return;
+            }
+            let found = null;
+            for (let i = 0; i < etapas.length; i++) {
+                const cards = etapas[i].cards && Array.isArray(etapas[i].cards) ? etapas[i].cards : [];
+                const card = cards.find(c => String(c.id) === target);
+                if (card) {
+                    found = card;
+                    break;
+                }
+            }
+            crmDeepLinkCardAttempted = true;
+            if (found) {
+                requestAnimationFrame(() => {
+                    abrirModalDetalhesCard(found);
+                    const safeId = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(target) : target.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+                    const el = document.querySelector('.card-item[data-card-id="' + safeId + '"]');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                });
+            } else {
+                showToast('Card não encontrado neste quadro.', 'info');
+            }
+        }
+
+        // Carregar etapas
+        async function carregarEtapas() {
+            crmDeepLinkCardAttempted = false;
+            quadroNomeAtual = '';
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId) {
+                showToast('Sessão inválida. Faça login novamente.', 'error');
+                return;
+            }
+
+            quadroId = getQuadroIdFromUrl();
+            if (!quadroId) {
+                showToast('Quadro não informado na URL. Redirecionando...', 'error');
+                setTimeout(() => navigateToPage('/hublabel/public/hublabel/public/crm'), 1500);
+                return;
+            }
+
+            const loadingContainer = document.getElementById('loadingContainer');
+            const kanbanBoard = document.getElementById('kanbanBoard');
+            const emptyState = document.getElementById('emptyState');
+
+            loadingContainer.classList.add('skeleton-loading');
+            loadingContainer.style.display = 'flex';
+            kanbanBoard.style.display = 'none';
+            emptyState.style.display = 'none';
+
+            try {
+                if (!window.supabase) {
+                    throw new Error('Supabase não disponível');
+                }
+
+                // Verificar se o quadro existe e pertence ao usuário (RLS); se não, redirecionar para CRM
+                const { data: quadroData, error: quadroError } = await window.supabase
+                    .from('SAAS_Quadros')
+                    .select('id, nome')
+                    .eq('id', quadroId)
+                    .maybeSingle();
+
+                if (quadroError || !quadroData) {
+                    console.warn('Quadro não encontrado ou sem permissão:', quadroId);
+                    loadingContainer.classList.remove('skeleton-loading');
+                    loadingContainer.style.display = 'none';
+                    showToast('Quadro não encontrado ou você não tem acesso. Redirecionando...', 'error');
+                    setTimeout(() => navigateToPage('/hublabel/public/hublabel/public/crm'), 1500);
+                    return;
+                }
+
+                const quadroNome = quadroData.nome || 'Etapas do Quadro';
+                quadroNomeAtual = quadroNome;
+                const quadroNomeElement = document.getElementById('quadroNome');
+                if (quadroNomeElement) quadroNomeElement.textContent = quadroNome;
+
+                // Manter URL com quadroId
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('quadroId') !== String(quadroId)) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('quadroId', quadroId);
+                    window.history.replaceState({}, '', url.toString());
+                }
+
+                // Puxar etapas e cards da view VW_SAAS_Etapas_Quadros
+                const { data: rows, error: etapasError } = await window.supabase
+                    .from('VW_SAAS_Etapas_Quadros')
+                    .select('*')
+                    .eq('quadroId', quadroId);
+
+                loadingContainer.classList.remove('skeleton-loading');
+                loadingContainer.style.display = 'none';
+
+                if (etapasError) {
+                    console.error('Erro ao carregar etapas:', etapasError);
+                    etapas = [];
+                    renderizarEtapas();
+                    return;
+                }
+
+                const rawEtapas = Array.isArray(rows) ? rows : [];
+                const etapasArray = rawEtapas.map((item, index) => {
+                    let cardsOrdenados = (item.cards || []).slice();
+                    if (!Array.isArray(cardsOrdenados)) cardsOrdenados = [];
+                    cardsOrdenados.sort((a, b) => {
+                        const ordemA = a.ordemCard != null ? a.ordemCard : (a.ordem != null ? a.ordem : 9999);
+                        const ordemB = b.ordemCard != null ? b.ordemCard : (b.ordem != null ? b.ordem : 9999);
+                        return ordemA - ordemB;
+                    });
+                    return {
+                        id: item.etapaId,
+                        nome: item.nomeEtapa || item.nome || 'Sem nome',
+                        ordem: item.ordemEtapa != null ? item.ordemEtapa : (item.ordem != null ? item.ordem : (index + 1)),
+                        cards: cardsOrdenados
+                    };
+                });
+
+                etapas = etapasArray.sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+                console.log('Etapas carregadas (Supabase VW_SAAS_Etapas_Quadros):', etapas.length);
+                renderizarEtapas();
+                tentarAbrirCardDaUrlAposRender();
+            } catch (error) {
+                console.error('Erro ao carregar etapas:', error);
+                loadingContainer.classList.remove('skeleton-loading');
+                loadingContainer.style.display = 'none';
+                etapas = [];
+                renderizarEtapas();
+            }
+        }
+
+        // Renderizar etapas
+        function renderizarEtapas() {
+            const kanbanBoard = document.getElementById('kanbanBoard');
+            const emptyState = document.getElementById('emptyState');
+
+            kanbanBoard.innerHTML = '';
+
+            if (etapas.length === 0) {
+                kanbanBoard.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            kanbanBoard.style.display = 'flex';
+            emptyState.style.display = 'none';
+
+            etapas.forEach((etapa, index) => {
+                const etapaColumn = document.createElement('div');
+                etapaColumn.className = 'etapa-column';
+                etapaColumn.draggable = true;
+                etapaColumn.dataset.etapaId = etapa.id;
+                etapaColumn.dataset.ordem = etapa.ordem || index + 1;
+
+                etapaColumn.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', etapa.id);
+                    etapaColumn.classList.add('dragging');
+                });
+
+                etapaColumn.addEventListener('dragend', () => {
+                    etapaColumn.classList.remove('dragging');
+                });
+
+                etapaColumn.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    etapaColumn.classList.add('drag-over');
+                });
+
+                etapaColumn.addEventListener('dragleave', () => {
+                    etapaColumn.classList.remove('drag-over');
+                });
+
+                etapaColumn.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    etapaColumn.classList.remove('drag-over');
+                    const draggedEtapaId = e.dataTransfer.getData('text/plain');
+                    if (draggedEtapaId && draggedEtapaId !== etapa.id) {
+                        moverEtapa(draggedEtapaId, etapa.ordem || index + 1);
+                    }
+                });
+
+                const etapaHeader = document.createElement('div');
+                etapaHeader.className = 'etapa-header';
+
+                const etapaNome = document.createElement('div');
+                etapaNome.className = 'etapa-nome';
+                const nomeEtapa = etapa.nome || 'Sem nome';
+                etapaNome.textContent = nomeEtapa;
+                etapaNome.title = nomeEtapa; // Tooltip para mostrar o nome completo no hover
+                etapaNome.contentEditable = false;
+                etapaNome.dataset.etapaId = etapa.id;
+
+                const etapaCount = document.createElement('div');
+                etapaCount.className = 'etapa-count';
+                
+                // Calcular contagem e soma dos valores
+                const cards = (etapa.cards && Array.isArray(etapa.cards)) ? etapa.cards : [];
+                const quantidade = cards.length;
+                
+                // Calcular soma dos valores (valores estão em número, não em centavos)
+                const somaValores = cards.reduce((total, card) => {
+                    const valor = card.valor || 0;
+                    return total + (typeof valor === 'number' ? valor : parseFloat(valor) || 0);
+                }, 0);
+                
+                // Formatar valor para exibição (multiplicar por 100 para centavos, depois formatar)
+                const valorFormatado = somaValores > 0 ? formatarValor(String(Math.round(somaValores * 100))) : '';
+                
+                // Exibir apenas número e valor, de forma compacta
+                etapaCount.textContent = quantidade;
+
+                // Container para ações (editar e excluir)
+                const etapaActions = document.createElement('div');
+                etapaActions.className = 'etapa-actions';
+
+                // Botão editar
+                const btnEditar = document.createElement('button');
+                btnEditar.className = 'etapa-action-btn edit';
+                btnEditar.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                `;
+                btnEditar.onclick = (e) => {
+                    e.stopPropagation();
+                    editarNomeEtapa(etapa.id, etapaNome);
+                };
+
+                const btnEtiqueta = document.createElement('button');
+                btnEtiqueta.type = 'button';
+                btnEtiqueta.className = 'etapa-action-btn tag';
+                btnEtiqueta.setAttribute('title', 'adicionar etiqueta');
+                btnEtiqueta.setAttribute('aria-label', 'adicionar etiqueta');
+                btnEtiqueta.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                    </svg>`;
+                btnEtiqueta.onclick = (e) => {
+                    e.stopPropagation();
+                    crmEtapasAbrirModalEtiquetaEtapa(etapa.id);
+                };
+
+                // Botão excluir
+                const btnExcluir = document.createElement('button');
+                btnExcluir.className = 'etapa-action-btn delete';
+                btnExcluir.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                `;
+                btnExcluir.onclick = (e) => {
+                    e.stopPropagation();
+                    abrirModalExcluirEtapa(etapa.id);
+                };
+
+                etapaActions.appendChild(btnEditar);
+                etapaActions.appendChild(btnEtiqueta);
+                etapaActions.appendChild(btnExcluir);
+
+                // Container esquerdo: nome + badge + valor (estilo gemini)
+                const etapaLeft = document.createElement('div');
+                
+                const etapaNomeLine = document.createElement('div');
+                etapaNomeLine.style.display = 'flex';
+                etapaNomeLine.style.alignItems = 'center';
+                etapaNomeLine.style.gap = '8px';
+                etapaNomeLine.appendChild(etapaNome);
+                etapaNomeLine.appendChild(etapaCount);
+                
+                const etapaValorLine = document.createElement('p');
+                etapaValorLine.style.cssText = 'font-size:0.625rem;font-weight:700;text-transform:uppercase;margin-top:2px;letter-spacing:0.02em;';
+                if (somaValores > 0) {
+                    etapaValorLine.style.color = '#6C63FF';
+                    etapaValorLine.textContent = valorFormatado;
+                } else {
+                    etapaValorLine.style.color = '#94a3b8';
+                    etapaValorLine.textContent = 'R$ 0,00';
+                }
+                
+                etapaLeft.appendChild(etapaNomeLine);
+                etapaLeft.appendChild(etapaValorLine);
+
+                const etapaRightContainer = document.createElement('div');
+                etapaRightContainer.style.display = 'flex';
+                etapaRightContainer.style.alignItems = 'center';
+                etapaRightContainer.style.gap = '4px';
+                
+                etapaRightContainer.appendChild(etapaActions);
+
+                etapaHeader.appendChild(etapaLeft);
+                etapaHeader.appendChild(etapaRightContainer);
+
+                const etapaCards = document.createElement('div');
+                etapaCards.className = 'etapa-cards';
+                etapaCards.dataset.etapaId = etapa.id;
+
+                etapaCards.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    etapaCards.classList.add('drag-over');
+                });
+
+                etapaCards.addEventListener('dragleave', () => {
+                    etapaCards.classList.remove('drag-over');
+                });
+
+                etapaCards.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation(); // Prevenir propagação para outros elementos
+                    etapaCards.classList.remove('drag-over');
+                    const cardId = e.dataTransfer.getData('text/plain');
+                    const sourceEtapaId = e.dataTransfer.getData('etapaId');
+                    
+                    if (!cardId || !sourceEtapaId) {
+                        console.log('Drop ignorado - dados inválidos');
+                        return;
+                    }
+                    
+                    // Calcular a ordem baseada na posição onde o card foi solto
+                    const cardElements = Array.from(etapaCards.querySelectorAll('.card-item:not(.dragging)'));
+                    const dropY = e.clientY;
+                    let novaOrdem = etapa.cards ? etapa.cards.length + 1 : 1;
+                    
+                    // Encontrar a posição correta baseada na posição Y do drop
+                    for (let i = 0; i < cardElements.length; i++) {
+                        const cardRect = cardElements[i].getBoundingClientRect();
+                        const cardCenterY = cardRect.top + cardRect.height / 2;
+                        
+                        if (dropY < cardCenterY) {
+                            novaOrdem = i + 1;
+                            break;
+                        }
+                    }
+                    
+                    // Se não encontrou posição, coloca no final
+                    if (novaOrdem > (etapa.cards ? etapa.cards.length : 0)) {
+                        novaOrdem = (etapa.cards ? etapa.cards.length : 0) + 1;
+                    }
+                    
+                    console.log('Drop event capturado:', {
+                        cardId,
+                        sourceEtapaId,
+                        etapaDestinoId: etapa.id,
+                        novaOrdem,
+                        saoDiferentes: String(sourceEtapaId) !== String(etapa.id)
+                    });
+                    
+                    moverCard(cardId, sourceEtapaId, etapa.id, novaOrdem);
+                });
+
+                const cards_list = (etapa.cards && Array.isArray(etapa.cards)) ? etapa.cards : [];
+                if (cards_list.length > 0) {
+                    cards_list.forEach(card => {
+                        const cardElement = criarCardElement(card, etapa.id);
+                        etapaCards.appendChild(cardElement);
+                    });
+                } else {
+                    // Empty state - "Nenhum card nesta etapa"
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.className = 'etapa-empty-state';
+                    emptyDiv.innerHTML = `
+                        <i class="fa-solid fa-box-open"></i>
+                        <span>Nenhum card nesta etapa</span>
+                    `;
+                    etapaCards.appendChild(emptyDiv);
+                }
+
+                const btnAdicionarCard = document.createElement('button');
+                btnAdicionarCard.className = 'btn-adicionar-card';
+                btnAdicionarCard.innerHTML = `<i class="fa-solid fa-plus" style="font-size:11px"></i> Adicionar Card`;
+                // Garantir que o ID da etapa seja passado corretamente
+                const etapaIdParaModal = etapa.id;
+                btnAdicionarCard.onclick = (e) => {
+                    e.stopPropagation();
+                    console.log('🔘 Botão Adicionar Card clicado para etapa:', etapaIdParaModal, 'Nome:', etapa.nome);
+                    abrirModalCriarCard(etapaIdParaModal);
+                };
+
+                etapaColumn.appendChild(etapaHeader);
+                etapaColumn.appendChild(etapaCards);
+                etapaColumn.appendChild(btnAdicionarCard);
+
+                kanbanBoard.appendChild(etapaColumn);
+            });
+
+            // Calcular e atualizar valor total do pipeline
+            let totalPipeline = 0;
+            etapas.forEach(etapa => {
+                const cards = (etapa.cards && Array.isArray(etapa.cards)) ? etapa.cards : [];
+                cards.forEach(card => {
+                    const v = card.valor || 0;
+                    totalPipeline += (typeof v === 'number' ? v : parseFloat(v) || 0);
+                });
+            });
+            const pipelineEl = document.getElementById('pipelineValorTopo');
+            if (pipelineEl) {
+                pipelineEl.textContent = totalPipeline > 0 
+                    ? formatarValor(String(Math.round(totalPipeline * 100))) 
+                    : 'R$ 0,00';
+            }
+        }
+
+        // Criar elemento de card
+        function criarCardElement(card, etapaId) {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card-item';
+            cardElement.draggable = true;
+            cardElement.dataset.cardId = card.id;
+            cardElement.dataset.etapaId = etapaId;
+
+            cardElement.addEventListener('dragstart', (e) => {
+                e.stopPropagation(); // Prevenir propagação
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', String(card.id));
+                e.dataTransfer.setData('etapaId', String(etapaId));
+                cardElement.classList.add('dragging');
+                
+                console.log('Dragstart - Card sendo arrastado:', {
+                    cardId: card.id,
+                    etapaId: etapaId,
+                    cardObservacoes: card.observacoes
+                });
+            });
+
+            cardElement.addEventListener('dragend', () => {
+                cardElement.classList.remove('dragging');
+            });
+
+            cardElement.addEventListener('click', () => {
+                abrirModalDetalhesCard(card);
+            });
+
+            // Processar dados do card
+            // Título: nome do contato ou telefone
+            const contatoNome = card.nomeContato || card.nome || '';
+            const telefone = card.telefone || card.contato || '';
+            const telefoneFormatado = telefone ? formatarTelefone(telefone.replace(/\D/g, '')) : '';
+            const tituloCard = contatoNome || telefoneFormatado || 'Card #' + card.id;
+            
+            // Formatar valor com R$ e vírgula
+            const valor = card.valor ? `R$ ${parseFloat(card.valor).toFixed(2).replace('.', ',')}` : '';
+            const observacoes = card.observacoes || card.observacao || '';
+            const tarefas = Array.isArray(card.tarefas) ? card.tarefas : [];
+            const tarefasPendentes = tarefas.filter(t => !t.concluida).length;
+
+            // Preparar telefone para WhatsApp (apenas números)
+            let telefoneWhatsApp = telefone ? telefone.replace(/\D/g, '') : '';
+            // Se o telefone já começa com 55 (DDI), usar direto, senão adicionar 55
+            if (telefoneWhatsApp && !telefoneWhatsApp.startsWith('55')) {
+                telefoneWhatsApp = '55' + telefoneWhatsApp;
+            }
+
+            // Gerar iniciais do avatar
+            const iniciais = tituloCard.split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
+
+            // Data formatada
+            const dataCard = card.created_at ? (() => {
+                const d = new Date(card.created_at);
+                const agora = new Date();
+                const diffMs = agora - d;
+                const diffH = Math.floor(diffMs / 3600000);
+                const diffD = Math.floor(diffMs / 86400000);
+                if (diffH < 1) return 'Agora';
+                if (diffH < 24) return 'Há ' + diffH + (diffH === 1 ? ' hora' : ' horas');
+                if (diffD === 1) return 'Ontem';
+                if (diffD < 7) return 'Há ' + diffD + ' dias';
+                return d.toLocaleDateString('pt-BR');
+            })() : 'Hoje';
+
+            let html = '';
+            
+            // Ícones hover (hidden by default)
+            html += `
+                <div class="card-delete-icon" onclick="event.stopPropagation(); excluirCard(${card.id}, ${etapaId});" title="Excluir card">
+                    <i class="fa-regular fa-trash-can" style="font-size:12px"></i>
+                </div>
+            `;
+            
+            const temVinculoContato = card.contatoId != null && card.contatoId !== '' && !Number.isNaN(Number(card.contatoId));
+            if (telefoneWhatsApp || temVinculoContato) {
+                const waTitle = temVinculoContato ? 'Abrir conversa no chat' : 'Abrir WhatsApp Web';
+                html += `
+                    <div class="card-whatsapp-icon" onclick="event.stopPropagation(); void abrirChatOuWhatsappDesdeCrmCard(${card.id});" title="${waTitle}">
+                        <i class="fa-brands fa-whatsapp" style="font-size:14px"></i>
+                    </div>
+                `;
+            }
+
+            // Avatar + Nome
+            html += `<div class="card-contato">
+                <div style="width:32px;height:32px;border-radius:999px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:#64748b;flex-shrink:0;border:1px solid #e2e8f0">${iniciais}</div>
+                ${tituloCard}
+            </div>`;
+            
+            if (valor) {
+                html += `<div class="card-valor">${valor}</div>`;
+            }
+            if (observacoes) {
+                html += `<div class="card-observacoes">${observacoes}</div>`;
+            }
+
+            // Footer: tarefas + data
+            html += `<div class="card-tarefas">`;
+            if (tarefasPendentes > 0) {
+                html += `<div class="card-tarefas-badge">
+                    <i class="fa-regular fa-calendar-check" style="font-size:10px"></i>
+                    ${tarefasPendentes} tarefa${tarefasPendentes > 1 ? 's' : ''}
+                </div>`;
+            } else {
+                html += `<span></span>`;
+            }
+            html += `<span class="card-data">${dataCard}</span>`;
+            html += `</div>`;
+
+            cardElement.innerHTML = html;
+            return cardElement;
+        }
+
+        // Excluir card
+        async function excluirCard(cardId, etapaId) {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId || !quadroId) {
+                showToast('Erro ao excluir card. Tente novamente.', 'error');
+                return;
+            }
+
+            // Confirmar exclusão
+            if (!await showConfirmDialog('Tem certeza que deseja excluir este card?')) {
+                return;
+            }
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { error } = await window.supabase
+                    .from('SAAS_Cards_Quadros')
+                    .delete()
+                    .eq('id', cardId);
+
+                if (error) throw new Error(error.message || 'Erro ao excluir card');
+
+                // Remover card localmente sem recarregar
+                const etapa = etapas.find(e => String(e.id) === String(etapaId));
+                if (etapa && etapa.cards) {
+                    const cardIndex = etapa.cards.findIndex(c => String(c.id) === String(cardId));
+                    if (cardIndex !== -1) {
+                        etapa.cards.splice(cardIndex, 1);
+                        renderizarEtapas();
+                    }
+                }
+
+                showToast('Card excluído com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao excluir card:', error);
+                showToast('Erro ao excluir card. Tente novamente.', 'error');
+            }
+        }
+
+        // Mover etapa
+        async function moverEtapa(etapaId, novaOrdem) {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId) return;
+
+            const etapa = etapas.find(e => e.id == etapaId);
+            if (!etapa) return;
+
+            const etapaIndex = etapas.findIndex(e => e.id == etapaId);
+            etapas.splice(etapaIndex, 1);
+
+            const novaPosicao = Math.min(Math.max(1, novaOrdem), etapas.length + 1);
+            etapas.splice(novaPosicao - 1, 0, etapa);
+
+            etapas.forEach((e, index) => {
+                e.ordem = index + 1;
+            });
+
+            renderizarEtapas();
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { error } = await window.supabase
+                    .from('SAAS_Etapas_Quadros')
+                    .update({ ordem: novaPosicao })
+                    .eq('id', etapaId);
+                if (error) throw new Error(error.message);
+                console.log('Ordem da etapa atualizada');
+            } catch (error) {
+                console.error('Erro ao atualizar ordem da etapa:', error);
+                showToast('Erro ao atualizar ordem da etapa', 'error');
+            }
+        }
+
+        // Mover card
+        async function moverCard(cardId, etapaOrigemId, etapaDestinoId, ordem) {
+            // Converter para string para comparação consistente
+            const cardIdStr = String(cardId);
+            const etapaOrigemIdStr = String(etapaOrigemId);
+            const etapaDestinoIdStr = String(etapaDestinoId);
+            const ordemNum = parseInt(ordem) || 1;
+
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId) return;
+
+            const etapaOrigem = etapas.find(e => String(e.id) === etapaOrigemIdStr);
+            const etapaDestino = etapas.find(e => String(e.id) === etapaDestinoIdStr);
+
+            if (!etapaOrigem || !etapaDestino) {
+                console.error('Etapa origem ou destino não encontrada', { etapaOrigem, etapaDestino, etapas });
+                return;
+            }
+
+            // Encontrar o índice do card específico pelo ID
+            const cardIndex = etapaOrigem.cards.findIndex(c => String(c.id) === cardIdStr);
+            if (cardIndex === -1) {
+                console.error('Card não encontrado na etapa origem', { 
+                    cardId: cardIdStr, 
+                    etapaOrigemId: etapaOrigemIdStr,
+                    cardsNaEtapa: etapaOrigem.cards.map(c => ({ id: c.id, idStr: String(c.id) }))
+                });
+                return;
+            }
+
+            // Pegar o card específico pelo índice (garantir que é o card correto)
+            const card = etapaOrigem.cards[cardIndex];
+            
+            const mesmaEtapa = etapaOrigemIdStr === etapaDestinoIdStr;
+            
+            console.log('Movendo card:', {
+                cardId: cardIdStr,
+                cardIndex: cardIndex,
+                card: { id: card.id, observacoes: card.observacoes },
+                etapaOrigem: etapaOrigemIdStr,
+                etapaDestino: etapaDestinoIdStr,
+                ordem: ordemNum,
+                mesmaEtapa: mesmaEtapa,
+                cardsAntesOrigem: etapaOrigem.cards.length,
+                cardsAntesDestino: etapaDestino.cards ? etapaDestino.cards.length : 0
+            });
+
+            // Remover apenas o card específico da etapa origem usando splice
+            etapaOrigem.cards.splice(cardIndex, 1);
+            
+            // Adicionar o card na etapa destino na posição correta
+            if (!etapaDestino.cards) {
+                etapaDestino.cards = [];
+            }
+            
+            // Se for a mesma etapa, ajustar a ordem considerando que o card foi removido
+            let posicaoInsercao = ordemNum - 1;
+            if (mesmaEtapa && cardIndex < posicaoInsercao) {
+                posicaoInsercao = posicaoInsercao - 1; // Ajustar porque o card foi removido antes
+            }
+            
+            // Garantir que a posição seja válida
+            posicaoInsercao = Math.max(0, Math.min(posicaoInsercao, etapaDestino.cards.length));
+            
+            etapaDestino.cards.splice(posicaoInsercao, 0, card);
+
+            console.log('Card movido com sucesso:', {
+                cardsDepoisOrigem: etapaOrigem.cards.length,
+                cardsDepoisDestino: etapaDestino.cards.length,
+                posicaoInsercao: posicaoInsercao
+            });
+
+            renderizarEtapas();
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { error } = await window.supabase
+                    .from('SAAS_Cards_Quadros')
+                    .update({ etapaQuadroId: etapaDestinoId, ordem: ordemNum })
+                    .eq('id', cardIdStr);
+                if (error) throw new Error(error.message);
+                console.log('Card movido com sucesso via Supabase');
+            } catch (error) {
+                console.error('Erro ao mover card:', error);
+                showToast('Erro ao mover card', 'error');
+            }
+        }
+
+        // Criar nova etapa
+        function criarNovaEtapa() {
+            const etapaColumn = document.createElement('div');
+            etapaColumn.className = 'etapa-column';
+            etapaColumn.style.border = '2px dashed #6C63FF';
+            etapaColumn.dataset.tempId = 'temp-' + Date.now();
+
+            const etapaHeader = document.createElement('div');
+            etapaHeader.className = 'etapa-header';
+
+            const etapaNome = document.createElement('input');
+            etapaNome.className = 'etapa-nome editing';
+            etapaNome.placeholder = 'Digite o nome da etapa';
+            etapaNome.autofocus = true;
+
+            etapaNome.addEventListener('blur', () => {
+                if (etapaNome.value.trim() && !etapaColumn.classList.contains('creating')) {
+                    salvarNovaEtapa(etapaNome.value.trim(), etapaColumn);
+                } else if (!etapaColumn.classList.contains('creating')) {
+                    etapaColumn.remove();
+                }
+            });
+
+            etapaNome.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !etapaColumn.classList.contains('creating')) {
+                    etapaNome.blur();
+                }
+            });
+
+            etapaHeader.appendChild(etapaNome);
+
+            const etapaCards = document.createElement('div');
+            etapaCards.className = 'etapa-cards';
+
+            etapaColumn.appendChild(etapaHeader);
+            etapaColumn.appendChild(etapaCards);
+
+            const kanbanBoard = document.getElementById('kanbanBoard');
+            kanbanBoard.style.display = 'flex';
+            kanbanBoard.appendChild(etapaColumn);
+            etapaNome.focus();
+        }
+
+        // Salvar nova etapa
+        async function salvarNovaEtapa(nome, etapaColumnElement) {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId) return;
+
+            // Adicionar estado de loading
+            etapaColumnElement.classList.add('creating');
+            const etapaHeader = etapaColumnElement.querySelector('.etapa-header');
+            
+            // Criar elemento de loading
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'etapa-loading';
+            loadingDiv.innerHTML = `
+                <div class="etapa-loading-spinner"></div>
+                <span>Criando etapa...</span>
+            `;
+            etapaHeader.innerHTML = '';
+            etapaHeader.appendChild(loadingDiv);
+
+            // Calcular ordem para ficar em último
+            const maxOrdem = etapas.length > 0 ? Math.max(...etapas.map(e => e.ordem || 0)) : 0;
+            const novaOrdem = maxOrdem + 1;
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { data: inserted, error } = await window.supabase
+                    .from('SAAS_Etapas_Quadros')
+                    .insert({ quadroId: Number(quadroId), nome, ordem: novaOrdem, contaId: contaId })
+                    .select('id, nome, ordem')
+                    .single();
+
+                if (error) throw new Error(error.message || 'Erro ao criar etapa');
+
+                const novaEtapa = {
+                    id: inserted.id,
+                    nome: inserted.nome || nome,
+                    ordem: inserted.ordem ?? novaOrdem,
+                    cards: []
+                };
+
+                etapas.push(novaEtapa);
+                
+                // Ordenar etapas por ordem
+                etapas.sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+
+                // Renderizar novamente sem recarregar dados
+                renderizarEtapas();
+
+                showToast('Etapa criada com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao criar etapa:', error);
+                showToast('Erro ao criar etapa. Tente novamente.', 'error');
+                
+                // Remover a etapa temporária em caso de erro
+                etapaColumnElement.remove();
+            }
+        }
+
+        // Abrir modal criar card
+        async function abrirModalCriarCard(etapaId) {
+            // Garantir que etapaId seja convertido para string para comparação consistente
+            etapaAtualCriarCard = String(etapaId);
+            console.log('📝 Modal criar card aberto para etapa:', etapaAtualCriarCard);
+            criarContatoModoTrocar = false;
+            const hidId = document.getElementById('criarContatoId');
+            const hidTel = document.getElementById('criarContatoTelefone');
+            const buscaC = document.getElementById('criarContatosBusca');
+            if (hidId) hidId.value = '';
+            if (hidTel) hidTel.value = '';
+            if (buscaC) buscaC.value = '';
+            document.getElementById('cardValorInput').value = '';
+            document.getElementById('cardObservacoesInput').value = '';
+            document.getElementById('tarefasContainer').innerHTML = '';
+            
+            // Popular select de etapas
+            const selectEtapa = document.getElementById('cardEtapaSelect');
+            if (selectEtapa) {
+                selectEtapa.innerHTML = '';
+                etapas.forEach(et => {
+                    const opt = document.createElement('option');
+                    opt.value = et.id;
+                    opt.textContent = et.nome || 'Sem nome';
+                    if (String(et.id) === etapaAtualCriarCard) opt.selected = true;
+                    selectEtapa.appendChild(opt);
+                });
+                selectEtapa.onchange = function() {
+                    etapaAtualCriarCard = this.value;
+                };
+            }
+            
+            document.getElementById('modalCriarCard').classList.add('show');
+
+            const listaEl = document.getElementById('criarContatosLista');
+            if (listaEl) listaEl.innerHTML = '<div class="contatos-lista-loading">Carregando contatos…</div>';
+            sincronizarPainelResumoContatoCriar();
+            aplicarVisibilidadePickerContatoCriar();
+
+            try {
+                await carregarContatosParaModalCrm();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') {
+                    fecharModalCriarCard();
+                    return;
+                }
+                console.warn('Não foi possível carregar contatos para criar card:', e);
+            }
+            renderCriarListaContatos();
+            if (buscaC) {
+                buscaC.oninput = function() { renderCriarListaContatos(); };
+            }
+        }
+
+        // Fechar modal criar card
+        function fecharModalCriarCard() {
+            document.getElementById('modalCriarCard').classList.remove('show');
+            etapaAtualCriarCard = null;
+            criarContatoModoTrocar = false;
+        }
+
+        // Formatação automática de telefone removida - permitir digitação livre
+
+        // Formatar valor automaticamente
+        document.getElementById('cardValorInput').addEventListener('input', (e) => {
+            const valorFormatado = formatarValor(e.target.value);
+            e.target.value = valorFormatado;
+        });
+
+        // Formatar telefone automaticamente
+        function formatarTelefone(value) {
+            // Remove tudo que não é dígito
+            const apenasNumeros = value.replace(/\D/g, '');
+            
+            if (apenasNumeros.length === 0) {
+                return '';
+            }
+            
+            // Lógica simplificada:
+            // 1. Se tem 13 dígitos e começa com 55: 55 é DDI
+            // 2. Se tem 11 dígitos e não começa com 55: adicionar DDI
+            // 3. Se tem 11 dígitos e começa com 55: permitir continuar digitando até 13
+            // 4. Durante a digitação (menos de 11 dígitos): não adicionar DDI
+            
+            let numeros = apenasNumeros;
+            let temDDI = false;
+            
+            // Verificar se já tem DDI no valor formatado
+            const valorFormatado = value.trim();
+            const jaTemDDI = valorFormatado.startsWith('55(') || valorFormatado.startsWith('+55');
+            
+            if (apenasNumeros.length === 13 && apenasNumeros.startsWith('55') && !jaTemDDI) {
+                // Número completo com DDI: 55 + DDD(2) + número(9) = 13 dígitos
+                numeros = apenasNumeros.slice(2); // Remove o DDI
+                temDDI = true;
+            } else if (apenasNumeros.length >= 11 && jaTemDDI) {
+                // Já tem DDI formatado, manter
+                if (apenasNumeros.length === 13 && apenasNumeros.startsWith('55')) {
+                    numeros = apenasNumeros.slice(2);
+                } else {
+                    numeros = apenasNumeros;
+                }
+                temDDI = true;
+            } else if (apenasNumeros.length === 11 && !apenasNumeros.startsWith('55')) {
+                // Número completo brasileiro sem DDI: DDD(2) + número(9) = 11 dígitos
+                numeros = apenasNumeros;
+                temDDI = true; // Adicionar DDI
+            } else if (apenasNumeros.length >= 11 && apenasNumeros.startsWith('55')) {
+                // Começa com 55 e tem 11+ dígitos: permitir continuar digitando
+                // Se tiver 13 dígitos, tratar 55 como DDI
+                if (apenasNumeros.length === 13) {
+                    numeros = apenasNumeros.slice(2);
+                    temDDI = true;
+                } else {
+                    // Ainda digitando, não adicionar DDI ainda
+                    numeros = apenasNumeros;
+                    temDDI = false;
+                }
+            } else {
+                // Durante a digitação: não adicionar DDI
+                numeros = apenasNumeros;
+                temDDI = false;
+            }
+            
+            // Aplica a máscara 55(DD) NNNNN-NNNN ou (DD) NNNNN-NNNN durante digitação
+            if (numeros.length <= 2) {
+                return temDDI ? `55(${numeros}` : `(${numeros}`;
+            } else if (numeros.length <= 7) {
+                return temDDI ? `55(${numeros.slice(0, 2)}) ${numeros.slice(2)}` : `(${numeros.slice(0, 2)}) ${numeros.slice(2)}`;
+            } else if (numeros.length <= 10) {
+                return temDDI ? `55(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7)}` : `(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7)}`;
+            } else {
+                // 11 ou mais dígitos
+                return temDDI ? `55(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7, 11)}` : `(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7, 11)}`;
+            }
+        }
+
+        // Formatar valor em R$ com vírgulas
+        function formatarValor(value) {
+            // Remove tudo que não é dígito
+            const apenasNumeros = value.replace(/\D/g, '');
+            
+            if (apenasNumeros === '') return '';
+            
+            // Converte para número e divide por 100 para ter centavos
+            const valor = parseFloat(apenasNumeros) / 100;
+            
+            // Formata com vírgula para decimais e adiciona separador de milhares
+            const valorFormatado = valor.toFixed(2).replace('.', ',');
+            const partes = valorFormatado.split(',');
+            partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            
+            return 'R$ ' + partes.join(',');
+        }
+
+        // Converter valor formatado para número
+        function valorParaNumero(valorFormatado) {
+            if (!valorFormatado) return null;
+            // Remove R$, espaços, pontos (separadores de milhares) e substitui vírgula por ponto
+            const valor = valorFormatado.replace('R$', '').replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+            return parseFloat(valor) || null;
+        }
+
+        // Adicionar tarefa
+        function adicionarTarefa() {
+            const container = document.getElementById('tarefasContainer');
+            const tarefaDiv = document.createElement('div');
+            tarefaDiv.className = 'tarefa-item';
+            tarefaDiv.innerHTML = `
+                <input type="text" placeholder="Descrição" class="tarefa-descricao">
+                <input type="date" class="tarefa-data">
+                <button type="button" class="btn-remove-tarefa" onclick="this.parentElement.remove()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            `;
+            container.appendChild(tarefaDiv);
+        }
+
+        // Salvar card
+        async function salvarCard() {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            
+            // Validar etapaId
+            if (!etapaAtualCriarCard) {
+                showToast('Etapa não selecionada. Por favor, selecione uma etapa.', 'error');
+                console.error('❌ etapaAtualCriarCard está vazio ou null');
+                return;
+            }
+
+            console.log('💾 Salvando card para etapa:', etapaAtualCriarCard);
+            console.log('📋 Etapas disponíveis:', etapas.map(e => ({ id: e.id, nome: e.nome })));
+
+            const idRawCriar = (document.getElementById('criarContatoId') || {}).value || '';
+            const telHiddenCriar = document.getElementById('criarContatoTelefone');
+            const telefoneDigitsCriar = ((telHiddenCriar && telHiddenCriar.value) ? telHiddenCriar.value : '').replace(/\D/g, '');
+            const contatoIdParsedCriar = idRawCriar ? parseInt(idRawCriar, 10) : NaN;
+            const contatoIdCriar = Number.isFinite(contatoIdParsedCriar) ? contatoIdParsedCriar : null;
+
+            if (!telefoneDigitsCriar || !contatoIdCriar) {
+                showToast('Selecione um contato da lista antes de salvar.', 'error');
+                return;
+            }
+
+            const nomeParaDbCriar = resolverNomeCardParaSalvarDetalhes(idRawCriar, telefoneDigitsCriar);
+            const nomeContatoCadastroCriar = resolverNomeContatoCadastroDetalhes(idRawCriar);
+            const valorFormatado = document.getElementById('cardValorInput').value;
+            const observacoes = document.getElementById('cardObservacoesInput').value.trim();
+            
+            // Converter valor formatado para número
+            const valor = valorParaNumero(valorFormatado);
+
+            const tarefas = [];
+            document.querySelectorAll('#tarefasContainer .tarefa-item').forEach(item => {
+                const descricao = item.querySelector('.tarefa-descricao').value.trim();
+                const data = item.querySelector('.tarefa-data').value;
+                if (descricao) {
+                    tarefas.push({ descricao, data, concluida: false });
+                }
+            });
+
+            // Encontrar a etapa atual - garantir comparação de strings
+            const etapaAtual = etapas.find(e => String(e.id) === String(etapaAtualCriarCard));
+            if (!etapaAtual) {
+                console.error('❌ Etapa não encontrada. etapaAtualCriarCard:', etapaAtualCriarCard);
+                console.error('❌ Etapas disponíveis:', etapas.map(e => String(e.id)));
+                showToast('Etapa não encontrada', 'error');
+                return;
+            }
+
+            console.log('✅ Etapa encontrada:', { id: etapaAtual.id, nome: etapaAtual.nome });
+
+            // Calcular ordem para ficar em último na etapa
+            const cardsNaEtapa = etapaAtual.cards || [];
+            const maxOrdemCard = cardsNaEtapa.length > 0 
+                ? Math.max(...cardsNaEtapa.map(c => (c.ordemCard !== null && c.ordemCard !== undefined ? c.ordemCard : (c.ordem !== null && c.ordem !== undefined ? c.ordem : 0))))
+                : 0;
+            const novaOrdemCard = maxOrdemCard + 1;
+
+            // Fechar modal imediatamente
+            fecharModalCriarCard();
+
+            // Criar card localmente enquanto a requisição é feita
+            const cardTemporarioId = 'temp-' + Date.now();
+            const novoCardTemporario = {
+                id: cardTemporarioId,
+                nome: nomeParaDbCriar || telefoneDigitsCriar || 'Novo Card',
+                nomeContato: nomeContatoCadastroCriar,
+                telefone: telefoneDigitsCriar,
+                contato: telefoneDigitsCriar,
+                contatoId: contatoIdCriar,
+                valor: valor,
+                observacoes: observacoes,
+                tarefas: tarefas,
+                ordemCard: novaOrdemCard,
+                ordem: novaOrdemCard,
+                etapaQuadroId: etapaAtual.id, // Vincular à etapa correta
+                created_at: new Date().toISOString(),
+                isTemporary: true
+            };
+            
+            console.log('✅ Card temporário criado para etapa:', etapaAtual.id, 'Nome:', etapaAtual.nome);
+
+            // Adicionar o card temporário na etapa
+            if (!etapaAtual.cards) {
+                etapaAtual.cards = [];
+            }
+            etapaAtual.cards.push(novoCardTemporario);
+
+            // Ordenar cards por ordem
+            etapaAtual.cards.sort((a, b) => {
+                const ordemA = a.ordemCard !== null && a.ordemCard !== undefined ? a.ordemCard : (a.ordem !== null && a.ordem !== undefined ? a.ordem : 9999);
+                const ordemB = b.ordemCard !== null && b.ordemCard !== undefined ? b.ordemCard : (b.ordem !== null && b.ordem !== undefined ? b.ordem : 9999);
+                return ordemA - ordemB;
+            });
+
+            // Renderizar imediatamente
+            renderizarEtapas();
+
+            // Usar o ID da etapa encontrada (não o etapaAtualCriarCard que pode ser string)
+            const etapaIdParaEnvio = etapaAtual.id;
+            console.log('📤 Enviando card com etapaId:', etapaIdParaEnvio, '(tipo:', typeof etapaIdParaEnvio, ')');
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { data: inserted, error } = await window.supabase
+                    .from('SAAS_Cards_Quadros')
+                    .insert({
+                        quadroId: Number(quadroId),
+                        etapaQuadroId: Number(etapaIdParaEnvio),
+                        nome: nomeParaDbCriar || null,
+                        contato: telefoneDigitsCriar,
+                        contatoId: contatoIdCriar,
+                        valor: valor,
+                        observacoes: observacoes || null,
+                        tarefas: tarefas && tarefas.length ? tarefas : [],
+                        ordem: novaOrdemCard
+                    })
+                    .select('id, nome, contato, valor, observacoes, tarefas, ordem, created_at, contatoId')
+                    .single();
+
+                if (error) throw new Error(error.message || 'Erro ao criar card');
+
+                // Remover card temporário
+                const cardTempIndex = etapaAtual.cards.findIndex(c => c.id === cardTemporarioId);
+                if (cardTempIndex !== -1) {
+                    etapaAtual.cards.splice(cardTempIndex, 1);
+                }
+
+                const insContatoId = inserted.contatoId != null ? inserted.contatoId : contatoIdCriar;
+                const novoCard = {
+                    id: inserted.id,
+                    nome: inserted.nome || nomeParaDbCriar || telefoneDigitsCriar || 'Card',
+                    nomeContato: nomeContatoCadastroCriar,
+                    telefone: inserted.contato || telefoneDigitsCriar,
+                    contato: inserted.contato || telefoneDigitsCriar,
+                    contatoId: insContatoId,
+                    valor: inserted.valor != null ? inserted.valor : valor,
+                    observacoes: inserted.observacoes != null ? inserted.observacoes : observacoes,
+                    tarefas: inserted.tarefas || tarefas,
+                    ordemCard: inserted.ordem ?? novaOrdemCard,
+                    ordem: inserted.ordem ?? novaOrdemCard,
+                    etapaQuadroId: etapaAtual.id,
+                    created_at: inserted.created_at || new Date().toISOString()
+                };
+                
+                console.log('✅ Card criado e adicionado à etapa:', etapaAtual.id, 'Nome:', etapaAtual.nome);
+
+                etapaAtual.cards.push(novoCard);
+
+                // Ordenar cards por ordem
+                etapaAtual.cards.sort((a, b) => {
+                    const ordemA = a.ordemCard !== null && a.ordemCard !== undefined ? a.ordemCard : (a.ordem !== null && a.ordem !== undefined ? a.ordem : 9999);
+                    const ordemB = b.ordemCard !== null && b.ordemCard !== undefined ? b.ordemCard : (b.ordem !== null && b.ordem !== undefined ? b.ordem : 9999);
+                    return ordemA - ordemB;
+                });
+
+                // Renderizar novamente sem recarregar dados
+                renderizarEtapas();
+
+                showToast('Card criado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao criar card:', error);
+                
+                // Remover card temporário em caso de erro
+                const cardTempIndex = etapaAtual.cards.findIndex(c => c.id === cardTemporarioId);
+                if (cardTempIndex !== -1) {
+                    etapaAtual.cards.splice(cardTempIndex, 1);
+                    renderizarEtapas();
+                }
+                
+                showToast('Erro ao criar card. Tente novamente.', 'error');
+            }
+        }
+
+        function escapeHtmlAttrDetalhes(s) {
+            return String(s ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function escapeHtmlTextareaDetalhes(s) {
+            return String(s ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function escapeHtmlDetalhesDisplay(s) {
+            return String(s ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        async function carregarContatosParaModalCrm() {
+            if (!window.supabase) return;
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') throw e;
+                return;
+            }
+            if (!contaId) return;
+            const { data, error } = await window.supabase
+                .from('SAAS_Contatos')
+                .select('id, nome, telefone, email')
+                .eq('contaId', contaId)
+                .eq('tipo', 'contato')
+                .order('nome', { ascending: true })
+                .limit(4000);
+            if (!error && Array.isArray(data)) {
+                contatosDisponiveis = data;
+            }
+        }
+
+        function normalizarIdContatoDetalhes(v) {
+            return String(v == null ? '' : v).trim();
+        }
+
+        function normalizarDigitosDetalhes(v) {
+            return String(v == null ? '' : v).replace(/\D/g, '');
+        }
+
+        function buildRowsContatosDetalhesModal(card, filtro) {
+            const termo = (filtro || '').trim().toLowerCase();
+            const termoDig = (filtro || '').replace(/\D/g, '');
+            const cardDigits = normalizarDigitosDetalhes(card.telefone || card.contato || '');
+            const cid = card.contatoId != null && card.contatoId !== '' ? normalizarIdContatoDetalhes(card.contatoId) : '';
+
+            const norm = (contatosDisponiveis || []).map(c => ({
+                id: normalizarIdContatoDetalhes(c.id),
+                nome: c.nome || 'Sem nome',
+                telefone: c.telefone || '',
+                email: (c.email != null && String(c.email).trim()) ? String(c.email).trim() : '',
+                digits: normalizarDigitosDetalhes(c.telefone),
+                isSynth: false
+            }));
+
+            const rowByCid = cid ? norm.find(r => r.id === cid) : null;
+            const rowByPhone = !rowByCid && cardDigits ? norm.find(r => r.digits === cardDigits) : null;
+            let synth = null;
+            if (!rowByCid && !rowByPhone && cardDigits) {
+                synth = {
+                    id: '',
+                    nome: 'Número do card (sem cadastro na base)',
+                    telefone: card.telefone || card.contato || '',
+                    email: '',
+                    digits: cardDigits,
+                    isSynth: true
+                };
+            }
+
+            let filtered = norm;
+            if (termo || termoDig) {
+                filtered = norm.filter(r => {
+                    const n = (r.nome || '').toLowerCase().includes(termo);
+                    const t = termoDig ? r.digits.includes(termoDig) : (r.telefone || '').toLowerCase().includes(termo);
+                    return n || t;
+                });
+            }
+
+            const display = [];
+            if (synth) {
+                if (!termo && !termoDig) {
+                    display.push(synth);
+                } else {
+                    const sn = (synth.nome || '').toLowerCase().includes(termo);
+                    const st = termoDig ? synth.digits.includes(termoDig) : (synth.telefone || '').toLowerCase().includes(termo);
+                    if (sn || st) display.push(synth);
+                }
+            }
+            display.push(...filtered);
+            return display;
+        }
+
+        function htmlContatoRowDetalhes(r, hidId, hidTel) {
+            const hidIdN = normalizarIdContatoDetalhes(hidId);
+            const hidTelN = normalizarDigitosDetalhes(hidTel);
+            const rid = normalizarIdContatoDetalhes(r.id);
+            const rdig = normalizarDigitosDetalhes(r.digits);
+            const selected = r.isSynth
+                ? (!hidIdN && hidTelN === rdig && rdig !== '')
+                : (hidIdN !== '' && hidIdN === rid);
+            const selClass = selected ? ' selected' : '';
+            const legClass = r.isSynth ? ' contato-item--legacy' : '';
+            const nomeEsc = escapeHtmlDetalhesDisplay(r.nome);
+            const telLabel = r.digits ? formatarTelefone(r.digits) : '—';
+            const telEsc = escapeHtmlDetalhesDisplay(telLabel);
+            const ariSel = selected ? 'true' : 'false';
+            return `<button type="button" class="contato-item-row${selClass}${legClass}" role="option" aria-selected="${ariSel}" data-contato-id="${escapeHtmlAttrDetalhes(r.id)}" data-telefone-digits="${escapeHtmlAttrDetalhes(r.digits)}" data-nome="${escapeHtmlAttrDetalhes(r.nome)}" data-email="${escapeHtmlAttrDetalhes(r.email || '')}" data-synth="${r.isSynth ? '1' : ''}"><span class="contato-item-row-text"><span class="contato-item-nome">${nomeEsc}</span><span class="contato-item-tel">${telEsc}</span></span><span class="contato-item-check" aria-hidden="true"><i class="fa-solid fa-check"></i></span></button>`;
+        }
+
+        function buildDetalhesContatoResumoHtml(nome, telefoneExibicao, emailExibicao) {
+            return (
+                '<dl class="detalhes-contato-resumo-dl">' +
+                '<div><dt>Nome</dt><dd>' + escapeHtmlDetalhesDisplay(nome || '—') + '</dd></div>' +
+                '<div><dt>Telefone</dt><dd>' + escapeHtmlDetalhesDisplay(telefoneExibicao || '—') + '</dd></div>' +
+                '<div><dt>E-mail</dt><dd>' + escapeHtmlDetalhesDisplay(emailExibicao || '—') + '</dd></div>' +
+                '</dl>'
+            );
+        }
+
+        /** Busca/lista só aparece após clicar no lápis (evita flash ~1s até carregar contatos). */
+        function detalhesDeveMostrarListaContatos() {
+            return detalhesContatoModoTrocar === true;
+        }
+
+        function aplicarVisibilidadePickerContatoDetalhes() {
+            const wrap = document.getElementById('detalhesContatosPickerBlock');
+            const btn = document.getElementById('detalhesContatoTrocarBtn');
+            const verBtn = document.getElementById('detalhesContatoVerDetalheBtn');
+            if (!wrap) return;
+            const show = detalhesDeveMostrarListaContatos();
+            wrap.style.display = show ? '' : 'none';
+            if (btn) btn.style.display = show ? 'none' : '';
+            if (verBtn) {
+                const idRaw = (document.getElementById('detalhesContatoId') || {}).value || '';
+                const hasCadastroId = normalizarIdContatoDetalhes(idRaw) !== '';
+                verBtn.style.display = show || !hasCadastroId ? 'none' : '';
+            }
+        }
+
+        function detalhesContatoAbrirTrocar() {
+            detalhesContatoModoTrocar = true;
+            aplicarVisibilidadePickerContatoDetalhes();
+            renderDetalhesListaContatos();
+            const busca = document.getElementById('detalhesContatosBusca');
+            if (busca) {
+                busca.focus();
+                try { busca.select(); } catch (err) { /* ignore */ }
+            }
+        }
+
+        function criarDeveMostrarListaContatos() {
+            if (criarContatoModoTrocar) return true;
+            const idRaw = (document.getElementById('criarContatoId') || {}).value || '';
+            const tel = normalizarDigitosDetalhes((document.getElementById('criarContatoTelefone') || {}).value || '');
+            return !(normalizarIdContatoDetalhes(idRaw) || tel);
+        }
+
+        function aplicarVisibilidadePickerContatoCriar() {
+            const wrap = document.getElementById('criarContatosPickerBlock');
+            const btn = document.getElementById('criarContatoTrocarBtn');
+            if (!wrap) return;
+            const show = criarDeveMostrarListaContatos();
+            wrap.style.display = show ? '' : 'none';
+            if (btn) btn.style.display = show ? 'none' : '';
+        }
+
+        function criarContatoAbrirTrocar() {
+            criarContatoModoTrocar = true;
+            aplicarVisibilidadePickerContatoCriar();
+            renderCriarListaContatos();
+            const busca = document.getElementById('criarContatosBusca');
+            if (busca) {
+                busca.focus();
+                try { busca.select(); } catch (err) { /* ignore */ }
+            }
+        }
+
+        function sincronizarPainelResumoContatoCriar() {
+            const inner = document.getElementById('criarContatoResumoInner');
+            const wrap = document.getElementById('criarContatoResumo');
+            if (!inner || !wrap) return;
+
+            const idRaw = (document.getElementById('criarContatoId') || {}).value || '';
+            const telDigits = normalizarDigitosDetalhes((document.getElementById('criarContatoTelefone') || {}).value || '');
+
+            wrap.classList.remove('detalhes-contato-resumo--legacy');
+
+            const idN = normalizarIdContatoDetalhes(idRaw);
+            if (idN) {
+                const c = (contatosDisponiveis || []).find(x => normalizarIdContatoDetalhes(x.id) === idN);
+                const nome = (c && c.nome != null && String(c.nome).trim()) ? String(c.nome).trim() : '—';
+                const rawTel = (c && c.telefone != null) ? String(c.telefone) : '';
+                const digits = rawTel ? normalizarDigitosDetalhes(rawTel) : telDigits;
+                const telFmt = digits ? formatarTelefone(digits) : (rawTel ? rawTel : '—');
+                const em = (c && c.email != null && String(c.email).trim()) ? String(c.email).trim() : '—';
+                inner.innerHTML = buildDetalhesContatoResumoHtml(nome, telFmt, em);
+                wrap.classList.remove('detalhes-contato-resumo--empty');
+                return;
+            }
+
+            if (telDigits) {
+                inner.innerHTML = buildDetalhesContatoResumoHtml(
+                    'Número sem cadastro na base',
+                    formatarTelefone(telDigits),
+                    '—'
+                );
+                wrap.classList.add('detalhes-contato-resumo--legacy');
+                wrap.classList.remove('detalhes-contato-resumo--empty');
+                return;
+            }
+
+            inner.innerHTML = '<p class="detalhes-contato-resumo-placeholder">Selecione um contato na lista para ver nome, telefone e e-mail.</p>';
+            wrap.classList.add('detalhes-contato-resumo--empty');
+        }
+
+        function renderCriarListaContatos() {
+            const listaEl = document.getElementById('criarContatosLista');
+            if (!listaEl) return;
+            const cardVazio = { telefone: '', contato: '', contatoId: null };
+            const filtro = (document.getElementById('criarContatosBusca') || {}).value || '';
+            const idVal = (document.getElementById('criarContatoId') || {}).value || '';
+            const telVal = (document.getElementById('criarContatoTelefone') || {}).value || '';
+            const display = buildRowsContatosDetalhesModal(cardVazio, filtro);
+            if (display.length === 0) {
+                listaEl.innerHTML = '<div class="contatos-lista-empty">Nenhum contato encontrado. Tente outro termo ou cadastre contatos na área Contatos.</div>';
+                sincronizarPainelResumoContatoCriar();
+                aplicarVisibilidadePickerContatoCriar();
+                return;
+            }
+            listaEl.innerHTML = display.map(r => htmlContatoRowDetalhes(r, idVal, telVal)).join('');
+            sincronizarPainelResumoContatoCriar();
+            aplicarVisibilidadePickerContatoCriar();
+        }
+
+        function selecionarContatoCriarRow(el) {
+            if (!el || !el.classList || !el.classList.contains('contato-item-row')) return;
+            const lista = document.getElementById('criarContatosLista');
+            if (!lista || !lista.contains(el)) return;
+
+            document.querySelectorAll('#criarContatosLista .contato-item-row').forEach(x => {
+                x.classList.remove('selected');
+                x.setAttribute('aria-selected', 'false');
+            });
+            el.classList.add('selected');
+            el.setAttribute('aria-selected', 'true');
+
+            const idRaw = el.getAttribute('data-contato-id');
+            const telRaw = el.getAttribute('data-telefone-digits');
+            const idInp = document.getElementById('criarContatoId');
+            const telInp = document.getElementById('criarContatoTelefone');
+            if (idInp) idInp.value = idRaw != null ? idRaw : '';
+            if (telInp) telInp.value = telRaw != null ? normalizarDigitosDetalhes(telRaw) : '';
+
+            criarContatoModoTrocar = false;
+            sincronizarPainelResumoContatoCriar();
+            aplicarVisibilidadePickerContatoCriar();
+        }
+
+        function editarDeveMostrarListaContatos() {
+            if (editarContatoModoTrocar) return true;
+            const idRaw = (document.getElementById('editarContatoId') || {}).value || '';
+            const tel = normalizarDigitosDetalhes((document.getElementById('editarContatoTelefone') || {}).value || '');
+            return !(normalizarIdContatoDetalhes(idRaw) || tel);
+        }
+
+        function aplicarVisibilidadePickerContatoEditar() {
+            const wrap = document.getElementById('editarContatosPickerBlock');
+            const btn = document.getElementById('editarContatoTrocarBtn');
+            if (!wrap) return;
+            const show = editarDeveMostrarListaContatos();
+            wrap.style.display = show ? '' : 'none';
+            if (btn) btn.style.display = show ? 'none' : '';
+        }
+
+        function editarContatoAbrirTrocar() {
+            editarContatoModoTrocar = true;
+            aplicarVisibilidadePickerContatoEditar();
+            renderEditarListaContatos();
+            const busca = document.getElementById('editarContatosBusca');
+            if (busca) {
+                busca.focus();
+                try { busca.select(); } catch (err) { /* ignore */ }
+            }
+        }
+
+        function sincronizarPainelResumoContatoEditar() {
+            const inner = document.getElementById('editarContatoResumoInner');
+            const wrap = document.getElementById('editarContatoResumo');
+            if (!inner || !wrap) return;
+
+            const idRaw = (document.getElementById('editarContatoId') || {}).value || '';
+            const telDigits = normalizarDigitosDetalhes((document.getElementById('editarContatoTelefone') || {}).value || '');
+
+            wrap.classList.remove('detalhes-contato-resumo--legacy');
+
+            const idN = normalizarIdContatoDetalhes(idRaw);
+            if (idN) {
+                const c = (contatosDisponiveis || []).find(x => normalizarIdContatoDetalhes(x.id) === idN);
+                const nome = (c && c.nome != null && String(c.nome).trim()) ? String(c.nome).trim() : '—';
+                const rawTel = (c && c.telefone != null) ? String(c.telefone) : '';
+                const digits = rawTel ? normalizarDigitosDetalhes(rawTel) : telDigits;
+                const telFmt = digits ? formatarTelefone(digits) : (rawTel ? rawTel : '—');
+                const em = (c && c.email != null && String(c.email).trim()) ? String(c.email).trim() : '—';
+                inner.innerHTML = buildDetalhesContatoResumoHtml(nome, telFmt, em);
+                wrap.classList.remove('detalhes-contato-resumo--empty');
+                return;
+            }
+
+            if (telDigits) {
+                inner.innerHTML = buildDetalhesContatoResumoHtml(
+                    'Número do card (sem cadastro na base)',
+                    formatarTelefone(telDigits),
+                    '—'
+                );
+                wrap.classList.add('detalhes-contato-resumo--legacy');
+                wrap.classList.remove('detalhes-contato-resumo--empty');
+                return;
+            }
+
+            inner.innerHTML = '<p class="detalhes-contato-resumo-placeholder">Selecione um contato na lista para ver nome, telefone e e-mail.</p>';
+            wrap.classList.add('detalhes-contato-resumo--empty');
+        }
+
+        function aplicarSelecaoInicialContatosEditar(card) {
+            const cid = card.contatoId != null && card.contatoId !== '' ? normalizarIdContatoDetalhes(card.contatoId) : '';
+            const cardDigits = normalizarDigitosDetalhes(card.telefone || card.contato || '');
+            const norm = (contatosDisponiveis || []).map(c => ({
+                id: normalizarIdContatoDetalhes(c.id),
+                digits: normalizarDigitosDetalhes(c.telefone)
+            }));
+            const hidId = document.getElementById('editarContatoId');
+            const hidTel = document.getElementById('editarContatoTelefone');
+            if (!hidId || !hidTel) return;
+
+            if (cid) {
+                const row = norm.find(r => r.id === cid);
+                if (row) {
+                    hidId.value = cid;
+                    hidTel.value = row.digits;
+                    return;
+                }
+                hidId.value = cid;
+                hidTel.value = cardDigits;
+                return;
+            }
+            if (cardDigits) {
+                const row = norm.find(r => r.digits === cardDigits);
+                if (row) {
+                    hidId.value = row.id;
+                    hidTel.value = row.digits;
+                    return;
+                }
+                hidId.value = '';
+                hidTel.value = cardDigits;
+                return;
+            }
+            hidId.value = '';
+            hidTel.value = '';
+        }
+
+        function renderEditarListaContatos() {
+            const card = etapas.flatMap(e => e.cards || []).find(c => String(c.id) === String(cardEditandoId));
+            const listaEl = document.getElementById('editarContatosLista');
+            if (!card || !listaEl) return;
+
+            const filtro = (document.getElementById('editarContatosBusca') || {}).value || '';
+            const idVal = (document.getElementById('editarContatoId') || {}).value || '';
+            const telVal = (document.getElementById('editarContatoTelefone') || {}).value || '';
+
+            const display = buildRowsContatosDetalhesModal(card, filtro);
+            if (display.length === 0) {
+                listaEl.innerHTML = '<div class="contatos-lista-empty">Nenhum contato encontrado. Tente outro termo ou cadastre contatos na área Contatos.</div>';
+                sincronizarPainelResumoContatoEditar();
+                aplicarVisibilidadePickerContatoEditar();
+                return;
+            }
+            listaEl.innerHTML = display.map(r => htmlContatoRowDetalhes(r, idVal, telVal)).join('');
+            sincronizarPainelResumoContatoEditar();
+            aplicarVisibilidadePickerContatoEditar();
+        }
+
+        function selecionarContatoEditarRow(el) {
+            if (!el || !el.classList || !el.classList.contains('contato-item-row')) return;
+            const lista = document.getElementById('editarContatosLista');
+            if (!lista || !lista.contains(el)) return;
+
+            document.querySelectorAll('#editarContatosLista .contato-item-row').forEach(x => {
+                x.classList.remove('selected');
+                x.setAttribute('aria-selected', 'false');
+            });
+            el.classList.add('selected');
+            el.setAttribute('aria-selected', 'true');
+
+            const idRaw = el.getAttribute('data-contato-id');
+            const telRaw = el.getAttribute('data-telefone-digits');
+            const idInp = document.getElementById('editarContatoId');
+            const telInp = document.getElementById('editarContatoTelefone');
+            if (idInp) idInp.value = idRaw != null ? idRaw : '';
+            if (telInp) telInp.value = telRaw != null ? normalizarDigitosDetalhes(telRaw) : '';
+
+            editarContatoModoTrocar = false;
+            sincronizarPainelResumoContatoEditar();
+            aplicarVisibilidadePickerContatoEditar();
+        }
+
+        function sincronizarPainelResumoContatoDetalhes() {
+            const inner = document.getElementById('detalhesContatoResumoInner');
+            const wrap = document.getElementById('detalhesContatoResumo');
+            if (!inner || !wrap) return;
+
+            const idRaw = (document.getElementById('detalhesContatoId') || {}).value || '';
+            const telDigits = normalizarDigitosDetalhes((document.getElementById('detalhesContatoTelefone') || {}).value || '');
+
+            wrap.classList.remove('detalhes-contato-resumo--legacy');
+
+            const idN = normalizarIdContatoDetalhes(idRaw);
+            if (idN) {
+                const c = (contatosDisponiveis || []).find(x => normalizarIdContatoDetalhes(x.id) === idN);
+                const nome = (c && c.nome != null && String(c.nome).trim()) ? String(c.nome).trim() : '—';
+                const rawTel = (c && c.telefone != null) ? String(c.telefone) : '';
+                const digits = rawTel ? normalizarDigitosDetalhes(rawTel) : telDigits;
+                const telFmt = digits ? formatarTelefone(digits) : (rawTel ? rawTel : '—');
+                const em = (c && c.email != null && String(c.email).trim()) ? String(c.email).trim() : '—';
+                inner.innerHTML = buildDetalhesContatoResumoHtml(nome, telFmt, em);
+                wrap.classList.remove('detalhes-contato-resumo--empty');
+                return;
+            }
+
+            if (telDigits) {
+                inner.innerHTML = buildDetalhesContatoResumoHtml(
+                    'Número do card (sem cadastro na base)',
+                    formatarTelefone(telDigits),
+                    '—'
+                );
+                wrap.classList.add('detalhes-contato-resumo--legacy');
+                wrap.classList.remove('detalhes-contato-resumo--empty');
+                return;
+            }
+
+            inner.innerHTML = '<p class="detalhes-contato-resumo-placeholder">Toque no lápis para buscar ou trocar o contato. Os dados aparecem aqui após a seleção.</p>';
+            wrap.classList.add('detalhes-contato-resumo--empty');
+        }
+
+        function renderDetalhesListaContatos() {
+            const card = etapas.flatMap(e => e.cards || []).find(c => String(c.id) === String(cardEditandoId));
+            const listaEl = document.getElementById('detalhesContatosLista');
+            if (!card || !listaEl) return;
+
+            const filtro = (document.getElementById('detalhesContatosBusca') || {}).value || '';
+            const idVal = (document.getElementById('detalhesContatoId') || {}).value || '';
+            const telVal = (document.getElementById('detalhesContatoTelefone') || {}).value || '';
+
+            const display = buildRowsContatosDetalhesModal(card, filtro);
+            if (display.length === 0) {
+                listaEl.innerHTML = '<div class="contatos-lista-empty">Nenhum contato encontrado. Tente outro termo ou cadastre contatos na área Contatos.</div>';
+                sincronizarPainelResumoContatoDetalhes();
+                aplicarVisibilidadePickerContatoDetalhes();
+                return;
+            }
+            listaEl.innerHTML = display.map(r => htmlContatoRowDetalhes(r, idVal, telVal)).join('');
+            sincronizarPainelResumoContatoDetalhes();
+            aplicarVisibilidadePickerContatoDetalhes();
+        }
+
+        function selecionarContatoDetalhesRow(el) {
+            if (!el || !el.classList || !el.classList.contains('contato-item-row')) return;
+            const lista = document.getElementById('detalhesContatosLista');
+            if (!lista || !lista.contains(el)) return;
+
+            document.querySelectorAll('#detalhesContatosLista .contato-item-row').forEach(x => {
+                x.classList.remove('selected');
+                x.setAttribute('aria-selected', 'false');
+            });
+            el.classList.add('selected');
+            el.setAttribute('aria-selected', 'true');
+
+            const idRaw = el.getAttribute('data-contato-id');
+            const telRaw = el.getAttribute('data-telefone-digits');
+            const idInp = document.getElementById('detalhesContatoId');
+            const telInp = document.getElementById('detalhesContatoTelefone');
+            if (idInp) idInp.value = idRaw != null ? idRaw : '';
+            if (telInp) telInp.value = telRaw != null ? normalizarDigitosDetalhes(telRaw) : '';
+
+            const nome = (el.getAttribute('data-nome') || '').trim();
+            const telDigits = normalizarDigitosDetalhes(telRaw);
+            const titulo = document.getElementById('cardDetalhesTitulo');
+            if (titulo) {
+                if (nome) titulo.textContent = nome;
+                else if (telDigits) titulo.textContent = formatarTelefone(telDigits);
+            }
+
+            detalhesContatoModoTrocar = false;
+            sincronizarPainelResumoContatoDetalhes();
+            aplicarVisibilidadePickerContatoDetalhes();
+        }
+
+        /** Nome gravado no card: do cadastro quando há contatoId; senão telefone formatado. */
+        function resolverNomeCardParaSalvarDetalhes(idRaw, telefoneDigits) {
+            const idStr = (idRaw || '').trim();
+            if (idStr) {
+                const c = (contatosDisponiveis || []).find(x => String(x.id) === idStr);
+                const n = c && c.nome != null ? String(c.nome).trim() : '';
+                if (n) return n;
+            }
+            if (telefoneDigits) return formatarTelefone(telefoneDigits);
+            return null;
+        }
+
+        /** Nome do contato (cadastro) só quando vinculado; usado em card.nomeContato local. */
+        function resolverNomeContatoCadastroDetalhes(idRaw) {
+            const idStr = (idRaw || '').trim();
+            if (!idStr) return null;
+            const c = (contatosDisponiveis || []).find(x => String(x.id) === idStr);
+            const n = c && c.nome != null ? String(c.nome).trim() : '';
+            return n || null;
+        }
+
+        function aplicarSelecaoInicialContatosDetalhes(card) {
+            const cid = card.contatoId != null && card.contatoId !== '' ? normalizarIdContatoDetalhes(card.contatoId) : '';
+            const cardDigits = normalizarDigitosDetalhes(card.telefone || card.contato || '');
+            const norm = (contatosDisponiveis || []).map(c => ({
+                id: normalizarIdContatoDetalhes(c.id),
+                digits: normalizarDigitosDetalhes(c.telefone)
+            }));
+            const hidId = document.getElementById('detalhesContatoId');
+            const hidTel = document.getElementById('detalhesContatoTelefone');
+            if (!hidId || !hidTel) return;
+
+            if (cid) {
+                const row = norm.find(r => r.id === cid);
+                if (row) {
+                    hidId.value = cid;
+                    hidTel.value = row.digits;
+                    return;
+                }
+                hidId.value = cid;
+                hidTel.value = cardDigits;
+                return;
+            }
+            if (cardDigits) {
+                const row = norm.find(r => r.digits === cardDigits);
+                if (row) {
+                    hidId.value = row.id;
+                    hidTel.value = row.digits;
+                    return;
+                }
+                hidId.value = '';
+                hidTel.value = cardDigits;
+                return;
+            }
+            hidId.value = '';
+            hidTel.value = '';
+        }
+
+        // Abrir modal detalhes card
+        async function abrirModalDetalhesCard(card) {
+            cardEditandoId = card.id;
+            const content = document.getElementById('cardDetalhesContent');
+            const tituloEl = document.getElementById('cardDetalhesTitulo');
+
+            const contatoNome = card.nomeContato || card.nome || '';
+            const contatoTelRaw = card.telefone || card.contato || '';
+            const tituloDisplay = contatoNome || (contatoTelRaw ? formatarTelefone(String(contatoTelRaw).replace(/\D/g, '')) : '') || ('Card #' + card.id);
+            if (tituloEl) tituloEl.textContent = tituloDisplay;
+
+            const observacoes = card.observacoes || card.observacao || 'Nenhuma observação';
+            const tarefas = Array.isArray(card.tarefas) ? card.tarefas : [];
+            const disparos = Array.isArray(card.disparos) ? card.disparos : [];
+            const valorFormatado = card.valor ? formatarValor(String(Math.round(parseFloat(card.valor) * 100))) : '';
+
+            detalhesContatoModoTrocar = false;
+
+            let html = `
+                <div class="modal-section-title green"><i class="fa-solid fa-user"></i> Contato</div>
+                <div class="form-group-modal">
+                    <label>Contato</label>
+                    <p class="detalhes-contato-hint">O resumo do contato aparece abaixo. Use o lápis para abrir a busca e escolher ou trocar (lista com rolagem).</p>
+                    <div id="detalhesContatosPickerBlock" style="display: none;">
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                            <input type="text" id="detalhesContatosBusca" class="has-icon" placeholder="Buscar por nome ou telefone..." autocomplete="off" />
+                        </div>
+                        <input type="hidden" id="detalhesContatoId" value="" />
+                        <input type="hidden" id="detalhesContatoTelefone" value="" />
+                        <div id="detalhesContatosLista" class="contatos-lista-scroll" role="listbox" aria-label="Lista de contatos" tabindex="-1"></div>
+                    </div>
+                    <div id="detalhesContatoResumo" class="detalhes-contato-resumo detalhes-contato-resumo--empty">
+                        <div class="detalhes-contato-resumo-header">
+                            <p class="detalhes-contato-resumo-titulo"><i class="fa-solid fa-id-card"></i> Dados do contato selecionado</p>
+                            <div class="detalhes-contato-acoes-btns">
+                                <button type="button" id="detalhesContatoVerDetalheBtn" class="detalhes-contato-edit-btn" title="Ver ficha completa do contato" aria-label="Ver detalhes do contato" style="display: none;">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button type="button" id="detalhesContatoTrocarBtn" class="detalhes-contato-edit-btn" title="Buscar ou trocar contato" aria-label="Buscar ou trocar contato">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="detalhesContatoResumoInner" class="detalhes-contato-resumo-inner">
+                            <p class="detalhes-contato-resumo-placeholder">Toque no lápis para buscar ou trocar o contato. Os dados aparecem aqui após a seleção.</p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="modal-section-divider" />
+                <div class="modal-section-title blue"><i class="fa-solid fa-briefcase"></i> Negócio</div>
+                <div class="form-group-modal">
+                    <label>Valor</label>
+                    <input type="text" id="detalhesCardValorInput" value="${escapeHtmlAttrDetalhes(valorFormatado)}" placeholder="R$ 0,00" style="font-weight:600;color:#6C63FF;" />
+                </div>
+                <div class="form-group-modal">
+                    <label>Observações</label>
+                    <textarea id="detalhesCardObservacoesInput" placeholder="Detalhes sobre este negócio...">${escapeHtmlTextareaDetalhes(observacoes !== 'Nenhuma observação' ? observacoes : '')}</textarea>
+                </div>
+            `;
+
+            html += `<div class="form-group-modal"><label>Tarefas</label>`;
+
+            if (tarefas.length > 0) {
+                tarefas.forEach((tarefa, index) => {
+                    const tarefaId = tarefa.id || `tarefa-${index}`;
+                    const descSeg = escapeHtmlDetalhesDisplay(tarefa.descricao || '');
+                    html += `
+                        <div class="detalhes-tarefa-row">
+                            <label style="position: relative; display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                <div style="position: relative; width: 22px; height: 22px; flex-shrink: 0;">
+                                    <input type="checkbox" ${tarefa.concluida ? 'checked' : ''}
+                                           onchange="toggleTarefaConcluida('${cardEditandoId}', '${tarefaId}', this.checked)"
+                                           style="appearance: none; width: 22px; height: 22px; border: 2px solid ${tarefa.concluida ? '#6C63FF' : '#94a3b8'}; border-radius: 50%; background: ${tarefa.concluida ? '#6C63FF' : 'transparent'}; cursor: pointer; position: absolute; top: 0; left: 0; transition: all 0.2s; z-index: 1;">
+                                    ${tarefa.concluida ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" style="position: absolute; top: 4px; left: 4px; pointer-events: none; z-index: 2;"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+                                </div>
+                                <span class="tarefa-descricao-text" style="margin-left: 10px; text-decoration: ${tarefa.concluida ? 'line-through' : 'none'}; opacity: ${tarefa.concluida ? '0.65' : '1'}; flex: 1;">${descSeg}</span>
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                                <input type="date" id="tarefa-date-${tarefaId}" value="${tarefa.data || ''}"
+                                       onchange="alterarDataTarefa('${cardEditandoId}', '${tarefaId}', this.value)"
+                                       style="flex: 1; font-size: 0.85rem; outline: none; cursor: pointer;">
+                                <button type="button" onclick="removerTarefaDetalhes('${cardEditandoId}', '${tarefaId}')"
+                                        style="background: transparent; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; color: #ef4444; transition: color 0.2s; flex-shrink: 0;"
+                                        onmouseover="this.style.color='#f87171'"
+                                        onmouseout="this.style.color='#ef4444'"
+                                        title="Remover tarefa">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `
+                <div style="margin-top: 10px;">
+                    <button type="button" onclick="toggleCamposNovaTarefa()"
+                            id="btnToggleNovaTarefa"
+                            style="width: 100%; background: rgba(108, 99, 255, 0.08); border: 1px solid rgba(108, 99, 255, 0.35); border-radius: 10px; padding: 10px; color: #6C63FF; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                        Adicionar tarefa
+                    </button>
+                    <div id="camposNovaTarefa" style="display: none; padding: 12px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; margin-top: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" id="novaTarefaDescricao" placeholder="Descrição da tarefa"
+                                   style="flex: 1; font-size: 0.9rem; outline: none;">
+                            <input type="date" id="novaTarefaData"
+                                   style="font-size: 0.9rem; outline: none; cursor: pointer;">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" id="btnSalvarTarefa" onclick="adicionarTarefaDetalhes('${cardEditandoId}')"
+                                    style="flex: 1; background: rgba(108, 99, 255, 0.15); border: 1px solid rgba(108, 99, 255, 0.45); border-radius: 8px; padding: 8px; color: #6C63FF; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <span id="btnSalvarTarefaText">Salvar</span>
+                                <div id="btnSalvarTarefaLoader" style="display: none; width: 14px; height: 14px; border: 2px solid rgba(108, 99, 255, 0.3); border-top-color: #6C63FF; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                            </button>
+                            <button type="button" onclick="cancelarNovaTarefa()"
+                                    style="flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; color: #64748b; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            html += `</div>`;
+
+            if (card.created_at) {
+                const data = new Date(card.created_at);
+                const dia = String(data.getDate()).padStart(2, '0');
+                const mes = String(data.getMonth() + 1).padStart(2, '0');
+                const ano = data.getFullYear();
+                html += `
+                    <div class="form-group-modal">
+                        <label>Data de criação</label>
+                        <div class="detalhes-info-box">${dia}/${mes}/${ano}</div>
+                    </div>
+                `;
+            }
+
+            if (disparos.length > 0) {
+                html += `<div class="form-group-modal"><label>Disparos realizados</label>`;
+                disparos.forEach(disparo => {
+                    const dNome = escapeHtmlDetalhesDisplay(disparo.nome || 'Disparo');
+                    const dData = escapeHtmlDetalhesDisplay(disparo.data || '');
+                    html += `
+                        <div class="detalhes-disparo-card">
+                            <div class="detalhes-disparo-titulo">${dNome}</div>
+                            <div style="color: #64748b; font-size: 0.85rem; margin-top: 4px;">${dData}</div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            content.innerHTML = html;
+
+            aplicarSelecaoInicialContatosDetalhes(card);
+            sincronizarPainelResumoContatoDetalhes();
+            aplicarVisibilidadePickerContatoDetalhes();
+
+            const listaEl = document.getElementById('detalhesContatosLista');
+            if (listaEl) listaEl.innerHTML = '<div class="contatos-lista-loading">Carregando contatos…</div>';
+
+            document.getElementById('modalDetalhesCard').classList.add('show');
+
+            try {
+                await carregarContatosParaModalCrm();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') {
+                    fecharModalDetalhesCard();
+                    return;
+                }
+                console.warn('Não foi possível carregar contatos para o modal:', e);
+            }
+
+            aplicarSelecaoInicialContatosDetalhes(card);
+            renderDetalhesListaContatos();
+
+            const busca = document.getElementById('detalhesContatosBusca');
+            if (busca) {
+                busca.oninput = function() { renderDetalhesListaContatos(); };
+            }
+
+            aplicarVisibilidadePickerContatoDetalhes();
+
+            const valorInput = document.getElementById('detalhesCardValorInput');
+            if (valorInput) {
+                valorInput.addEventListener('input', function(e) {
+                    e.target.value = formatarValor(e.target.value);
+                });
+            }
+        }
+
+        // Fechar modal detalhes card
+        function fecharModalDetalhesCard() {
+            document.getElementById('modalDetalhesCard').classList.remove('show');
+            detalhesContatoModoTrocar = false;
+            fecharCrmEtapasContactDetailModal();
+        }
+
+        // Salvar alterações do card diretamente do modal de detalhes
+        async function salvarCardDetalhes() {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId || !cardEditandoId) return;
+
+            const idRaw = (document.getElementById('detalhesContatoId') || {}).value || '';
+            const telHidden = document.getElementById('detalhesContatoTelefone');
+            const telefoneDigits = ((telHidden && telHidden.value) ? telHidden.value : '').replace(/\D/g, '');
+            const valorFormatado = (document.getElementById('detalhesCardValorInput') || {}).value;
+            const observacoes = (document.getElementById('detalhesCardObservacoesInput') || {}).value.trim();
+
+            if (!telefoneDigits) {
+                showToast('Selecione um contato ou o número do card na lista antes de salvar.', 'error');
+                return;
+            }
+
+            const contatoIdParsed = idRaw ? parseInt(idRaw, 10) : NaN;
+            const contatoIdUpdate = Number.isFinite(contatoIdParsed) ? contatoIdParsed : null;
+
+            // Buscar o card atual (antes de resolver nome a partir da lista / vínculo)
+            const card = etapas.flatMap(e => e.cards || []).find(c => c.id == cardEditandoId);
+            if (!card) return;
+
+            const nomeParaDb = resolverNomeCardParaSalvarDetalhes(idRaw, telefoneDigits);
+            const nomeContatoCadastro = resolverNomeContatoCadastroDetalhes(idRaw);
+
+            // Converter valor formatado para número
+            const valor = valorParaNumero(valorFormatado);
+
+            // Atualizar card localmente com os novos valores antes de salvar
+            card.telefone = telefoneDigits;
+            card.contato = telefoneDigits;
+            card.contatoId = contatoIdUpdate;
+            card.nomeContato = nomeContatoCadastro;
+            card.valor = valor;
+            card.observacoes = observacoes;
+            card.nome = nomeParaDb || telefoneDigits || card.nome;
+
+            // Pegar as tarefas atualizadas do card
+            const tarefas = Array.isArray(card.tarefas) ? card.tarefas : [];
+
+            // Fechar o modal imediatamente
+            fecharModalDetalhesCard();
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { error } = await window.supabase
+                    .from('SAAS_Cards_Quadros')
+                    .update({
+                        nome: nomeParaDb || null,
+                        contato: telefoneDigits,
+                        contatoId: contatoIdUpdate,
+                        valor: valor,
+                        observacoes: observacoes || null,
+                        tarefas: tarefas
+                    })
+                    .eq('id', cardEditandoId);
+
+                if (error) throw new Error(error.message || 'Erro ao editar card');
+
+                if (card) {
+                    card.telefone = telefoneDigits;
+                    card.contato = telefoneDigits;
+                    card.contatoId = contatoIdUpdate;
+                    card.nomeContato = nomeContatoCadastro;
+                    card.valor = valor;
+                    card.observacoes = observacoes;
+                    card.tarefas = tarefas;
+                    card.nome = nomeParaDb || telefoneDigits || card.nome;
+                    renderizarEtapas();
+                }
+                showToast('Card editado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao editar card:', error);
+                showToast('Erro ao editar card. Tente novamente.', 'error');
+            }
+        }
+
+        // Abrir modal editar card
+        async function abrirModalEditarCard() {
+            const card = etapas.flatMap(e => e.cards || []).find(c => c.id == cardEditandoId);
+            if (!card) return;
+
+            editarContatoModoTrocar = false;
+            const buscaEd = document.getElementById('editarContatosBusca');
+            const hidIdEd = document.getElementById('editarContatoId');
+            const hidTelEd = document.getElementById('editarContatoTelefone');
+            if (buscaEd) buscaEd.value = '';
+            if (hidIdEd) hidIdEd.value = '';
+            if (hidTelEd) hidTelEd.value = '';
+
+            const valorFormatado = card.valor ? formatarValor(String(Math.round(card.valor * 100))) : '';
+            document.getElementById('editarCardValorInput').value = valorFormatado;
+            document.getElementById('editarCardObservacoesInput').value = card.observacoes || card.observacao || '';
+
+            document.getElementById('modalDetalhesCard').classList.remove('show');
+            document.getElementById('modalEditarCard').classList.add('show');
+
+            const listaElEd = document.getElementById('editarContatosLista');
+            if (listaElEd) listaElEd.innerHTML = '<div class="contatos-lista-loading">Carregando contatos…</div>';
+
+            try {
+                await carregarContatosParaModalCrm();
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') {
+                    fecharModalEditarCard();
+                    return;
+                }
+                console.warn('Não foi possível carregar contatos para editar card:', e);
+            }
+
+            aplicarSelecaoInicialContatosEditar(card);
+            renderEditarListaContatos();
+            if (buscaEd) {
+                buscaEd.oninput = function() { renderEditarListaContatos(); };
+            }
+            aplicarVisibilidadePickerContatoEditar();
+        }
+
+        // Formatação automática de telefone removida - permitir digitação livre
+
+        // Formatar valor no campo de edição
+        document.getElementById('editarCardValorInput').addEventListener('input', (e) => {
+            const valorFormatado = formatarValor(e.target.value);
+            e.target.value = valorFormatado;
+        });
+
+        // Fechar modal editar card
+        function fecharModalEditarCard() {
+            document.getElementById('modalEditarCard').classList.remove('show');
+            editarContatoModoTrocar = false;
+            cardEditandoId = null;
+        }
+
+        // Salvar edição card
+        async function salvarEdicaoCard() {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId || !cardEditandoId) return;
+
+            const idRawEd = (document.getElementById('editarContatoId') || {}).value || '';
+            const telHiddenEd = document.getElementById('editarContatoTelefone');
+            const telefoneDigitsEd = ((telHiddenEd && telHiddenEd.value) ? telHiddenEd.value : '').replace(/\D/g, '');
+            const valorFormatado = document.getElementById('editarCardValorInput').value;
+            const observacoes = document.getElementById('editarCardObservacoesInput').value.trim();
+
+            if (!telefoneDigitsEd) {
+                showToast('Selecione um contato ou o número do card na lista antes de salvar.', 'error');
+                return;
+            }
+
+            const contatoIdParsedEd = idRawEd ? parseInt(idRawEd, 10) : NaN;
+            const contatoIdUpdateEd = Number.isFinite(contatoIdParsedEd) ? contatoIdParsedEd : null;
+            const nomeParaDbEd = resolverNomeCardParaSalvarDetalhes(idRawEd, telefoneDigitsEd);
+            const nomeContatoCadastroEd = resolverNomeContatoCadastroDetalhes(idRawEd);
+
+            // Converter valor formatado para número
+            const valor = valorParaNumero(valorFormatado);
+
+            // Buscar o card atual para pegar as tarefas
+            const card = etapas.flatMap(e => e.cards || []).find(c => c.id == cardEditandoId);
+            const tarefas = card && Array.isArray(card.tarefas) ? card.tarefas : [];
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { error } = await window.supabase
+                    .from('SAAS_Cards_Quadros')
+                    .update({
+                        nome: nomeParaDbEd || null,
+                        contato: telefoneDigitsEd,
+                        contatoId: contatoIdUpdateEd,
+                        valor: valor,
+                        observacoes: observacoes || null,
+                        tarefas: tarefas
+                    })
+                    .eq('id', cardEditandoId);
+
+                if (error) throw new Error(error.message || 'Erro ao editar card');
+
+                if (card) {
+                    card.telefone = telefoneDigitsEd;
+                    card.contato = telefoneDigitsEd;
+                    card.contatoId = contatoIdUpdateEd;
+                    card.nomeContato = nomeContatoCadastroEd;
+                    card.valor = valor;
+                    card.observacoes = observacoes;
+                    card.tarefas = tarefas;
+                    card.nome = nomeParaDbEd || telefoneDigitsEd || card.nome;
+                    renderizarEtapas();
+                }
+                showToast('Card editado com sucesso!', 'success');
+                fecharModalEditarCard();
+            } catch (error) {
+                console.error('Erro ao editar card:', error);
+                showToast('Erro ao editar card. Tente novamente.', 'error');
+            }
+        }
+
+        // Variável para etapa sendo excluída
+        let etapaExcluindoId = null;
+
+        // Toggle tarefa concluída
+        function toggleTarefaConcluida(cardId, tarefaId, concluida) {
+            // Encontrar o card
+            const card = etapas.flatMap(e => e.cards || []).find(c => String(c.id) === String(cardId));
+            if (!card || !Array.isArray(card.tarefas)) return;
+
+            // Encontrar a tarefa
+            const tarefaIndex = card.tarefas.findIndex((t, idx) => {
+                const id = t.id || `tarefa-${idx}`;
+                return String(id) === String(tarefaId);
+            });
+            if (tarefaIndex === -1) return;
+
+            // Atualizar localmente apenas
+            card.tarefas[tarefaIndex].concluida = concluida;
+
+            // Atualizar visualização do modal
+            abrirModalDetalhesCard(card);
+        }
+
+        // Toggle campos de nova tarefa
+        function toggleCamposNovaTarefa() {
+            const campos = document.getElementById('camposNovaTarefa');
+            if (campos) {
+                const isVisible = campos.style.display !== 'none';
+                campos.style.display = isVisible ? 'none' : 'block';
+                if (!isVisible) {
+                    // Focar no campo de descrição quando abrir
+                    setTimeout(() => {
+                        const descInput = document.getElementById('novaTarefaDescricao');
+                        if (descInput) descInput.focus();
+                    }, 100);
+                }
+            }
+        }
+
+        // Cancelar adição de nova tarefa
+        function cancelarNovaTarefa() {
+            const campos = document.getElementById('camposNovaTarefa');
+            const descInput = document.getElementById('novaTarefaDescricao');
+            const dataInput = document.getElementById('novaTarefaData');
+            
+            if (campos) campos.style.display = 'none';
+            if (descInput) descInput.value = '';
+            if (dataInput) dataInput.value = '';
+        }
+
+        // Adicionar tarefa no modal de detalhes
+        async function adicionarTarefaDetalhes(cardId) {
+            const descricao = document.getElementById('novaTarefaDescricao').value.trim();
+            const data = document.getElementById('novaTarefaData').value;
+
+            if (!descricao) {
+                showToast('Por favor, informe a descrição da tarefa', 'error');
+                return;
+            }
+
+            // Obter elementos do botão
+            const btnSalvar = document.getElementById('btnSalvarTarefa');
+            const btnText = document.getElementById('btnSalvarTarefaText');
+            const btnLoader = document.getElementById('btnSalvarTarefaLoader');
+
+            // Mostrar animação e bloquear botão
+            if (btnSalvar) {
+                btnSalvar.disabled = true;
+                btnSalvar.style.opacity = '0.6';
+                btnSalvar.style.cursor = 'not-allowed';
+            }
+            if (btnText) btnText.style.display = 'none';
+            if (btnLoader) btnLoader.style.display = 'block';
+
+            // Encontrar o card
+            const card = etapas.flatMap(e => e.cards || []).find(c => String(c.id) === String(cardId));
+            if (!card) {
+                // Restaurar botão em caso de erro
+                if (btnSalvar) {
+                    btnSalvar.disabled = false;
+                    btnSalvar.style.opacity = '1';
+                    btnSalvar.style.cursor = 'pointer';
+                }
+                if (btnText) btnText.style.display = 'inline';
+                if (btnLoader) btnLoader.style.display = 'none';
+                return;
+            }
+
+            // Criar nova tarefa
+            const novaTarefa = {
+                descricao: descricao,
+                data: data || null,
+                concluida: false
+            };
+
+            // Adicionar tarefa localmente
+            if (!Array.isArray(card.tarefas)) {
+                card.tarefas = [];
+            }
+            card.tarefas.push(novaTarefa);
+
+            // Simular um pequeno delay para a animação
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // Limpar campos e ocultar
+            document.getElementById('novaTarefaDescricao').value = '';
+            document.getElementById('novaTarefaData').value = '';
+            const camposNovaTarefa = document.getElementById('camposNovaTarefa');
+            if (camposNovaTarefa) camposNovaTarefa.style.display = 'none';
+
+            // Atualizar visualização
+            abrirModalDetalhesCard(card);
+            showToast('Tarefa adicionada com sucesso!', 'success');
+
+            // Restaurar botão
+            if (btnSalvar) {
+                btnSalvar.disabled = false;
+                btnSalvar.style.opacity = '1';
+                btnSalvar.style.cursor = 'pointer';
+            }
+            if (btnText) btnText.style.display = 'inline';
+            if (btnLoader) btnLoader.style.display = 'none';
+        }
+
+        // Remover tarefa do modal de detalhes
+        async function removerTarefaDetalhes(cardId, tarefaId) {
+            // Encontrar o card
+            const card = etapas.flatMap(e => e.cards || []).find(c => String(c.id) === String(cardId));
+            if (!card || !Array.isArray(card.tarefas)) return;
+
+            // Encontrar a tarefa
+            const tarefaIndex = card.tarefas.findIndex((t, idx) => {
+                const id = t.id || `tarefa-${idx}`;
+                return String(id) === String(tarefaId);
+            });
+            if (tarefaIndex === -1) return;
+
+            // Remover tarefa localmente
+            card.tarefas.splice(tarefaIndex, 1);
+
+            // Simular um pequeno delay para a animação
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            // Atualizar visualização imediatamente
+            abrirModalDetalhesCard(card);
+            showToast('Tarefa removida com sucesso!', 'success');
+        }
+
+        // Alterar data da tarefa
+        function alterarDataTarefa(cardId, tarefaId, novaData) {
+            // Encontrar o card
+            const card = etapas.flatMap(e => e.cards || []).find(c => String(c.id) === String(cardId));
+            if (!card || !Array.isArray(card.tarefas)) return;
+
+            // Encontrar a tarefa
+            const tarefaIndex = card.tarefas.findIndex((t, idx) => {
+                const id = t.id || `tarefa-${idx}`;
+                return String(id) === String(tarefaId);
+            });
+            if (tarefaIndex === -1) return;
+
+            // Atualizar localmente apenas
+            card.tarefas[tarefaIndex].data = novaData;
+
+            // Atualizar visualização do modal
+            abrirModalDetalhesCard(card);
+        }
+
+        // Editar nome da etapa
+        function editarNomeEtapa(etapaId, etapaNomeElement) {
+            const nomeAtual = etapaNomeElement.textContent.trim();
+            
+            // Tornar editável
+            etapaNomeElement.contentEditable = true;
+            etapaNomeElement.classList.add('editing');
+            etapaNomeElement.title = ''; // Remover tooltip durante edição
+            etapaNomeElement.focus();
+            
+            // Selecionar todo o texto
+            const range = document.createRange();
+            range.selectNodeContents(etapaNomeElement);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            // Salvar ao perder foco ou pressionar Enter
+            const salvarEdicao = async () => {
+                const novoNome = etapaNomeElement.textContent.trim();
+                
+                if (!novoNome || novoNome === nomeAtual) {
+                    // Cancelar edição
+                    etapaNomeElement.textContent = nomeAtual;
+                    etapaNomeElement.title = nomeAtual; // Restaurar tooltip
+                    etapaNomeElement.contentEditable = false;
+                    etapaNomeElement.classList.remove('editing');
+                    return;
+                }
+
+                // Desabilitar edição durante salvamento
+                etapaNomeElement.contentEditable = false;
+                etapaNomeElement.classList.remove('editing');
+                etapaNomeElement.textContent = novoNome;
+                etapaNomeElement.title = novoNome; // Atualizar tooltip com novo nome
+
+                // Atualizar localmente
+                const etapa = etapas.find(e => String(e.id) === String(etapaId));
+                if (etapa) {
+                    etapa.nome = novoNome;
+                }
+
+                // Enviar requisição
+                let contaId;
+                try {
+                    contaId = await obterUserIdComStatus();
+                } catch (error) {
+                    if (error.message === 'STATUS_BLOQUEADO') {
+                        return;
+                    }
+                    throw error;
+                }
+                if (!contaId) return;
+
+                try {
+                    if (!window.supabase) throw new Error('Supabase não disponível');
+                    const { error } = await window.supabase
+                        .from('SAAS_Etapas_Quadros')
+                        .update({ nome: novoNome })
+                        .eq('id', etapaId);
+
+                    if (error) throw new Error(error.message || 'Erro ao editar etapa');
+
+                    showToast('Etapa editada com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Erro ao editar etapa:', error);
+                    showToast('Erro ao editar etapa. Tente novamente.', 'error');
+                    
+                    // Reverter mudança local
+                    if (etapa) {
+                        etapa.nome = nomeAtual;
+                        etapaNomeElement.textContent = nomeAtual;
+                        etapaNomeElement.title = nomeAtual; // Restaurar tooltip
+                    }
+                }
+            };
+
+            etapaNomeElement.addEventListener('blur', salvarEdicao, { once: true });
+            etapaNomeElement.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    etapaNomeElement.blur();
+                } else if (e.key === 'Escape') {
+                    etapaNomeElement.textContent = nomeAtual;
+                    etapaNomeElement.title = nomeAtual; // Restaurar tooltip
+                    etapaNomeElement.contentEditable = false;
+                    etapaNomeElement.classList.remove('editing');
+                }
+            }, { once: true });
+        }
+
+        // Abrir modal excluir etapa
+        function abrirModalExcluirEtapa(etapaId) {
+            etapaExcluindoId = etapaId;
+            document.getElementById('modalExcluirEtapa').classList.add('show');
+        }
+
+        // Fechar modal excluir etapa
+        function fecharModalExcluirEtapa() {
+            document.getElementById('modalExcluirEtapa').classList.remove('show');
+            etapaExcluindoId = null;
+        }
+
+        // Confirmar exclusão de etapa
+        async function confirmarExcluirEtapa() {
+            let contaId;
+            try {
+                contaId = await obterUserIdComStatus();
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') {
+                    return;
+                }
+                throw error;
+            }
+            if (!contaId || !etapaExcluindoId) return;
+
+            try {
+                if (!window.supabase) throw new Error('Supabase não disponível');
+                const { error } = await window.supabase
+                    .from('SAAS_Etapas_Quadros')
+                    .delete()
+                    .eq('id', etapaExcluindoId);
+
+                if (error) throw new Error(error.message || 'Erro ao excluir etapa');
+
+                // Remover etapa localmente sem recarregar
+                const etapaIndex = etapas.findIndex(e => String(e.id) === String(etapaExcluindoId));
+                if (etapaIndex !== -1) {
+                    etapas.splice(etapaIndex, 1);
+                    renderizarEtapas();
+                }
+
+                showToast('Etapa excluída com sucesso!', 'success');
+                fecharModalExcluirEtapa();
+            } catch (error) {
+                console.error('Erro ao excluir etapa:', error);
+                showToast('Erro ao excluir etapa. Tente novamente.', 'error');
+            }
+        }
+
+        // Fechar modais ao clicar fora
+        document.getElementById('modalCriarCard').addEventListener('click', (e) => {
+            if (e.target.id === 'modalCriarCard') {
+                fecharModalCriarCard();
+            }
+        });
+
+        document.getElementById('modalDetalhesCard').addEventListener('click', (e) => {
+            if (e.target.id === 'modalDetalhesCard') {
+                fecharModalDetalhesCard();
+            }
+        });
+
+        /* Clique na lista de contatos do modal de detalhes (delegação — mais confiável que onclick inline) */
+        document.getElementById('modalDetalhesCard').addEventListener('click', function(e) {
+            if (e.target.closest('#detalhesContatoVerDetalheBtn')) {
+                e.preventDefault();
+                const idRaw = (document.getElementById('detalhesContatoId') || {}).value || '';
+                const idNum = parseInt(String(idRaw).trim(), 10);
+                if (!Number.isFinite(idNum)) {
+                    showToast('É necessário um contato cadastrado na base para ver a ficha completa.', 'info');
+                    return;
+                }
+                void abrirCrmEtapasModalDetalheContato(idNum);
+                return;
+            }
+            if (e.target.closest('#detalhesContatoTrocarBtn')) {
+                e.preventDefault();
+                detalhesContatoAbrirTrocar();
+                return;
+            }
+            const row = e.target.closest('.contato-item-row');
+            if (!row) return;
+            const lista = document.getElementById('detalhesContatosLista');
+            if (!lista || !lista.contains(row)) return;
+            e.preventDefault();
+            selecionarContatoDetalhesRow(row);
+        });
+
+        document.getElementById('modalCriarCard').addEventListener('click', function(e) {
+            if (e.target.closest('#criarContatoTrocarBtn')) {
+                e.preventDefault();
+                criarContatoAbrirTrocar();
+                return;
+            }
+            const row = e.target.closest('.contato-item-row');
+            if (!row) return;
+            const lista = document.getElementById('criarContatosLista');
+            if (!lista || !lista.contains(row)) return;
+            e.preventDefault();
+            selecionarContatoCriarRow(row);
+        });
+
+        document.getElementById('modalEditarCard').addEventListener('click', function(e) {
+            if (e.target.id === 'modalEditarCard') {
+                fecharModalEditarCard();
+                return;
+            }
+            if (e.target.closest('#editarContatoTrocarBtn')) {
+                e.preventDefault();
+                editarContatoAbrirTrocar();
+                return;
+            }
+            const rowEd = e.target.closest('.contato-item-row');
+            if (!rowEd) return;
+            const listaEd = document.getElementById('editarContatosLista');
+            if (!listaEd || !listaEd.contains(rowEd)) return;
+            e.preventDefault();
+            selecionarContatoEditarRow(rowEd);
+        });
+
+        document.getElementById('modalExcluirEtapa').addEventListener('click', (e) => {
+            if (e.target.id === 'modalExcluirEtapa') {
+                fecharModalExcluirEtapa();
+            }
+        });
+
+        // Inicializar (aguardar Supabase antes de carregar etapas e versão)
+        function initCarregarEtapas() {
+            if (!checkAuth()) return;
+            if (window.supabase) {
+                carregarVersao();
+                carregarEtapas();
+            } else {
+                window.addEventListener('supabase-ready', function onReady() {
+                    window.removeEventListener('supabase-ready', onReady);
+                    carregarVersao();
+                    carregarEtapas();
+                });
+            }
+        }
+        initCarregarEtapas();
+
+        // ===== DARK MODE / LIGHT MODE =====
+        function initDarkMode() {
+            const darkMode = getCookie('darkMode');
+            const isDarkMode = darkMode === 'true';
+            applyTheme(isDarkMode);
+            const toggle = document.getElementById('darkModeToggle');
+            if (toggle) {
+                toggle.checked = isDarkMode;
+                toggle.addEventListener('change', function() {
+                    const newMode = this.checked;
+                    applyTheme(newMode);
+                    setCookie('darkMode', newMode ? 'true' : 'false', 365);
+                });
+            }
+        }
+
+        function applyTheme(isDarkMode) {
+            const themeText = document.getElementById('themeToggleText');
+            if (isDarkMode) {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                if (themeText) themeText.textContent = 'Modo Escuro';
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                if (themeText) themeText.textContent = 'Modo Claro';
+            }
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
+        }
+
+        // Initialize dark mode and mobile menu on page load
+        async function verificarMostrarMenuAdmin() {
+            const el = document.getElementById('menu-item-admin');
+            if (!el || !window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                const { data } = await window.supabase.from('SAAS_Usuarios').select('super_admin').eq('auth_user_id', user.id).limit(1);
+                if (data && data.length > 0 && data[0].super_admin === true) {
+                    el.style.display = '';
+                }
+            } catch (e) { console.warn('Erro ao verificar super_admin:', e); }
+        }
+
+        async function initMenuOcultar() {
+            const CACHE_KEY = 'menuOcultarCache';
+            const TTL_MS = 30 * 60 * 1000;
+            const cached = typeof getCookie === 'function' ? getCookie(CACHE_KEY) : null;
+            if (cached) {
+                try {
+                    const obj = JSON.parse(decodeURIComponent(cached));
+                    if (obj && Array.isArray(obj.arr) && obj.exp && Date.now() < obj.exp) {
+                        obj.arr.forEach(id => document.body.classList.add('menu-oculta-' + id));
+                        return;
+                    }
+                } catch (e) { /* cache inválido */ }
+            }
+            if (!window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                const { data: usuario } = await window.supabase.from('SAAS_Usuarios').select('contaId').eq('auth_user_id', user.id).limit(1).maybeSingle();
+                if (!usuario?.contaId) return;
+                const { data: conta } = await window.supabase.from('SAAS_Contas').select('plano').eq('id', usuario.contaId).limit(1).maybeSingle();
+                if (!conta?.plano) return;
+                const { data: plano } = await window.supabase.from('SAAS_Planos').select('menu_ocultar').eq('id', conta.plano).limit(1).maybeSingle();
+                const arr = Array.isArray(plano?.menu_ocultar) ? plano.menu_ocultar : [];
+                arr.forEach(id => document.body.classList.add('menu-oculta-' + id));
+                if (typeof setCookie === 'function') setCookie(CACHE_KEY, encodeURIComponent(JSON.stringify({arr, exp: Date.now() + TTL_MS})), 1/48);
+            } catch (e) { console.warn('initMenuOcultar:', e); }
+        }
+        function clearMenuOcultarCache() {
+            document.cookie = 'menuOcultarCache=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            initDarkMode();
+            initMenuOcultar();
+            verificarMostrarMenuAdmin();
+
+            document.querySelector('#crmEtapasContactDetailOverlay .ce-cd-modal-box')?.addEventListener('click', function(e) {
+                if (!e.target.closest('.contact-detail-etiquetas-wrap')) crmEtapasCloseEtiquetaPicker();
+            });
+
+            // Filtro de busca de leads por nome ou telefone
+            const buscarInput = document.getElementById('buscarLeadInput');
+            if (buscarInput) {
+                buscarInput.addEventListener('input', function() {
+                    const termo = this.value.toLowerCase().trim();
+                    const cards = document.querySelectorAll('.card-item');
+                    cards.forEach(card => {
+                        if (!termo) {
+                            card.style.display = '';
+                            return;
+                        }
+                        const texto = card.textContent.toLowerCase();
+                        card.style.display = texto.includes(termo) ? '' : 'none';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

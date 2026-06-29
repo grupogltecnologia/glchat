@@ -1,0 +1,94 @@
+/* Menu Item de Administração - Estilo especial para Super Admin */
+
+.menu-item-admin {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    margin: 8px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item-admin::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-item-admin:hover::before {
+    opacity: 1;
+}
+
+.menu-item-admin:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateX(4px);
+}
+
+.menu-item-admin .menu-icon {
+    color: #fff;
+}
+
+.menu-item-admin .menu-text {
+    color: #fff;
+    font-weight: 600;
+}
+
+.menu-badge-admin {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: auto;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Animação de entrada */
+@keyframes slideInAdmin {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.menu-item-admin {
+    animation: slideInAdmin 0.3s ease-out;
+}
+
+/* Efeito de brilho */
+.menu-item-admin::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}

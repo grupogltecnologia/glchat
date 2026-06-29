@@ -1,0 +1,30 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+!deploy/env.production.example
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Runtime storage and uploads
+/storage/uploads/
+/public/uploads/
+/storage/logs/
+*.log
+
+# Local/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.swp
+
+# OS/XAMPP local artifacts
+desktop.ini

@@ -1,0 +1,176 @@
+[
+  {
+    "parameters": {
+      "amount": "={{ (Math.max(0, (new Date($json.body.dataEnvio) - Date.now()) / 1000)).toFixed(2) }}"
+    },
+    "type": "n8n-nodes-base.wait",
+    "typeVersion": 1.1,
+    "position": [
+      2704,
+      1536
+    ],
+    "id": "9720ff03-eb7b-478f-a649-c7575b2d5828",
+    "name": "ESPERAR HORARIO",
+    "webhookId": "622057a2-8a0b-4c51-a81d-e5c89b99c638"
+  },
+  {
+    "parameters": {},
+    "type": "n8n-nodes-base.wait",
+    "typeVersion": 1.1,
+    "position": [
+      5440,
+      1952
+    ],
+    "id": "657711c7-5410-484b-9bf5-c8375dc386a1",
+    "name": "ESPERAR 5 SEG",
+    "webhookId": "be0eabf6-8551-461a-8b5c-bdd9a407c450"
+  },
+  {
+    "parameters": {
+      "amount": "={{ (Math.max(0, (new Date($json.body.dataEnvio) - Date.now()) / 1000)).toFixed(2) }}"
+    },
+    "type": "n8n-nodes-base.wait",
+    "typeVersion": 1.1,
+    "position": [
+      2640,
+      3072
+    ],
+    "id": "3bec6361-941c-4a41-9a6f-f8a6323a1643",
+    "name": "ESPERAR HORARIO1",
+    "webhookId": "622057a2-8a0b-4c51-a81d-e5c89b99c638"
+  },
+  {
+    "parameters": {},
+    "type": "n8n-nodes-base.wait",
+    "typeVersion": 1.1,
+    "position": [
+      4560,
+      3568
+    ],
+    "id": "aa14f027-7e6f-468a-a578-1f235d0e4e5f",
+    "name": "ESPERAR 5 SEG1",
+    "webhookId": "be0eabf6-8551-461a-8b5c-bdd9a407c450"
+  },
+  {
+    "parameters": {
+      "operation": "delete",
+      "key": "={{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}"
+    },
+    "type": "n8n-nodes-base.redis",
+    "typeVersion": 1,
+    "position": [
+      7712,
+      5632
+    ],
+    "id": "11faaa18-d050-4d8e-83e1-e0e0841646ba",
+    "name": "DELETAR"
+  },
+  {
+    "parameters": {
+      "operation": "push",
+      "list": "={{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}",
+      "messageData": "={{ $item(\"0\").$node[\"ORGANIZAR - INFOS\"].json[\"data\"][\"conversation\"] }}",
+      "tail": true
+    },
+    "type": "n8n-nodes-base.redis",
+    "typeVersion": 1,
+    "position": [
+      5344,
+      5440
+    ],
+    "id": "ccfaccc8-7312-4af2-be57-3cb0f2a84961",
+    "name": "MEMÓRIA DE TEXTO",
+    "alwaysOutputData": true
+  },
+  {
+    "parameters": {
+      "operation": "push",
+      "list": "={{ $node[\"ORGANIZAR - INFOS\"].json[\"data\"][\"remoteJid\"] }}",
+      "messageData": "={{ $json.text }}",
+      "tail": true
+    },
+    "type": "n8n-nodes-base.redis",
+    "typeVersion": 1,
+    "position": [
+      5504,
+      5632
+    ],
+    "id": "238be99d-f10f-4a46-9573-2d3726f977cf",
+    "name": "MEMÓRIA DE AUDIO"
+  },
+  {
+    "parameters": {
+      "operation": "push",
+      "list": "={{ $node[\"ORGANIZAR - INFOS\"].json[\"data\"][\"remoteJid\"] }}",
+      "messageData": "={{ $json.content }}",
+      "tail": true
+    },
+    "type": "n8n-nodes-base.redis",
+    "typeVersion": 1,
+    "position": [
+      5584,
+      6096
+    ],
+    "id": "d0dee20a-b8ca-4aed-8249-58a112e0a361",
+    "name": "MEMÓRIA DE IMAGEM"
+  },
+  {
+    "parameters": {
+      "options": {}
+    },
+    "type": "n8n-nodes-base.splitInBatches",
+    "typeVersion": 3,
+    "position": [
+      8464,
+      5632
+    ],
+    "id": "fed8a2d9-9dde-4536-b2e3-4898c0d5a042",
+    "name": "ENVIO SEPARADO"
+  },
+  {
+    "parameters": {
+      "operation": "get",
+      "propertyName": "mensagem2",
+      "key": "={{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.redis",
+    "typeVersion": 1,
+    "position": [
+      6384,
+      5632
+    ],
+    "id": "9a6fad82-b9c8-44fa-a52f-ca4e59d84b99",
+    "name": "MEMORIA2"
+  },
+  {
+    "parameters": {
+      "operation": "get",
+      "propertyName": "mensagem1",
+      "key": "={{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.redis",
+    "typeVersion": 1,
+    "position": [
+      5728,
+      5632
+    ],
+    "id": "d9fe479f-12eb-4f91-b54e-aa86befc7ebc",
+    "name": "MEMORIA1"
+  },
+  {
+    "parameters": {
+      "amount": "={{ $('ORGANIZAR - INFOS AGENTE').item.json.agente.intervaloEntreMensagens }}"
+    },
+    "type": "n8n-nodes-base.wait",
+    "typeVersion": 1.1,
+    "position": [
+      6160,
+      5600
+    ],
+    "id": "4cac802e-ceeb-45f6-8afd-ed5e56bb8aa5",
+    "name": "INTERVALO ENTRE MENSAGENS",
+    "webhookId": "657b22f9-fb17-4660-9cdd-67b74b90e2f5"
+  }
+]

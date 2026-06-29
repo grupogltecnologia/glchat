@@ -1,0 +1,120 @@
+# Mapa técnico do JSON n8n
+
+## Contagem por tipo de node
+
+- `n8n-nodes-base.webhook`: 54
+- `n8n-nodes-base.httpRequest`: 47
+- `n8n-nodes-base.executionData`: 40
+- `n8n-nodes-base.supabase`: 38
+- `n8n-nodes-base.stickyNote`: 31
+- `n8n-nodes-base.respondToWebhook`: 22
+- `n8n-nodes-base.set`: 21
+- `n8n-nodes-base.html`: 19
+- `n8n-nodes-base.if`: 19
+- `n8n-nodes-base.code`: 10
+- `n8n-nodes-base.n8n`: 9
+- `n8n-nodes-base.postgres`: 8
+- `n8n-nodes-base.switch`: 7
+- `n8n-nodes-base.redis`: 6
+- `@n8n/n8n-nodes-langchain.openAi`: 6
+- `n8n-nodes-base.wait`: 5
+- `n8n-nodes-base.filter`: 5
+- `n8n-nodes-base.aggregate`: 4
+- `n8n-nodes-base.noOp`: 3
+- `n8n-nodes-base.convertToFile`: 3
+- `n8n-nodes-base.s3`: 3
+- `@n8n/n8n-nodes-langchain.vectorStoreSupabase`: 2
+- `@n8n/n8n-nodes-langchain.embeddingsOpenAi`: 2
+- `n8n-nodes-base.emailSend`: 2
+- `n8n-nodes-base.splitOut`: 1
+- `n8n-nodes-base.summarize`: 1
+- `n8n-nodes-base.scheduleTrigger`: 1
+- `@n8n/n8n-nodes-langchain.lmChatOpenAi`: 1
+- `n8n-nodes-base.splitInBatches`: 1
+- `@n8n/n8n-nodes-langchain.memoryPostgresChat`: 1
+- `@n8n/n8n-nodes-langchain.agent`: 1
+- `@n8n/n8n-nodes-langchain.documentDefaultDataLoader`: 1
+- `n8n-nodes-base.httpRequestTool`: 1
+- `@n8n/n8n-nodes-langchain.toolCode`: 1
+- `n8n-nodes-base.supabaseTool`: 1
+
+## Telas HTML extraídas
+
+- 01. `HTML1` — Criar Nova Campanha - IA Chatconversa — `01_html_extraido/01_criar_nova_campanha_ia_chatconversa.html` — 304530 chars
+- 02. `HTML2` — Login - IA Chatconversa — `01_html_extraido/02_login_ia_chatconversa.html` — 40987 chars
+- 03. `HTML4` — Conexões - IA Chatconversa — `01_html_extraido/03_conexões_ia_chatconversa.html` — 267592 chars
+- 04. `HTML5` — Disparos em Grupos - IA Chatconversa — `01_html_extraido/04_disparos_em_grupos_ia_chatconversa.html` — 260316 chars
+- 05. `HTML6` — Disparos - IA Chatconversa — `01_html_extraido/05_disparos_ia_chatconversa.html` — 165872 chars
+- 06. `HTML7` — Dashboard - IA Chatconversa — `01_html_extraido/06_dashboard_ia_chatconversa.html` — 201355 chars
+- 07. `HTML9` — Contatos - IA Chatconversa — `01_html_extraido/07_contatos_ia_chatconversa.html` — 380477 chars
+- 08. `HTML11` — Detalhes do Disparo - IA Chatconversa — `01_html_extraido/08_detalhes_do_disparo_ia_chatconversa.html` — 211490 chars
+- 09. `HTML12` — Configurações - IA Chatconversa — `01_html_extraido/09_configurações_ia_chatconversa.html` — 280442 chars
+- 10. `HTML13` — Administração - IA Chatconversa — `01_html_extraido/10_administração_ia_chatconversa.html` — 656371 chars
+- 11. `HTML14` — Criar Cadastro - IA Chatconversa — `01_html_extraido/11_criar_cadastro_ia_chatconversa.html` — 38365 chars
+- 12. `HTML` — CRM - IA Chatconversa — `01_html_extraido/12_crm_ia_chatconversa.html` — 155827 chars
+- 13. `HTML3` — Agente IA - IA Chatconversa — `01_html_extraido/13_agente_ia_ia_chatconversa.html` — 578506 chars
+- 14. `HTML15` — Etapas do Quadro - IA Chatconversa — `01_html_extraido/14_etapas_do_quadro_ia_chatconversa.html` — 364214 chars
+- 15. `HTML16` — Chat - IA Chatconversa — `01_html_extraido/15_chat_ia_chatconversa.html` — 790585 chars
+- 16. `HTML17` — Redefinir Senha - IA Chatconversa — `01_html_extraido/16_redefinir_senha_ia_chatconversa.html` — 23811 chars
+- 17. `HTML18` — Acesso Bloqueado - IA Chatconversa — `01_html_extraido/17_acesso_bloqueado_ia_chatconversa.html` — 8453 chars
+- 18. `HTML19` — Definir Super Admin - IA Chatconversa — `01_html_extraido/18_definir_super_admin_ia_chatconversa.html` — 8094 chars
+- 19. `EMAIL USUARIO CRIADO` — sem title — `01_html_extraido/19_email_usuario_criado.html` — 35 chars
+- 20. `EMAIL USUARIO CRIADO1` — sem title — `01_html_extraido/20_email_usuario_criado1.html` — 22 chars
+- 21. `HTML20` — Ajuda - IA Chatconversa — `01_html_extraido/21_ajuda_ia_chatconversa.html` — 148861 chars
+
+## Webhooks e rotas detectadas
+
+- `GET /disparos-individuais` — node `Webhook` — HTML conectado: HTML1
+- `GET /login` — node `LOGIN` — HTML conectado: HTML2
+- `GET /conexoes` — node `LOGIN1` — HTML conectado: HTML4
+- `GET /disparos-grupos` — node `DISPAROS GRUPOS` — HTML conectado: HTML5
+- `GET /disparos` — node `HISTORICO DISPAROS` — HTML conectado: HTML6
+- `GET /dashboard` — node `DASHBOARD` — HTML conectado: HTML7
+- `POST /criarconexaoback` — node `CRIAR CONEXAO2` — HTML conectado: -
+- `POST /listar-grupos` — node `LISTAR GRUPOS` — HTML conectado: -
+- `POST /contar-participantes` — node `CONTAR PARTICIPANTES` — HTML conectado: -
+- `POST /exportar-participantes` — node `EXPORTAR PARTICIPANTES` — HTML conectado: -
+- `POST /puxarcontato-wpp` — node `PUXAR CONTATOS4` — HTML conectado: -
+- `POST /disparar` — node `DISPARAR MENSAGEM` — HTML conectado: -
+- `GET /detalhes-disparo` — node `DETALHES DISPARO` — HTML conectado: HTML11
+- `POST /disparar-grupos` — node `DISPARAR MENSAGEM1` — HTML conectado: -
+- `POST /uploadmedia` — node `UPLOAD MEDIA` — HTML conectado: -
+- `POST /usuario-gratis` — node `CRIAR CADASTRO` — HTML conectado: -
+- `GET /configuracoes` — node `DETALHES DISPARO1` — HTML conectado: HTML12
+- `GET /adminpannel` — node `TELA ADMIN` — HTML conectado: HTML13
+- `POST /criar-usuario` — node `CRIAR CADASTRO1` — HTML conectado: -
+- `GET /cadastrar` — node `CRIAR CADASTRO2` — HTML conectado: HTML14
+- `GET /crm` — node `CRM` — HTML conectado: HTML
+- `GET /agentes-ia` — node `CRM1` — HTML conectado: HTML3
+- `GET /crm-etapas` — node `CRM2` — HTML conectado: HTML15
+- `POST /calcular-token` — node `CALCULAR TOKEN IA` — HTML conectado: -
+- `POST /agente-no-whatsapp` — node `Webhook1` — HTML conectado: -
+- `POST /alterar-openai` — node `ALTERAR OPEN AI` — HTML conectado: -
+- `POST /testar-openai` — node `TESTAR OPEN AI` — HTML conectado: -
+- `POST /inserir-conhecimento` — node `INSERIR CONHECIMENTO` — HTML conectado: -
+- `POST /criar-instrucao` — node `CRIAR INSTRUCAO IA` — HTML conectado: -
+- `POST /salvarfoto` — node `SALVAR FOTO E TELEFONE` — HTML conectado: -
+- `POST /enviar-mensagem` — node `ENVIAR MENSAGEM` — HTML conectado: -
+- `GET /chat` — node `CHAT` — HTML conectado: HTML16
+- `GET /redefinir-senha` — node `CHAT1` — HTML conectado: HTML17
+- `GET /acesso-bloqueado` — node `ACESSO BLOQUEADO` — HTML conectado: HTML18
+- `POST /sincronizar-contatos` — node `SINCRONIZAR CONTATOS` — HTML conectado: -
+- `POST /token` — node `RECEBER WEBHOOK` — HTML conectado: -
+- `POST /enviar-audio` — node `ENVIAR MIDIA` — HTML conectado: -
+- `POST /gerarmensagem-ia` — node `GERAR MENSAGEM IA - DISPAROS` — HTML conectado: -
+- `POST /sincronizar-mensagens` — node `SINCRONIZAR MENSAGENS` — HTML conectado: -
+- `POST /atualizar-sql` — node `ATUALIZAR SQL` — HTML conectado: -
+- `POST /adicionar-usuario` — node `ADICIONAR USUÁRIO1` — HTML conectado: -
+- `GET /asnn883b28d23dmifbudom` — node `SUPER ADMIN` — HTML conectado: HTML19
+- `POST /personalizar-pv` — node `PERSONALIZAR PV` — HTML conectado: -
+- `POST /criar-pv` — node `CRIAR PV` — HTML conectado: -
+- `GET /buscar-pv` — node `BUSCAR PV` — HTML conectado: -
+- `POST /personalizar-pagina` — node `PERSONALIZAR PAGINA` — HTML conectado: -
+- `POST /integracao` — node `INTEGRACAO PAGAMENTO` — HTML conectado: -
+- `POST /sincronizar-supabase` — node `SINCRONIZAR SMTP SUPABASE` — HTML conectado: -
+- `POST /alterar-credencial-smtp` — node `ALTERAR CREDENCIAL` — HTML conectado: -
+- `POST /enviar-teste-email` — node `TESTAR EMAIL` — HTML conectado: -
+- `POST /personalizar-saas` — node `PERSONALIZAR SAAS` — HTML conectado: -
+- `POST /email-supabase` — node `EMAIL RESET PASSWORD SUPABASE` — HTML conectado: -
+- `GET /contatos` — node `CONTATOS` — HTML conectado: HTML9
+- `GET /ajuda` — node `TELA AJUDA` — HTML conectado: HTML20

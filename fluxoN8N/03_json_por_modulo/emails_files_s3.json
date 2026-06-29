@@ -1,0 +1,147 @@
+[
+  {
+    "parameters": {
+      "operation": "toBinary",
+      "sourceProperty": "base64",
+      "options": {
+        "mimeType": "={{ $json.mimetype }}"
+      }
+    },
+    "type": "n8n-nodes-base.convertToFile",
+    "typeVersion": 1.1,
+    "position": [
+      5072,
+      5632
+    ],
+    "id": "455f213c-3cfc-49aa-a127-f43b519ff57c",
+    "name": "CONVERTE AUDIO1",
+    "alwaysOutputData": false,
+    "retryOnFail": false
+  },
+  {
+    "parameters": {
+      "operation": "toBinary",
+      "sourceProperty": "base64",
+      "options": {
+        "mimeType": "={{ $json.mimetype }}"
+      }
+    },
+    "type": "n8n-nodes-base.convertToFile",
+    "typeVersion": 1.1,
+    "position": [
+      5168,
+      6096
+    ],
+    "id": "7ba89bb9-5564-47af-bf8e-d64a7ac8ad4e",
+    "name": "CONVERTE AUDIO",
+    "alwaysOutputData": false,
+    "retryOnFail": false
+  },
+  {
+    "parameters": {
+      "operation": "toBinary",
+      "sourceProperty": "base64",
+      "options": {
+        "fileName": "={{ $json.fileName }}",
+        "mimeType": "={{ $json.mimetype }}"
+      }
+    },
+    "type": "n8n-nodes-base.convertToFile",
+    "typeVersion": 1.1,
+    "position": [
+      3472,
+      5472
+    ],
+    "id": "c2dcbe51-4ddd-40a2-b951-7a6e78e5e0be",
+    "name": "Convert to File"
+  },
+  {
+    "parameters": {
+      "fromEmail": "={{ $json.smtp_email }}",
+      "toEmail": "={{ $('SUBSTITUIR VARIAVEIS1').item.json.vars.email }}",
+      "subject": "={{ $json.assunto_email_novousuario }}",
+      "html": "={{ $json.html_email_novousuario }}",
+      "options": {
+        "appendAttribution": false
+      }
+    },
+    "type": "n8n-nodes-base.emailSend",
+    "typeVersion": 2.1,
+    "position": [
+      2320,
+      6688
+    ],
+    "id": "81e572d1-e8ba-4784-bdb3-7923ec24e5c9",
+    "name": "EMAIL USUARIO CRIADO",
+    "webhookId": "1796a219-a737-4f1b-9a5d-97f3b85adb09"
+  },
+  {
+    "parameters": {
+      "fromEmail": "={{ $json.body.smtp_email }}",
+      "toEmail": "={{ $json.body.para }}",
+      "subject": "={{ $json.body.assunto }}",
+      "html": "={{ $json.body.html }}",
+      "options": {
+        "appendAttribution": false
+      }
+    },
+    "type": "n8n-nodes-base.emailSend",
+    "typeVersion": 2.1,
+    "position": [
+      3792,
+      5040
+    ],
+    "id": "f3ebb33a-400a-41ca-85f0-d94579f53d4f",
+    "name": "EMAIL USUARIO CRIADO1",
+    "webhookId": "1796a219-a737-4f1b-9a5d-97f3b85adb09"
+  },
+  {
+    "parameters": {
+      "operation": "upload",
+      "bucketName": "n8n",
+      "fileName": "={{ encodeURIComponent($binary[Object.keys($binary)[0]].fileName) }}",
+      "binaryPropertyName": "file",
+      "additionalFields": {}
+    },
+    "type": "n8n-nodes-base.s3",
+    "typeVersion": 1,
+    "position": [
+      1472,
+      1376
+    ],
+    "id": "f84da821-d47a-40cb-9c5d-b1adac958c21",
+    "name": "Upload a file3"
+  },
+  {
+    "parameters": {
+      "operation": "upload",
+      "bucketName": "n8n",
+      "fileName": "={{ encodeURIComponent($binary[Object.keys($binary)[0]].fileName) }}",
+      "additionalFields": {}
+    },
+    "type": "n8n-nodes-base.s3",
+    "typeVersion": 1,
+    "position": [
+      3888,
+      5472
+    ],
+    "id": "c0cd99a3-500a-4d90-8e68-6780dbece487",
+    "name": "Upload a file1"
+  },
+  {
+    "parameters": {
+      "operation": "upload",
+      "bucketName": "n8n",
+      "fileName": "={{ encodeURIComponent($binary[Object.keys($binary)[0]].fileName) }}",
+      "additionalFields": {}
+    },
+    "type": "n8n-nodes-base.s3",
+    "typeVersion": 1,
+    "position": [
+      480,
+      5392
+    ],
+    "id": "5dd73e59-b13d-430e-af65-2c439a4d945a",
+    "name": "Upload a file"
+  }
+]

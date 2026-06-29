@@ -1,0 +1,170 @@
+[
+  {
+    "index": 1,
+    "node_name": "HTML1",
+    "title": "Criar Nova Campanha - IA Chatconversa",
+    "file_html": "storage/extracted_html/01_criar_nova_campanha_ia_chatconversa.html",
+    "file_php": "app/Views/pages/01_criar_nova_campanha_ia_chatconversa.php",
+    "size": 304530
+  },
+  {
+    "index": 2,
+    "node_name": "HTML2",
+    "title": "Login - IA Chatconversa",
+    "file_html": "storage/extracted_html/02_login_ia_chatconversa.html",
+    "file_php": "app/Views/pages/02_login_ia_chatconversa.php",
+    "size": 40987
+  },
+  {
+    "index": 3,
+    "node_name": "HTML4",
+    "title": "Conexões - IA Chatconversa",
+    "file_html": "storage/extracted_html/03_conex_es_ia_chatconversa.html",
+    "file_php": "app/Views/pages/03_conex_es_ia_chatconversa.php",
+    "size": 267592
+  },
+  {
+    "index": 4,
+    "node_name": "HTML5",
+    "title": "Disparos em Grupos - IA Chatconversa",
+    "file_html": "storage/extracted_html/04_disparos_em_grupos_ia_chatconversa.html",
+    "file_php": "app/Views/pages/04_disparos_em_grupos_ia_chatconversa.php",
+    "size": 260316
+  },
+  {
+    "index": 5,
+    "node_name": "HTML6",
+    "title": "Disparos - IA Chatconversa",
+    "file_html": "storage/extracted_html/05_disparos_ia_chatconversa.html",
+    "file_php": "app/Views/pages/05_disparos_ia_chatconversa.php",
+    "size": 165872
+  },
+  {
+    "index": 6,
+    "node_name": "HTML7",
+    "title": "Dashboard - IA Chatconversa",
+    "file_html": "storage/extracted_html/06_dashboard_ia_chatconversa.html",
+    "file_php": "app/Views/pages/06_dashboard_ia_chatconversa.php",
+    "size": 201355
+  },
+  {
+    "index": 7,
+    "node_name": "HTML9",
+    "title": "Contatos - IA Chatconversa",
+    "file_html": "storage/extracted_html/07_contatos_ia_chatconversa.html",
+    "file_php": "app/Views/pages/07_contatos_ia_chatconversa.php",
+    "size": 380477
+  },
+  {
+    "index": 8,
+    "node_name": "HTML11",
+    "title": "Detalhes do Disparo - IA Chatconversa",
+    "file_html": "storage/extracted_html/08_detalhes_do_disparo_ia_chatconversa.html",
+    "file_php": "app/Views/pages/08_detalhes_do_disparo_ia_chatconversa.php",
+    "size": 211490
+  },
+  {
+    "index": 9,
+    "node_name": "HTML12",
+    "title": "Configurações - IA Chatconversa",
+    "file_html": "storage/extracted_html/09_configura_es_ia_chatconversa.html",
+    "file_php": "app/Views/pages/09_configura_es_ia_chatconversa.php",
+    "size": 280442
+  },
+  {
+    "index": 10,
+    "node_name": "HTML13",
+    "title": "Administração - IA Chatconversa",
+    "file_html": "storage/extracted_html/10_administra_o_ia_chatconversa.html",
+    "file_php": "app/Views/pages/10_administra_o_ia_chatconversa.php",
+    "size": 656371
+  },
+  {
+    "index": 11,
+    "node_name": "HTML14",
+    "title": "Criar Cadastro - IA Chatconversa",
+    "file_html": "storage/extracted_html/11_criar_cadastro_ia_chatconversa.html",
+    "file_php": "app/Views/pages/11_criar_cadastro_ia_chatconversa.php",
+    "size": 38365
+  },
+  {
+    "index": 12,
+    "node_name": "HTML",
+    "title": "CRM - IA Chatconversa",
+    "file_html": "storage/extracted_html/12_crm_ia_chatconversa.html",
+    "file_php": "app/Views/pages/12_crm_ia_chatconversa.php",
+    "size": 155827
+  },
+  {
+    "index": 13,
+    "node_name": "HTML3",
+    "title": "Agente IA - IA Chatconversa",
+    "file_html": "storage/extracted_html/13_agente_ia_ia_chatconversa.html",
+    "file_php": "app/Views/pages/13_agente_ia_ia_chatconversa.php",
+    "size": 578506
+  },
+  {
+    "index": 14,
+    "node_name": "HTML15",
+    "title": "Etapas do Quadro - IA Chatconversa",
+    "file_html": "storage/extracted_html/14_etapas_do_quadro_ia_chatconversa.html",
+    "file_php": "app/Views/pages/14_etapas_do_quadro_ia_chatconversa.php",
+    "size": 364214
+  },
+  {
+    "index": 15,
+    "node_name": "HTML16",
+    "title": "Chat - IA Chatconversa",
+    "file_html": "storage/extracted_html/15_chat_ia_chatconversa.html",
+    "file_php": "app/Views/pages/15_chat_ia_chatconversa.php",
+    "size": 790585
+  },
+  {
+    "index": 16,
+    "node_name": "HTML17",
+    "title": "Redefinir Senha - IA Chatconversa",
+    "file_html": "storage/extracted_html/16_redefinir_senha_ia_chatconversa.html",
+    "file_php": "app/Views/pages/16_redefinir_senha_ia_chatconversa.php",
+    "size": 23811
+  },
+  {
+    "index": 17,
+    "node_name": "HTML18",
+    "title": "Acesso Bloqueado - IA Chatconversa",
+    "file_html": "storage/extracted_html/17_acesso_bloqueado_ia_chatconversa.html",
+    "file_php": "app/Views/pages/17_acesso_bloqueado_ia_chatconversa.php",
+    "size": 8453
+  },
+  {
+    "index": 18,
+    "node_name": "HTML19",
+    "title": "Definir Super Admin - IA Chatconversa",
+    "file_html": "storage/extracted_html/18_definir_super_admin_ia_chatconversa.html",
+    "file_php": "app/Views/pages/18_definir_super_admin_ia_chatconversa.php",
+    "size": 8094
+  },
+  {
+    "index": 19,
+    "node_name": "EMAIL USUARIO CRIADO",
+    "title": "",
+    "file_html": "storage/extracted_html/19_email_usuario_criado.html",
+    "file_php": "app/Views/pages/19_email_usuario_criado.php",
+    "size": 35
+  },
+  {
+    "index": 20,
+    "node_name": "EMAIL USUARIO CRIADO1",
+    "title": "",
+    "file_html": "storage/extracted_html/20_email_usuario_criado1.html",
+    "file_php": "app/Views/pages/20_email_usuario_criado1.php",
+    "size": 22
+  },
+  {
+    "index": 21,
+    "node_name": "HTML20",
+    "title": "Ajuda - IA Chatconversa",
+    "file_html": "storage/extracted_html/21_ajuda_ia_chatconversa.html",
+    "file_php": "app/Views/pages/21_ajuda_ia_chatconversa.php",
+    "size": 148861
+  }
+]

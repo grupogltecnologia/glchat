@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Versão limpa: HTML + CSS apenas. JavaScript removido. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disparos em Grupos - IA Chatconversa</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="shortcut icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="apple-touch-icon" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .main-content,
+        .admin-main-content,
+        .main-content-wrapper {
+            max-width: none !important;
+            width: 100% !important;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --brand-50: rgba(108, 99, 255, 0.1);
+            --brand-500: #6C63FF;
+            --surface: #fbfcfd;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.03);
+        }
+
+        body {
+            background: #f4f4f5;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #18181b;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            margin: 0;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e2e8f0;
+        }
+
+        body.light-mode {
+            background: #f4f4f5;
+            color: #18181b;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .app-layout { display: flex; min-height: 100vh; }
+
+        /* ========== SIDEBAR (dashboard.html style) ========== */
+        .sidebar {
+            width: 72px;
+            overflow: hidden;
+            background: #1A202C;
+            border-right: none;
+            transition: width 0.3s ease;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .sidebar.sidebar-expanded { width: 250px; overflow: visible; transition-duration: 0s; }
+        .sidebar:hover { width: 250px; }
+        .sidebar-header {
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-height: 96px;
+        }
+        .sidebar-logo-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px; height: 40px; min-width: 32px;
+            flex-shrink: 0;
+            transition: width 0.3s ease, min-width 0.3s ease;
+        }
+        .sidebar:hover .sidebar-logo-link,
+        .sidebar.sidebar-expanded .sidebar-logo-link,
+        .sidebar.mobile-open .sidebar-logo-link {
+            width: 100%; min-width: 180px; justify-content: center; padding: 0 16px;
+        }
+        .sidebar-logo-img {
+            width: 32px; height: 32px; min-width: 32px;
+            object-fit: contain;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        .sidebar:hover .sidebar-logo-img,
+        .sidebar.sidebar-expanded .sidebar-logo-img,
+        .sidebar.mobile-open .sidebar-logo-img {
+            width: auto; max-width: 100%; height: 45px; min-width: 0;
+        }
+        .sidebar-menu {
+            padding: 4px 0; flex: 1; min-height: 0;
+            display: flex; flex-direction: column; gap: 0;
+        }
+        .sidebar-nav-divider {
+            height: 1px; background: rgba(255,255,255,0.1);
+            margin: 4px 16px; flex-shrink: 0;
+        }
+        .menu-item {
+            display: flex; align-items: center; justify-content: center;
+            padding: 10px 0; margin: 2px 10px;
+            color: rgba(255,255,255,0.7); text-decoration: none;
+            transition: all 0.2s ease; position: relative;
+            white-space: nowrap; border-radius: 16px; text-align: left;
+        }
+        .sidebar:hover .menu-item,
+        .sidebar.sidebar-expanded .menu-item,
+        .sidebar.mobile-open .menu-item {
+            justify-content: flex-start; padding: 10px 12px;
+        }
+        .menu-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .menu-item.active { background: #2D3748; color: white; }
+        .menu-item-admin { font-weight: 700 !important; }
+        .menu-badge-admin {
+            display: none; margin-left: auto; font-size: 0.6rem; font-weight: 600;
+            padding: 2px 8px; border-radius: 999px; background: #6C63FF; color: #fff;
+        }
+        .sidebar:hover .menu-badge-admin,
+        .sidebar.sidebar-expanded .menu-badge-admin,
+        .sidebar.mobile-open .menu-badge-admin { display: inline-block; }
+        .menu-icon {
+            width: 25px; text-align: center; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .menu-icon svg { width: 16px; height: 16px; transition: all 0.3s ease; }
+        .menu-item:hover .menu-icon svg { transform: scale(1.1); }
+        .menu-icon .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded', sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: normal;
+            font-style: normal;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-item:hover .menu-icon .material-symbols-rounded { transform: scale(1.1); }
+        .menu-text {
+            margin-left: 0; opacity: 0; width: 0; overflow: hidden; flex: 0;
+            transition: opacity 0.3s ease, margin-left 0.3s ease, width 0.3s ease;
+        }
+        .sidebar:hover .menu-text,
+        .sidebar.sidebar-expanded .menu-text,
+        .sidebar.mobile-open .menu-text {
+            margin-left: 16px; opacity: 1; width: auto; flex: 1;
+        }
+        .menu-badge-novidade {
+            display: none; margin-left: auto; font-size: 0.6rem; font-weight: 500;
+            padding: 2px 8px; border-radius: 999px; background: #6C63FF; color: #fff;
+        }
+        .sidebar:hover .menu-badge-novidade,
+        .sidebar.sidebar-expanded .menu-badge-novidade,
+        .sidebar.mobile-open .menu-badge-novidade { display: inline-block; }
+        .sidebar-footer {
+            margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 0; flex-shrink: 0;
+        }
+        .version-text {
+            color: #666; font-size: 0.6rem; text-align: center;
+            padding: 8px 20px; opacity: 0; transition: opacity 0.3s ease;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .sidebar:hover .version-text,
+        .sidebar.sidebar-expanded .version-text { opacity: 1; }
+        .logout-item { color: #ff6b6b !important; }
+        .logout-item:hover { background: rgba(255,107,107,0.1) !important; color: #ff6b6b !important; }
+
+        /* Dark Mode Toggle */
+        .theme-toggle-item { cursor: default; }
+        .theme-toggle-item:hover { background: transparent !important; color: inherit !important; }
+        .theme-switch {
+            display: none; position: relative; width: 44px; height: 24px; margin-left: auto;
+        }
+        .sidebar:hover .theme-switch,
+        .sidebar.sidebar-expanded .theme-switch,
+        .sidebar.mobile-open .theme-switch { display: inline-block; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .theme-switch .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #444; transition: 0.3s; border-radius: 24px;
+        }
+        .theme-switch .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px;
+            left: 3px; bottom: 3px; background-color: white;
+            transition: 0.3s; border-radius: 50%;
+        }
+        .theme-switch input:checked + .slider { background-color: #22c55e; }
+        .theme-switch input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Sidebar responsive (ícones alinhados a chat.html) */
+        @media (max-height: 800px) {
+            .sidebar-header { padding: 12px 20px; }
+            .menu-item { padding: 10px 20px; }
+            .menu-icon { width: 26px; }
+            .menu-icon svg { width: 18px; height: 18px; }
+            .menu-icon .material-symbols-rounded { font-size: 18px; }
+        }
+        @media (max-height: 700px) {
+            .sidebar-header { padding: 8px 20px; }
+            .menu-item { padding: 8px 20px; }
+            .menu-text { font-size: 0.85rem; }
+            .menu-icon { width: 22px; }
+            .menu-icon svg { width: 16px; height: 16px; }
+            .menu-icon .material-symbols-rounded { font-size: 16px; }
+            .theme-switch { width: 38px; height: 20px; }
+        }
+        @media (max-height: 600px) {
+            .sidebar-header { padding: 6px 20px; }
+            .menu-item { padding: 6px 20px; }
+            .menu-icon { width: 20px; }
+            .menu-icon svg { width: 14px; height: 14px; }
+            .menu-icon .material-symbols-rounded { font-size: 14px; }
+            .menu-text { font-size: 0.8rem; margin-left: 10px; }
+            .theme-switch { width: 34px; height: 18px; }
+        }
+
+        /* Mobile close btn - hidden on desktop */
+        .mobile-close-btn {
+            display: none; position: absolute; top: 12px; right: 12px;
+            background: none; border: none; color: rgba(255,255,255,0.5);
+            cursor: pointer; padding: 4px; border-radius: 8px; z-index: 10;
+        }
+        .mobile-close-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+
+        /* Light mode sidebar */
+        body.light-mode .sidebar { background: #ffffff; border-right: 1px solid #e2e8f0; }
+        body.light-mode .menu-item { color: #64748b; }
+        body.light-mode .menu-item:hover { background: #f1f5f9; color: #0f172a; }
+        body.light-mode .menu-item.active { background: #f1f5f9; color: #0f172a; }
+        body.light-mode .sidebar-nav-divider { background: #e2e8f0; }
+        body.light-mode .sidebar-footer { border-top-color: #e2e8f0; }
+        body.light-mode .logout-item { color: #ef4444 !important; }
+        body.light-mode .logout-item:hover { background: rgba(239,68,68,0.08) !important; }
+        body.light-mode .theme-switch .slider { background-color: #cbd5e1; }
+        body.light-mode .version-text { color: #94a3b8; }
+        body.light-mode .mobile-close-btn { color: #64748b; }
+        body.light-mode .mobile-close-btn:hover { color: #0f172a; background: #f1f5f9; }
+        body.light-mode .menu-icon svg { stroke: #64748b; }
+        body.light-mode .menu-item:hover .menu-icon svg,
+        body.light-mode .menu-item.active .menu-icon svg { stroke: #0f172a; }
+        body.light-mode .menu-badge-novidade { background: #6C63FF; color: #fff; }
+        body.light-mode .menu-badge-admin { background: #6C63FF; color: #fff; }
+
+        /* Mobile */
+        .sidebar-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999;
+        }
+        .sidebar-overlay.active { display: block; }
+        .mobile-menu-toggle {
+            display: none; position: fixed; top: 16px; left: 16px; z-index: 998;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: white; border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer; align-items: center; justify-content: center;
+        }
+        .mobile-menu-toggle svg { width: 20px; height: 20px; color: #334155; }
+        body.dark-mode .mobile-menu-toggle {
+            background: #1e293b; border-color: rgba(71,85,105,0.4);
+        }
+        body.dark-mode .mobile-menu-toggle svg { color: #e2e8f0; }
+        @media (max-width: 768px) {
+            .mobile-menu-toggle { display: flex; }
+            .mobile-menu-toggle.visible { display: flex; }
+            .sidebar { width: 0; }
+            .sidebar.mobile-open { width: 250px; }
+            .sidebar.mobile-open .mobile-close-btn { display: flex; }
+            .main-content-wrapper { margin-left: 0 !important; }
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .main-content-wrapper {
+            flex: 1; margin-left: 72px;
+            display: flex; flex-direction: column;
+            height: 100vh; overflow: hidden;
+            min-width: 0;
+        }
+
+        /* ========== WIZARD HEADER ========== */
+        .wizard-header {
+            background: white; padding: 20px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            z-index: 10; display: flex; align-items: center; justify-content: space-between;
+        }
+        body.dark-mode .wizard-header {
+            background: rgba(30,41,59,0.6);
+            border-bottom-color: rgba(71,85,105,0.4);
+        }
+        body.light-mode .wizard-header { background: white; }
+        .wizard-header-left { display: flex; align-items: center; gap: 16px; }
+        .wizard-back-btn, .wizard-back-arrow {
+            width: 40px; height: 40px; border-radius: 50%; border: none;
+            background: transparent; color: #94a3b8; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; font-size: 16px;
+        }
+        .wizard-back-btn:hover, .wizard-back-arrow:hover { color: #0f172a; background: #f1f5f9; }
+        body.dark-mode .wizard-back-btn:hover, body.dark-mode .wizard-back-arrow:hover { color: #f8fafc; background: rgba(51,65,85,0.5); }
+        .wizard-header-title, .wizard-title {
+            font-size: 1.5rem; font-weight: 800; color: #0f172a;
+            letter-spacing: -0.025em; line-height: 1;
+        }
+        body.dark-mode .wizard-header-title, body.dark-mode .wizard-title { color: #f8fafc; }
+        body.light-mode .wizard-header-title, body.light-mode .wizard-title { color: #0f172a; }
+        .wizard-header-subtitle, .wizard-subtitle {
+            font-size: 0.6875rem; font-weight: 700; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px;
+        }
+        .wizard-header-step, .wizard-step-indicator { font-size: 0.75rem; font-weight: 700; color: #64748b; }
+        body.dark-mode .wizard-header-step, body.dark-mode .wizard-step-indicator { color: #94a3b8; }
+        .wizard-header-right { display: flex; align-items: center; }
+
+        /* ========== WIZARD BODY ========== */
+        .wizard-body { flex: 1; overflow: hidden; display: flex; }
+        .wizard-form-area, .wizard-form-column {
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+        }
+        .wizard-form-inner {
+            padding: 24px 40px; max-width: 900px; margin: 0 auto; width: 100%; flex: 1;
+        }
+
+        /* ========== STEPPER ========== */
+        .stepper, .wizard-stepper {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 40px; position: relative;
+            max-width: 600px; margin-left: auto; margin-right: auto; padding: 0 16px;
+        }
+        .stepper-line-bg {
+            position: absolute; left: 40px; right: 40px; top: 20px;
+            height: 4px; background: #e2e8f0; z-index: 0; border-radius: 999px;
+        }
+        body.dark-mode .stepper-line-bg { background: rgba(71,85,105,0.4); }
+        body.light-mode .stepper-line-bg { background: #e2e8f0; }
+        .stepper-line-progress {
+            position: absolute; left: 40px; top: 20px;
+            height: 4px; background: #6C63FF; z-index: 0;
+            border-radius: 999px; transition: width 0.5s ease;
+        }
+        .stepper-step {
+            position: relative; z-index: 10; display: flex; flex-direction: column;
+            align-items: center; gap: 8px; cursor: pointer; outline: none;
+            border: none; background: none; padding: 0;
+        }
+        .stepper-step.disabled { cursor: not-allowed; }
+        .stepper-num, .stepper-circle {
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.875rem; transition: all 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: white; color: #94a3b8; border: 2px solid #e2e8f0;
+        }
+        body.dark-mode .stepper-circle, body.dark-mode .stepper-num {
+            background: #1e293b; border-color: rgba(71,85,105,0.5); color: #64748b;
+        }
+        .stepper-step.active .stepper-circle,
+        .stepper-step.completed .stepper-circle,
+        .stepper-num.active, .stepper-num.completed {
+            background: #6C63FF; color: white; border-color: #6C63FF;
+            box-shadow: 0 0 0 4px rgba(37,211,102,0.15);
+        }
+        .stepper-num.pending {
+            background: white; color: #94a3b8; border: 2px solid #e2e8f0;
+        }
+        body.dark-mode .stepper-num.pending {
+            background: #1e293b; border-color: rgba(71,85,105,0.5); color: #64748b;
+        }
+        .stepper-step.active .stepper-label { color: #0f172a; }
+        .stepper-step.completed .stepper-label { color: #6C63FF; }
+        body.dark-mode .stepper-step.active .stepper-label { color: #f8fafc; }
+        .stepper-label {
+            font-size: 0.625rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.08em; transition: color 0.3s; color: #94a3b8;
+        }
+        .stepper-label.active-label { color: #0f172a; }
+        .stepper-label.pending-label { color: #94a3b8; }
+        body.dark-mode .stepper-label.active-label { color: #f8fafc; }
+        body.light-mode .stepper-label.active-label { color: #0f172a; }
+
+        /* ========== STEP CARD ========== */
+        .step-card {
+            background: white; border-radius: 2rem; padding: 32px;
+            box-shadow: var(--shadow-soft); border: 1px solid #f1f5f9;
+        }
+        body.dark-mode .step-card {
+            background: rgba(30,41,59,0.6); border-color: rgba(71,85,105,0.4);
+        }
+        body.light-mode .step-card { background: white; border-color: #f1f5f9; }
+        .step-card-title { font-size: 1.125rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+        body.dark-mode .step-card-title { color: #f8fafc; }
+        body.light-mode .step-card-title { color: #0f172a; }
+        .step-card-desc { font-size: 0.875rem; color: #64748b; margin-bottom: 32px; }
+        body.dark-mode .step-card-desc { color: #94a3b8; }
+
+        /* ========== STEP CONTENT ========== */
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+
+        /* Section desc */
+        .section-desc { font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px; }
+        body.dark-mode .section-desc { color: #64748b; }
+        .section-title { font-size: 0.875rem; font-weight: 700; color: #334155; }
+        body.dark-mode .section-title { color: #e2e8f0; }
+
+        /* ========== FORM ========== */
+        .connections-section, .lists-section, .messages-section, .main-schedule-container { margin-bottom: 0; }
+        .connections-section { margin-bottom: 32px; }
+        .connections-header, .lists-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+        }
+        .connections-header label, .lists-header label {
+            font-size: 0.875rem; font-weight: 700; color: #334155;
+        }
+        body.dark-mode .connections-header label,
+        body.dark-mode .lists-header label { color: #e2e8f0; }
+        body.light-mode .connections-header label,
+        body.light-mode .lists-header label { color: #334155; }
+        .connections-header-buttons { display: flex; gap: 8px; }
+
+        .select-active-btn, .refresh-connections-btn-small, .refresh-lists-btn-small {
+            background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.2);
+            color: #6C63FF; padding: 6px 12px; border-radius: 8px;
+            font-weight: 700; font-size: 0.7rem; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+            font-family: inherit;
+        }
+        .select-active-btn:hover, .refresh-connections-btn-small:hover, .refresh-lists-btn-small:hover {
+            background: rgba(37,211,102,0.15);
+        }
+        body.dark-mode .select-active-btn,
+        body.dark-mode .refresh-connections-btn-small,
+        body.dark-mode .refresh-lists-btn-small {
+            background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.25); color: #6C63FF;
+        }
+
+        /* Connection cards */
+        .connections-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+        .connection-card {
+            background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+            padding: 12px; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04); min-width: 200px;
+        }
+        .connection-card:hover { border-color: #cbd5e1; }
+        .connection-card.selected { border-color: #6C63FF; background: rgba(37,211,102,0.04); }
+        body.dark-mode .connection-card {
+            background: rgba(30,41,59,0.5); border-color: rgba(71,85,105,0.4);
+        }
+        body.dark-mode .connection-card.selected {
+            border-color: #6C63FF; background: rgba(37,211,102,0.08);
+        }
+        body.light-mode .connection-card { background: white; border-color: #e2e8f0; }
+        body.light-mode .connection-card.selected {
+            border-color: #6C63FF; background: rgba(37,211,102,0.04);
+        }
+        .connection-header { display: flex; align-items: center; gap: 10px; }
+        .connection-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #6C63FF; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem; flex-shrink: 0; overflow: hidden;
+        }
+        .connection-name { font-size: 0.875rem; font-weight: 700; color: #0f172a; }
+        body.dark-mode .connection-name { color: #f8fafc; }
+        body.light-mode .connection-name { color: #0f172a; }
+        .connection-phone { font-size: 0.65rem; font-family: monospace; color: #94a3b8; }
+        .connection-status-pill {
+            font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; font-weight: 600;
+        }
+        .connection-status-pill.connected { background: rgba(37,211,102,0.15); color: #6C63FF; }
+        .connection-status-pill.disconnected { background: rgba(239,68,68,0.1); color: #ef4444; }
+        .connections-selected, .lists-selected {
+            display: none; padding: 8px 12px; border-radius: 8px;
+            background: rgba(37,211,102,0.08); font-size: 0.75rem;
+            font-weight: 600; color: #6C63FF;
+        }
+        .connections-selected.show, .lists-selected.show { display: block; }
+        body.dark-mode .connections-selected, body.dark-mode .lists-selected {
+            background: rgba(37,211,102,0.1); color: #6C63FF;
+        }
+
+        /* Lists */
+        .lists-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+        .list-card {
+            background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+            padding: 12px 16px; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04); min-width: 160px;
+        }
+        .list-card:hover { border-color: #cbd5e1; }
+        .list-card.selected { border-color: #6C63FF; background: rgba(37,211,102,0.04); }
+        body.dark-mode .list-card {
+            background: rgba(30,41,59,0.5); border-color: rgba(71,85,105,0.4);
+        }
+        body.dark-mode .list-card.selected {
+            border-color: #6C63FF; background: rgba(37,211,102,0.08);
+        }
+        body.light-mode .list-card { background: white; }
+        .list-info { display: flex; align-items: center; gap: 10px; }
+        .list-icon { color: #94a3b8; flex-shrink: 0; }
+        .list-name { font-size: 0.875rem; font-weight: 700; color: #0f172a; }
+        body.dark-mode .list-name { color: #f8fafc; }
+        body.light-mode .list-name { color: #0f172a; }
+        .campaign-name-section { margin-bottom: 20px; }
+        .campaign-name-input {
+            width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 12px 14px; font-size: 0.875rem; font-weight: 500; color: #334155;
+            font-family: inherit; outline: none; transition: all 0.2s;
+        }
+        .campaign-name-input:focus { border-color: #6C63FF; box-shadow: 0 0 0 3px rgba(37,211,102,0.12); background: #fff; }
+        body.dark-mode .campaign-name-input { background: rgba(15,23,42,0.4); border-color: rgba(71,85,105,0.5); color: #e2e8f0; }
+        .crm-filter-builder { margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; }
+        .segment-select {
+            width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 10px 12px; font-size: 0.8rem; color: #334155; font-family: inherit; outline: none;
+        }
+        .segment-add-btn {
+            background: #6C63FF; color: #fff; border: none; border-radius: 10px; padding: 10px 14px;
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+        }
+        .segment-add-btn:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; }
+        .crm-selected-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .crm-stage-chip {
+            display: inline-flex; align-items: center; gap: 6px; background: #eef4ff; border: 1px solid #c7d8ff;
+            color: #2f4a8f; border-radius: 12px; padding: 8px 12px; font-size: 0.75rem; font-weight: 700;
+        }
+        .crm-stage-chip button { background: none; border: none; color: inherit; cursor: pointer; font-weight: 800; padding: 0; margin-left: 6px; }
+        @media (max-width: 768px) { .crm-filter-builder { grid-template-columns: 1fr; } }
+        .audience-summary {
+            margin-top: 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background: #fff;
+            padding: 16px;
+        }
+        .audience-summary-title { font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+        .audience-summary-desc { font-size: 0.8rem; color: #64748b; margin-bottom: 12px; }
+        .audience-metric {
+            border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px;
+            text-align: center; margin-bottom: 12px; background: #f8fafc;
+        }
+        .audience-metric-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; color: #94a3b8; margin-bottom: 4px; }
+        .audience-metric-value { font-size: 2.5rem; line-height: 1.1; font-weight: 800; color: #0f172a; }
+        .audience-metric-status { margin-top: 6px; font-size: 0.88rem; font-weight: 700; color: #6C63FF; }
+        .applied-filters { border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #fff; }
+        .applied-filters h4 { margin: 0 0 8px; font-size: 0.95rem; font-weight: 700; color: #334155; }
+        .filter-row { border-top: 1px solid #f1f5f9; padding-top: 8px; margin-top: 8px; }
+        .filter-row-title { font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 2px; }
+        .filter-row-value { font-size: 0.78rem; color: #64748b; word-break: break-word; }
+        body.dark-mode .audience-summary {
+            background: rgba(15,23,42,0.35);
+            border-color: rgba(71,85,105,0.45);
+        }
+        body.dark-mode .audience-summary-title { color: #e2e8f0; }
+        body.dark-mode .audience-summary-desc { color: #94a3b8; }
+        body.dark-mode .audience-metric {
+            background: rgba(15,23,42,0.45);
+            border-color: rgba(71,85,105,0.45);
+        }
+        body.dark-mode .audience-metric-label { color: #64748b; }
+        body.dark-mode .audience-metric-value { color: #f8fafc; }
+        body.dark-mode .audience-metric-status { color: #6C63FF; }
+        body.dark-mode .applied-filters {
+            background: rgba(15,23,42,0.3);
+            border-color: rgba(71,85,105,0.45);
+        }
+        body.dark-mode .applied-filters h4 { color: #e2e8f0; }
+        body.dark-mode .filter-row { border-top-color: rgba(71,85,105,0.35); }
+        body.dark-mode .filter-row-title { color: #e2e8f0; }
+        body.dark-mode .filter-row-value { color: #94a3b8; }
+        .multiple-lists-warning {
+            display: none; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+            color: #d97706; padding: 8px 12px; border-radius: 8px; font-size: 0.75rem;
+            font-weight: 600; margin-top: 8px;
+        }
+        .multiple-lists-warning.show { display: block; }
+
+        /* No connections/lists */
+        .no-connections, .no-lists {
+            text-align: center; padding: 32px; border-radius: 12px;
+            background: #f8fafc; border: 1px dashed #cbd5e1;
+        }
+        .no-connections h3, .no-lists h3 { font-size: 0.95rem; font-weight: 700; color: #334155; margin-bottom: 4px; }
+        .no-connections p, .no-lists p { font-size: 0.8rem; color: #94a3b8; }
+        body.dark-mode .no-connections, body.dark-mode .no-lists {
+            background: rgba(15,23,42,0.3); border-color: rgba(71,85,105,0.4);
+        }
+        body.dark-mode .no-connections h3, body.dark-mode .no-lists h3 { color: #e2e8f0; }
+
+        /* Loading skeletons */
+        .loading-connections-container, .loading-lists-container {
+            display: flex; flex-wrap: wrap; gap: 12px;
+        }
+        .loading-skeleton-connection-card, .loading-skeleton-list-card {
+            background: #f1f5f9; border-radius: 12px; padding: 16px;
+            min-width: 200px; flex: 1; animation: pulse 1.5s infinite;
+        }
+        body.dark-mode .loading-skeleton-connection-card,
+        body.dark-mode .loading-skeleton-list-card {
+            background: rgba(30,41,59,0.5);
+        }
+        .skeleton-status-pill, .skeleton-avatar, .skeleton-line-name,
+        .skeleton-line-phone, .skeleton-icon, .skeleton-line {
+            background: #e2e8f0; border-radius: 8px;
+        }
+        body.dark-mode .skeleton-status-pill, body.dark-mode .skeleton-avatar,
+        body.dark-mode .skeleton-line-name, body.dark-mode .skeleton-line-phone,
+        body.dark-mode .skeleton-icon, body.dark-mode .skeleton-line {
+            background: rgba(71,85,105,0.3);
+        }
+        .skeleton-status-pill { width: 50px; height: 16px; margin-bottom: 8px; }
+        .skeleton-header { display: flex; gap: 10px; align-items: center; }
+        .skeleton-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
+        .skeleton-info { flex: 1; }
+        .skeleton-line-name { width: 100px; height: 14px; margin-bottom: 6px; }
+        .skeleton-line-phone { width: 80px; height: 12px; }
+        .skeleton-icon { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+        .skeleton-line { width: 100px; height: 14px; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Messages */
+        .message-item {
+            background: white; border: 1px solid #e2e8f0; border-radius: 16px;
+            padding: 16px; margin-bottom: 12px; transition: all 0.2s;
+        }
+        .message-item:focus-within { border-color: #6C63FF; box-shadow: 0 0 0 3px rgba(37,211,102,0.12); }
+        body.dark-mode .message-item {
+            background: rgba(30,41,59,0.5); border-color: rgba(71,85,105,0.4);
+        }
+        body.light-mode .message-item { background: white; }
+        .message-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;
+        }
+        body.dark-mode .message-header { border-bottom-color: rgba(71,85,105,0.3); }
+        .message-title { font-size: 0.875rem; font-weight: 700; color: #6C63FF; }
+        .remove-message {
+            font-size: 0.65rem; font-weight: 700; color: #ef4444;
+            background: none; border: none; cursor: pointer;
+            padding: 4px 8px; border-radius: 4px; transition: all 0.2s;
+        }
+        .remove-message:hover { background: rgba(239,68,68,0.08); }
+        .message-item .form-group { margin-bottom: 0; }
+        .message-item .form-group label {
+            font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 6px; display: block;
+        }
+        body.dark-mode .message-item .form-group label { color: #94a3b8; }
+        body.light-mode .message-item .form-group label { color: #475569; }
+        .message-item textarea {
+            width: 100%; background: #f8fafc; border: 1px solid transparent;
+            border-radius: 12px; padding: 14px; font-size: 0.875rem;
+            font-weight: 500; color: #334155; font-family: inherit;
+            outline: none; resize: none; height: 100px; transition: all 0.2s;
+        }
+        .message-item textarea:focus { background: white; border-color: #e2e8f0; }
+        body.dark-mode .message-item textarea {
+            background: rgba(15,23,42,0.4); color: #e2e8f0;
+        }
+        body.dark-mode .message-item textarea:focus {
+            background: rgba(15,23,42,0.6); border-color: rgba(71,85,105,0.5);
+        }
+        body.light-mode .message-item textarea { background: #f8fafc; color: #334155; }
+
+        /* Variables */
+        .variables-section { margin-bottom: 8px; }
+        .variables-label { font-size: 0.7rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; }
+        .variables-container { display: flex; flex-wrap: wrap; gap: 6px; }
+        .variable-btn {
+            background: white; border: 1px solid #e2e8f0; color: #334155;
+            font-size: 0.7rem; font-weight: 700; padding: 4px 10px;
+            border-radius: 8px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 4px; font-family: inherit;
+        }
+        .variable-btn:hover { background: #f8fafc; border-color: #6C63FF; }
+        body.dark-mode .variable-btn {
+            background: rgba(30,41,59,0.5); border-color: rgba(71,85,105,0.4); color: #e2e8f0;
+        }
+        body.dark-mode .variable-btn:hover {
+            background: rgba(51, 65, 85, 0.45);
+            border-color: #6C63FF;
+        }
+        body.light-mode .variable-btn { background: white; color: #334155; }
+        .time-toggle-btn.expanded { background: rgba(37,211,102,0.08); border-color: #6C63FF; }
+        .time-variables-dropdown {
+            display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;
+            padding: 6px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;
+        }
+        body.dark-mode .time-variables-dropdown {
+            background: rgba(15,23,42,0.4); border-color: rgba(71,85,105,0.4);
+        }
+        .no-variables { font-size: 0.7rem; color: #94a3b8; font-style: italic; }
+        .custom-fields-container { position: relative; display: inline-block; }
+        .custom-fields-toggle { background: #eef2f7; border: 1px solid #dbe4f0; color: #334155; }
+        .custom-fields-toggle:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+        .custom-fields-dropdown-menu {
+            display: none; position: absolute; top: calc(100% + 6px); left: 0; width: 280px; z-index: 20;
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 24px rgba(15,23,42,0.12); padding: 10px;
+        }
+        .custom-fields-dropdown-menu.show { display: block; }
+        .custom-fields-search {
+            width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px;
+            font-size: 0.78rem; color: #334155; margin-bottom: 8px; outline: none; font-family: inherit;
+        }
+        .custom-fields-search:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+        }
+        .custom-fields-options { max-height: 190px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+        .custom-field-option { width: 100%; text-align: left; justify-content: flex-start; }
+        .custom-fields-empty { font-size: 0.75rem; color: #94a3b8; padding: 6px; text-align: center; }
+        body.dark-mode .custom-fields-toggle {
+            background: rgba(30, 41, 59, 0.65);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: #e2e8f0;
+        }
+        body.dark-mode .custom-fields-toggle:hover {
+            background: rgba(51, 65, 85, 0.55);
+            border-color: rgba(100, 116, 139, 0.6);
+        }
+        body.dark-mode .custom-fields-dropdown-menu {
+            background: #0f172a;
+            border-color: rgba(71, 85, 105, 0.55);
+            box-shadow: 0 10px 24px rgba(2, 6, 23, 0.5);
+        }
+        body.dark-mode .custom-fields-search {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(71, 85, 105, 0.55);
+            color: #e2e8f0;
+        }
+        body.dark-mode .custom-fields-search::placeholder {
+            color: #64748b;
+        }
+        body.dark-mode .custom-fields-empty {
+            color: #94a3b8;
+        }
+        body:not(.light-mode) .time-variables-dropdown {
+            background: rgba(15, 23, 42, 0.4);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+        body:not(.light-mode) .custom-fields-toggle {
+            background: rgba(30, 41, 59, 0.65);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: #e2e8f0;
+        }
+        body:not(.light-mode) .custom-fields-toggle:hover {
+            background: rgba(51, 65, 85, 0.55);
+            border-color: rgba(100, 116, 139, 0.6);
+        }
+        body:not(.light-mode) .custom-fields-dropdown-menu {
+            background: #0f172a;
+            border-color: rgba(71, 85, 105, 0.55);
+            box-shadow: 0 10px 24px rgba(2, 6, 23, 0.5);
+        }
+        body:not(.light-mode) .custom-fields-search {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(71, 85, 105, 0.55);
+            color: #e2e8f0;
+        }
+        body:not(.light-mode) .custom-fields-search::placeholder {
+            color: #64748b;
+        }
+        body:not(.light-mode) .custom-fields-empty {
+            color: #94a3b8;
+        }
+        body:not(.light-mode) .variable-btn {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(71, 85, 105, 0.4);
+            color: #e2e8f0;
+        }
+        body:not(.light-mode) .variable-btn:hover {
+            background: rgba(51, 65, 85, 0.45);
+            border-color: #6C63FF;
+        }
+
+        /* Formatting buttons */
+        .formatting-buttons { display: flex; gap: 6px; margin-bottom: 6px; }
+        .format-btn {
+            width: 30px; height: 30px; border-radius: 6px;
+            background: white; border: 1px solid #e2e8f0;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.8rem; color: #475569;
+            transition: all 0.2s; font-family: inherit;
+        }
+        .format-btn:hover { background: #f8fafc; border-color: #6C63FF; }
+        body.dark-mode .format-btn {
+            background: rgba(30,41,59,0.5); border-color: rgba(71,85,105,0.4); color: #e2e8f0;
+        }
+
+        /* Media upload */
+        .media-upload { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-top: 12px; }
+        .media-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 12px 8px; background: #f8fafc; border: 1px dashed #e2e8f0;
+            border-radius: 10px; color: #94a3b8; cursor: pointer;
+            transition: all 0.2s; font-size: 0.65rem; font-weight: 700;
+            position: relative; text-align: center; gap: 4px;
+        }
+        .media-btn input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer;
+        }
+        .media-btn:hover { background: #f1f5f9; color: #6C63FF; }
+        .media-btn.active { border-color: #6C63FF; background: rgba(37,211,102,0.04); color: #6C63FF; }
+        body.light-mode .media-btn {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #475569;
+        }
+        body.light-mode .media-btn:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            color: #6C63FF;
+        }
+        body.dark-mode .media-btn {
+            background: rgba(15,23,42,0.3); border-color: rgba(71,85,105,0.3);
+        }
+        body.dark-mode .media-btn:hover { background: rgba(51,65,85,0.4); color: #6C63FF; }
+        .file-size-limit { font-size: 0.55rem; color: #cbd5e1; margin-top: 2px; }
+        .media-preview-section { margin-top: 8px; }
+        .media-selected {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 12px; background: rgba(37,211,102,0.05); border: 1px solid rgba(37,211,102,0.2);
+            border-radius: 8px;
+        }
+        .media-info-display { display: flex; align-items: center; gap: 8px; }
+        .media-icon-display { color: #6C63FF; flex-shrink: 0; }
+        .media-name-display { font-size: 0.8rem; font-weight: 600; color: #334155; }
+        body.dark-mode .media-name-display { color: #e2e8f0; }
+        .media-size-display { font-size: 0.65rem; color: #94a3b8; }
+        .remove-media-btn {
+            background: none; border: none; color: #ef4444; cursor: pointer;
+            font-size: 1rem; padding: 4px;
+        }
+        .media-uploading {
+            padding: 12px; text-align: center;
+        }
+        .upload-text { display: flex; align-items: center; justify-content: center; gap: 8px; color: #94a3b8; font-size: 0.8rem; }
+        .upload-spinner {
+            width: 16px; height: 16px; border: 2px solid #e2e8f0;
+            border-top-color: #6C63FF; border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Add message button */
+        .add-message-btn {
+            width: 100%; padding: 12px; border-radius: 12px;
+            border: 1px dashed rgba(37,211,102,0.4); background: rgba(37,211,102,0.04);
+            color: #6C63FF; font-size: 0.875rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-family: inherit; margin-top: 12px;
+        }
+        .add-message-btn:hover { background: rgba(37,211,102,0.08); }
+        body.dark-mode .add-message-btn {
+            border-color: rgba(37,211,102,0.3); background: rgba(37,211,102,0.05); color: #6C63FF;
+        }
+
+        /* AI Settings */
+        .advanced-settings-section { margin-top: 16px; }
+        .advanced-settings-label { font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 12px; }
+        body.dark-mode .advanced-settings-label { color: #94a3b8; }
+        body.light-mode .advanced-settings-label { color: #475569; }
+        .setting-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: 12px; margin-bottom: 8px;
+        }
+        body.dark-mode .setting-item {
+            background: rgba(15,23,42,0.3); border-color: rgba(71,85,105,0.4);
+        }
+        body.light-mode .setting-item { background: #f8fafc; }
+        .setting-title {
+            font-size: 0.85rem; font-weight: 700; color: #0f172a;
+            display: flex; align-items: center; gap: 6px;
+        }
+        body.dark-mode .setting-title { color: #f8fafc; }
+        body.light-mode .setting-title { color: #0f172a; }
+        .setting-description { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
+        .chatgpt-icon { color: #6C63FF; }
+        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 24px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: #cbd5e1; border-radius: 24px; transition: 0.3s;
+        }
+        .toggle-slider:before {
+            content: ""; position: absolute; height: 18px; width: 18px;
+            left: 3px; bottom: 3px; background: white; border-radius: 50%;
+            transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #6C63FF; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(16px); }
+        .ai-settings-container { margin-top: 8px; }
+        .ai-settings-content { padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
+        body.dark-mode .ai-settings-content {
+            background: rgba(15,23,42,0.3); border-color: rgba(71,85,105,0.4);
+        }
+        .ai-input-group { margin-bottom: 12px; }
+        .ai-input-group label { font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 6px; display: block; }
+        body.dark-mode .ai-input-group label { color: #94a3b8; }
+        .ai-input, .ai-textarea {
+            width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px; font-size: 0.85rem; font-family: inherit; outline: none;
+            transition: all 0.2s; color: #334155;
+        }
+        .ai-input:focus, .ai-textarea:focus { border-color: #6C63FF; }
+        body.dark-mode .ai-input, body.dark-mode .ai-textarea {
+            background: rgba(15,23,42,0.6); border-color: rgba(71,85,105,0.5); color: #e2e8f0;
+        }
+        .ai-textarea { resize: none; height: 60px; }
+        .ai-input { width: 60px; text-align: center; }
+        .ai-note { font-size: 0.7rem; color: #94a3b8; display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+        .ai-note .info-icon { color: #6C63FF; flex-shrink: 0; }
+        .generate-ai-btn {
+            background: #6C63FF; color: white; border: none; border-radius: 10px;
+            padding: 10px 20px; font-weight: 700; font-size: 0.85rem;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s; font-family: inherit;
+        }
+        .generate-ai-btn:hover { background: #1fb954; }
+        .chatgpt-btn-icon { flex-shrink: 0; }
+
+        /* Schedule (Step 3) */
+        .schedule-section { margin-bottom: 24px; }
+        .schedule-title {
+            font-size: 0.8rem; font-weight: 700; color: #0f172a; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        body.dark-mode .schedule-title { color: #f8fafc; }
+        body.light-mode .schedule-title { color: #0f172a; }
+        .schedule-title-bar { width: 3px; height: 16px; background: #6C63FF; border-radius: 2px; }
+        .schedule-toggle-row { display: flex; align-items: center; justify-content: space-between; }
+        .toggle-label { font-size: 0.85rem; font-weight: 500; color: #475569; }
+        body.dark-mode .toggle-label { color: #94a3b8; }
+        body.light-mode .toggle-label { color: #475569; }
+        .schedule-input-container { margin-top: 12px; }
+        .schedule-datetime-input {
+            background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px; font-family: inherit; font-size: 0.85rem;
+            outline: none; color: #334155;
+        }
+        .schedule-datetime-input:focus { border-color: #6C63FF; }
+        body.dark-mode .schedule-datetime-input {
+            background: rgba(15,23,42,0.6); border-color: rgba(71,85,105,0.5); color: #e2e8f0;
+        }
+
+        .interval-row, .pause-row, .time-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .interval-input, .pause-input {
+            width: 64px; background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px; font-size: 0.85rem; font-weight: 600; text-align: center;
+            font-family: inherit; outline: none; color: #334155;
+        }
+        .interval-input:focus, .pause-input:focus { border-color: #6C63FF; }
+        body.dark-mode .interval-input, body.dark-mode .pause-input {
+            background: rgba(15,23,42,0.6); border-color: rgba(71,85,105,0.5); color: #e2e8f0;
+        }
+        .interval-label, .pause-label { font-size: 0.8rem; font-weight: 500; color: #64748b; }
+        body.dark-mode .interval-label, body.dark-mode .pause-label { color: #94a3b8; }
+        .time-input input {
+            background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px; font-size: 0.85rem; font-weight: 600;
+            font-family: inherit; outline: none; color: #334155; width: 86px;
+        }
+        .time-input input:focus { border-color: #6C63FF; }
+        body.dark-mode .time-input input {
+            background: rgba(15,23,42,0.6); border-color: rgba(71,85,105,0.5); color: #e2e8f0;
+        }
+        .time-label { font-size: 0.8rem; font-weight: 500; color: #64748b; }
+        body.dark-mode .time-label { color: #94a3b8; }
+
+        /* Days */
+        .days-section .schedule-title { margin-bottom: 12px; }
+        .days-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .day-btn {
+            flex: 1; min-width: 70px; padding: 10px; border-radius: 12px;
+            border: 1px solid #e2e8f0; background: white; color: #64748b;
+            cursor: pointer; transition: all 0.2s;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        .day-btn:hover { background: #f8fafc; }
+        .day-btn.selected {
+            background: #6C63FF; color: white; border-color: #6C63FF;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        body.dark-mode .day-btn {
+            background: rgba(30,41,59,0.5); border-color: rgba(71,85,105,0.4); color: #94a3b8;
+        }
+        body.dark-mode .day-btn.selected {
+            background: #6C63FF; border-color: #6C63FF; color: white;
+        }
+        body.light-mode .day-btn { background: white; }
+        .day-full { font-size: 0.75rem; font-weight: 700; }
+        .day-abbr { font-size: 0.5625rem; font-weight: 500; opacity: 0.6; }
+
+        /* Phone Preview */
+        .phone-preview {
+            width: 400px; flex-shrink: 0; background: #f8fafc;
+            border-left: 1px solid #e2e8f0; padding: 24px;
+            display: flex; flex-direction: column; position: relative; overflow-y: auto;
+        }
+        body.dark-mode .phone-preview {
+            background: rgba(15,23,42,0.4); border-left-color: rgba(71,85,105,0.4);
+        }
+        body.light-mode .phone-preview { background: #f8fafc; }
+        .preview-header-text, .phone-preview-title {
+            font-size: 0.875rem; font-weight: 800; color: #0f172a;
+            text-transform: uppercase; letter-spacing: 0.1em; text-align: center; margin-bottom: 4px;
+        }
+        body.dark-mode .preview-header-text, body.dark-mode .phone-preview-title { color: #f8fafc; }
+        .preview-sub-text, .phone-preview-subtitle {
+            font-size: 0.75rem; font-weight: 500; color: #94a3b8;
+            text-align: center; margin-bottom: 20px;
+        }
+        .phone-container {
+            flex: 1; max-height: 600px; border-radius: 2.5rem;
+            border: 10px solid #0f172a; background: #EFEAE2;
+            overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            margin: 0 auto; width: 100%; max-width: 300px;
+            display: flex; flex-direction: column;
+        }
+        body.dark-mode .phone-container { border-color: #334155; }
+        .phone-screen { display: flex; flex-direction: column; height: 100%; }
+        .whatsapp-header {
+            background: #075E54; color: white; padding: 10px 14px;
+            display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+        }
+        .contact-avatar {
+            width: 32px; height: 32px; border-radius: 50%; background: #b0bec5;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .contact-avatar svg { color: #78909c; }
+        .contact-name { font-weight: 700; font-size: 0.8rem; }
+        .contact-status { font-size: 0.6rem; opacity: 0.8; }
+        .chat-area {
+            flex: 1; padding: 12px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 6px; min-height: 200px;
+        }
+        .no-messages {
+            text-align: center; color: #94a3b8; font-size: 0.75rem;
+            padding: 32px 16px; font-weight: 500;
+        }
+        .message-bubble {
+            background: white; padding: 10px; border-radius: 12px 12px 12px 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08); max-width: 85%;
+            font-size: 0.8rem; color: #334155; line-height: 1.4;
+        }
+        .message-text { white-space: pre-wrap; word-break: break-word; }
+        .message-time { text-align: right; font-size: 0.55rem; color: #94a3b8; margin-top: 4px; }
+        .image-preview-whatsapp { width: 100%; border-radius: 8px; max-height: 200px; object-fit: cover; }
+        .video-preview-whatsapp { width: 100%; border-radius: 8px; max-height: 200px; }
+        .audio-preview-whatsapp, .document-preview-whatsapp {
+            display: flex; align-items: center; gap: 8px; padding: 8px;
+            background: #f0f0f0; border-radius: 8px; margin-bottom: 4px;
+        }
+        .audio-icon, .document-icon { color: #6C63FF; flex-shrink: 0; }
+        .audio-name, .document-name { font-size: 0.7rem; font-weight: 600; color: #334155; }
+        .audio-duration, .document-size { font-size: 0.6rem; color: #94a3b8; }
+        .audio-controls { width: 100%; height: 24px; margin-top: 4px; }
+        .media-preview-whatsapp { margin-bottom: 4px; }
+        .video-overlay { display: none; }
+
+        /* Dispatch button */
+        .dispatch-btn {
+            width: 100%; padding: 14px; border-radius: 12px; border: none;
+            background: #6C63FF; color: white; font-weight: 700; font-size: 0.95rem;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 4px 14px rgba(37,211,102,0.3); margin-top: 24px;
+        }
+        .dispatch-btn:hover { background: #1fb954; transform: translateY(-1px); }
+        .dispatch-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .dispatch-btn.loading { opacity: 0.7; }
+        .loading-spinner {
+            display: none; width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        .dispatch-btn.loading .loading-spinner { display: block; }
+
+        /* Validation / Success / Error */
+        .error-message, .success-message {
+            display: none; padding: 12px 16px; border-radius: 10px;
+            font-size: 0.85rem; font-weight: 600; margin-top: 12px;
+        }
+        .error-message.show { display: block; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #ef4444; }
+        .success-message.show { display: block; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #22c55e; }
+
+        /* Stats */
+        .stats {
+            display: none; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 12px; margin-top: 16px;
+        }
+        .stat-card {
+            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 16px; text-align: center;
+        }
+        body.dark-mode .stat-card { background: rgba(30,41,59,0.5); border-color: rgba(71,85,105,0.4); }
+        .stat-value { font-size: 1.5rem; font-weight: 800; color: #6C63FF; }
+        .stat-value.stat-value-compact { font-size: 0.95rem; font-weight: 700; line-height: 1.25; word-break: break-word; }
+        .stat-label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; margin-top: 4px; }
+
+        /* Toast */
+/* ========== WIZARD NAV ========== */
+        .wizard-nav {
+            background: white; border: 1px solid #e2e8f0; border-radius: 16px;
+            padding: 16px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04); position: sticky; bottom: 24px;
+            max-width: 900px; margin: 32px auto 24px; width: calc(100% - 80px); z-index: 20;
+        }
+        body.dark-mode .wizard-nav {
+            background: rgba(30,41,59,0.8); border-color: rgba(71,85,105,0.4);
+            backdrop-filter: blur(12px);
+        }
+        body.light-mode .wizard-nav { background: white; }
+        .btn-wizard-back {
+            padding: 12px 24px; border-radius: 12px; font-weight: 700; color: #64748b;
+            background: none; border: none; cursor: pointer; font-size: 0.875rem;
+            font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-wizard-back:hover { background: #f1f5f9; }
+        body.dark-mode .btn-wizard-back { color: #94a3b8; }
+        body.dark-mode .btn-wizard-back:hover { background: rgba(51,65,85,0.5); }
+        .btn-wizard-next {
+            padding: 12px 32px; border-radius: 12px; font-weight: 700; color: white;
+            background: #6C63FF; border: none; cursor: pointer; font-size: 0.875rem;
+            font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-wizard-next:hover { background: #1fb954; transform: translateY(-1px); }
+        body.dark-mode .btn-wizard-next { background: #6C63FF; }
+        body.dark-mode .btn-wizard-next:hover { background: #1fb954; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .phone-preview { display: none; }
+        }
+        @media (max-width: 768px) {
+            .wizard-form-inner { padding: 16px 20px; }
+            .media-upload { grid-template-columns: repeat(2,1fr); }
+            .wizard-nav { width: calc(100% - 40px); }
+        }
+
+        /* Section title for light mode */
+        body.light-mode .section-title { color: #6C63FF !important; }
+    
+
+        /* Grupo-specific styles */
+        .whatsapp-warning {
+            display: none; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+            color: #d97706; padding: 12px 16px; border-radius: 8px; font-size: 0.8rem;
+            font-weight: 600; margin-top: 8px; line-height: 1.4;
+        }
+        .whatsapp-warning.show { display: block; }
+        body.dark-mode .whatsapp-warning {
+            background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); color: #fbbf24;
+        }
+
+        .toggle-container {
+            display: flex; align-items: center; gap: 12px; margin-top: 8px;
+        }
+        .toggle-container .toggle-switch {
+            position: relative; width: 54px; height: 30px;
+            background: #444; border-radius: 15px; cursor: pointer;
+            transition: all 0.3s ease; border: 2px solid transparent;
+        }
+        .toggle-container .toggle-switch.disabled { cursor: not-allowed; opacity: 0.5; }
+        .toggle-container .toggle-switch:not(.disabled):hover { background: #555; }
+        .toggle-container .toggle-switch.active {
+            background: #6C63FF; border-color: #6C63FF;
+            box-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
+        }
+        .toggle-container .toggle-switch.active:hover { background: #6C63FF; }
+        .toggle-container .toggle-slider {
+            position: absolute; top: 2px; left: 2px; width: 22px; height: 22px;
+            background: white; border-radius: 50%; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .toggle-container .toggle-switch.active .toggle-slider {
+            transform: translateX(24px); background: white;
+        }
+        .toggle-checkbox { display: none; }
+
+        .groups-section { margin-bottom: 24px; }
+        .groups-selected { margin-top: 8px; }
+
+        body.menu-oculta-chat [data-menu-id="chat"] { display: none !important; }
+        body.menu-oculta-agentes-ia [data-menu-id="agentes-ia"] { display: none !important; }
+        body.menu-oculta-crm [data-menu-id="crm"] { display: none !important; }
+        body.menu-oculta-conexoes [data-menu-id="conexoes"] { display: none !important; }
+        body.menu-oculta-disparos [data-menu-id="disparos"] { display: none !important; }
+        body.menu-oculta-contatos [data-menu-id="contatos"] { display: none !important; }
+        body.menu-oculta-listas [data-menu-id="listas"] { display: none !important; }
+        body.menu-oculta-ajuda [data-menu-id="ajuda"] { display: none !important; }
+        body.menu-oculta-configuracoes [data-menu-id="configuracoes"] { display: none !important; }
+
+    </style>
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    <style>
+        .toast-container {
+            position: fixed !important;
+            top: max(20px, env(safe-area-inset-top, 0px)) !important;
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) !important;
+            z-index: 200100 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 8px !important;
+            width: min(380px, calc(100vw - 28px)) !important;
+            pointer-events: none !important;
+            box-sizing: border-box !important;
+        }
+        .toast-notification {
+            pointer-events: auto !important;
+            margin: 0 !important;
+            padding: 10px 14px 10px 0 !important;
+            border-radius: 12px !important;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+            font-size: 13px !important;
+            line-height: 1.35 !important;
+            letter-spacing: -0.01em !important;
+            font-weight: 400 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0 !important;
+            opacity: 0 !important;
+            transform: translateY(-8px) scale(0.98) !important;
+            transition: opacity 0.22s ease, transform 0.22s ease !important;
+            color: rgba(0, 0, 0, 0.88) !important;
+            background: rgba(255, 255, 255, 0.76) !important;
+            backdrop-filter: saturate(180%) blur(22px) !important;
+            -webkit-backdrop-filter: saturate(180%) blur(22px) !important;
+            border: 1px solid rgba(0, 0, 0, 0.09) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04) inset !important;
+            max-width: none !important;
+        }
+        .toast-notification.show {
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+        }
+        .toast-notification::before {
+            content: '' !important;
+            align-self: stretch !important;
+            width: 4px !important;
+            min-height: 2.5em !important;
+            margin: 6px 12px 6px 8px !important;
+            border-radius: 3px !important;
+            flex-shrink: 0 !important;
+            background: rgba(0, 122, 255, 0.95) !important;
+        }
+        .toast-notification.info::before { background: rgba(0, 122, 255, 0.95) !important; }
+        .toast-notification.success::before { background: rgba(52, 199, 89, 0.95) !important; }
+        .toast-notification.error::before { background: rgba(255, 59, 48, 0.95) !important; }
+        .toast-notification .toast-message {
+            flex: 1 !important;
+            min-width: 0 !important;
+            word-break: break-word !important;
+            padding-right: 4px !important;
+        }
+        body.dark-mode .toast-notification {
+            color: rgba(255, 255, 255, 0.92) !important;
+            background: rgba(44, 44, 46, 0.78) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 0 0.5px rgba(255, 255, 255, 0.06) inset !important;
+        }
+        body.dark-mode .toast-notification.info::before { background: rgba(10, 132, 255, 0.95) !important; }
+        body.dark-mode .toast-notification.success::before { background: rgba(48, 209, 88, 0.95) !important; }
+        body.dark-mode .toast-notification.error::before { background: rgba(255, 69, 58, 0.95) !important; }
+
+        /* === Dropdowns: fundo branco e texto preto (light e dark) === */
+        body.light-mode select,
+        body.dark-mode select,
+        body:not(.light-mode) select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select option,
+        body.dark-mode select option,
+        body:not(.light-mode) select option,
+        body.light-mode select optgroup,
+        body.dark-mode select optgroup,
+        body:not(.light-mode) select optgroup {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.light-mode select[class],
+        body.dark-mode select[class],
+        body:not(.light-mode) select[class] {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select[class] option,
+        body.dark-mode select[class] option,
+        body:not(.light-mode) select[class] option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tema antes da primeira pintura: evita flash claro (cookie darkMode, mesma lógica que getCookie) -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar (Dashboard Style) -->
+        <div class="sidebar">
+            <button class="mobile-close-btn" id="mobileCloseBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo-link">
+                    <img class="sidebar-logo-img" src="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/logo" alt="IA Chatconversa">
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item" data-menu-id="dashboard">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">analytics</span>
+                    </span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="chat">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+                    </span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="agentes-ia">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">network_intel_node</span>
+                    </span>
+                    <span class="menu-text">Agentes IA</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="crm">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">view_kanban</span>
+                    </span>
+                    <span class="menu-text">CRM</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="conexoes">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">qr_code</span>
+                    </span>
+                    <span class="menu-text">Conexões</span>
+                </a>
+                <a href="#" class="menu-item active" data-menu-id="disparos">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+                    </span>
+                    <span class="menu-text">Disparos</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="contatos">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">contacts</span>
+                    </span>
+                    <span class="menu-text">Contatos</span>
+                </a>
+                <div class="sidebar-nav-divider"></div>
+                <a href="#" class="menu-item" data-menu-id="ajuda">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">help</span>
+                    </span>
+                    <span class="menu-text">Ajuda</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="configuracoes">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Configurações</span>
+                </a>
+                <a href="#" id="menu-item-admin" class="menu-item menu-item-admin" style="display: none;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">admin_panel_settings</span>
+                    </span>
+                    <span class="menu-text">Administração</span>
+                    <span class="menu-badge-admin">Admin</span>
+                </a>
+            </nav>
+            <div class="version-text" id="versaoAtualTexto">Versão atual: -</div>
+            <div class="sidebar-footer">
+                <div class="menu-item theme-toggle-item">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text" id="themeToggleText">Modo Escuro</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="darkModeToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#" class="menu-item logout-item">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Sair</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Wizard Header -->
+            <div class="wizard-header">
+                <div class="wizard-header-left">
+                    <button class="wizard-back-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5"></path>
+                            <polyline points="12,19 5,12 12,5"></polyline>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="wizard-title">Disparos em Grupos</h1>
+                        <p class="wizard-subtitle">Assistente passo a passo</p>
+                    </div>
+                </div>
+                <div class="wizard-header-right">
+                    <span class="wizard-step-indicator">Etapa <span id="currentStepLabel">1</span> de 3</span>
+                </div>
+            </div>
+
+            <!-- Wizard Body: Split layout -->
+            <div class="wizard-body">
+                <!-- Left Column: Form -->
+                <div class="wizard-form-column">
+                    <div class="wizard-form-inner">
+                        <!-- Stepper -->
+                        <div class="wizard-stepper">
+                            <div class="stepper-line-bg"></div>
+                            <div class="stepper-line-progress" id="stepperProgress"></div>
+                            <div class="stepper-step active" id="stepperStep1">
+                                <div class="stepper-circle">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="8"></circle></svg>
+                                </div>
+                                <span class="stepper-label">Destino</span>
+                            </div>
+                            <div class="stepper-step" id="stepperStep2">
+                                <div class="stepper-circle"><span>2</span></div>
+                                <span class="stepper-label">Mensagem</span>
+                            </div>
+                            <div class="stepper-step" id="stepperStep3">
+                                <div class="stepper-circle"><span>3</span></div>
+                                <span class="stepper-label">Regras</span>
+                            </div>
+                        </div>
+
+                        <form id="dispatchForm">
+                            <!-- =================== STEP 1: DESTINO =================== -->
+                            <div class="step-content active" id="stepContent1">
+                                <div class="step-card">
+                                    <h2 class="step-card-title">Para quais grupos vamos enviar?</h2>
+                                    <p class="step-card-desc">Escolha a conexão e os filtros por etiquetas e CRM para o disparo.</p>
+
+                                    <div class="campaign-name-section">
+                                        <label class="section-title" for="campaignName">Nome da campanha *</label>
+                                        <input type="text" id="campaignName" name="campaignName" class="campaign-name-input" placeholder="Ex: Campanha grupos março/2026" maxlength="120" required>
+                                    </div>
+
+                                    <!-- Connections Section (SINGLE selection) -->
+                                    <div class="connections-section">
+                                        <div class="connections-header">
+                                            <label class="section-title">Selecione uma conexao *</label>
+                                            <div class="connections-header-buttons">
+                                                <button type="button" class="refresh-connections-btn-small" title="Atualizar conexoes">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <polyline points="23,4 23,10 17,10"></polyline>
+                                                        <polyline points="1,20 1,14 7,14"></polyline>
+                                                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p class="section-desc">Selecione apenas uma conexao para fazer o disparo nos grupos.</p>
+                                        <div id="connectionsContainer">
+                                            <div class="loading-connections-container">
+                                                <div class="loading-skeleton-connection-card">
+                                                    <div class="skeleton-status-pill"></div>
+                                                    <div class="skeleton-header">
+                                                        <div class="skeleton-avatar"></div>
+                                                        <div class="skeleton-info">
+                                                            <div class="skeleton-line-name"></div>
+                                                            <div class="skeleton-line-phone"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="loading-skeleton-connection-card">
+                                                    <div class="skeleton-status-pill"></div>
+                                                    <div class="skeleton-header">
+                                                        <div class="skeleton-avatar"></div>
+                                                        <div class="skeleton-info">
+                                                            <div class="skeleton-line-name"></div>
+                                                            <div class="skeleton-line-phone"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="loading-skeleton-connection-card">
+                                                    <div class="skeleton-status-pill"></div>
+                                                    <div class="skeleton-header">
+                                                        <div class="skeleton-avatar"></div>
+                                                        <div class="skeleton-info">
+                                                            <div class="skeleton-line-name"></div>
+                                                            <div class="skeleton-line-phone"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Segmentação Section -->
+                                    <div class="lists-section">
+                                        <div class="lists-header">
+                                            <label class="section-title">Segmentação por Etiquetas</label>
+                                            <button type="button" class="refresh-lists-btn-small" title="Atualizar listas">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="23,4 23,10 17,10"></polyline>
+                                                    <polyline points="1,20 1,14 7,14"></polyline>
+                                                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <p class="section-desc">Selecione uma ou mais etiquetas para segmentar os grupos.</p>
+                                        <div id="listsContainer">
+                                            <div class="loading-lists-container">
+                                                <div class="loading-skeleton-list-card">
+                                                    <div class="skeleton-icon"></div>
+                                                    <div class="skeleton-line"></div>
+                                                </div>
+                                                <div class="loading-skeleton-list-card">
+                                                    <div class="skeleton-icon"></div>
+                                                    <div class="skeleton-line"></div>
+                                                </div>
+                                                <div class="loading-skeleton-list-card">
+                                                    <div class="skeleton-icon"></div>
+                                                    <div class="skeleton-line"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="whatsapp-warning" id="whatsappWarning">
+                                            <strong>Certifique-se que o WhatsApp selecionado esta em todos os grupos da lista.</strong> Caso nao estiver no grupo nao e possivel enviar a mensagem.
+                                        </div>
+                                        <div class="audience-summary" id="audienceSummary">
+                                            <div class="audience-summary-title">Resumo do Público</div>
+                                            <div class="audience-summary-desc">Estimativa baseada nos filtros selecionados.</div>
+                                            <div class="audience-metric">
+                                                <div class="audience-metric-label">Grupos Elegíveis</div>
+                                                <div class="audience-metric-value" id="eligibleContactsCount">0</div>
+                                                <div class="audience-metric-status" id="eligibleContactsStatus">Todos os grupos selecionados</div>
+                                            </div>
+                                            <div class="applied-filters">
+                                                <h4>Filtros Aplicados</h4>
+                                                <div class="filter-row">
+                                                    <div class="filter-row-title">Etiquetas</div>
+                                                    <div class="filter-row-value" id="filterEtiquetas">Nenhuma etiqueta selecionada</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- =================== STEP 2: MENSAGEM =================== -->
+                            <div class="step-content" id="stepContent2" style="display:none;">
+                                <div class="step-card">
+                                    <h2 class="step-card-title">O que vamos enviar?</h2>
+                                    <p class="step-card-desc">Crie variacoes de mensagens. O sistema enviara apenas 1 mensagem por grupo (escolhida aleatoriamente).</p>
+
+                                    <div class="messages-section">
+                                        <label class="section-title">Mensagens a serem enviadas *</label>
+                                        <div id="messagesContainer">
+                                            <!-- Mensagens serao adicionadas aqui dinamicamente -->
+                                        </div>
+                                        <button type="button" class="add-message-btn" id="addMessageBtn">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                            </svg>
+                                            Adicionar Mensagem
+                                        </button>
+
+                                        <!-- Advanced Settings Section -->
+                                        <div class="advanced-settings-section">
+                                            <div class="advanced-settings-label">Configuracoes avancadas:</div>
+                                            <div class="advanced-settings-container">
+                                                <div class="setting-item">
+                                                    <div class="setting-info">
+                                                        <div class="setting-title">
+                                                            <svg class="chatgpt-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142-.0852 4.783-2.7582a.7712.7712 0 0 0 .7806 0l5.8428 3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
+                                                            </svg>
+                                                            Gerar mensagens com IA
+                                                        </div>
+                                                        <div class="setting-description">Utiliza inteligencia artificial para criar mensagens personalizadas e persuasivas</div>
+                                                    </div>
+                                                    <label class="toggle-switch">
+                                                        <input type="checkbox" id="aiMessagesToggle">
+                                                        <span class="toggle-slider"></span>
+                                                    </label>
+                                                </div>
+
+                                                <!-- AI Settings Container -->
+                                                <div id="aiSettingsContainer" class="ai-settings-container" style="display: none;">
+                                                    <div class="ai-settings-content">
+                                                        <div class="ai-input-group">
+                                                            <label for="aiVariationsCount">Quantidade de variacoes de mensagens:</label>
+                                                            <input type="number" id="aiVariationsCount" min="1" max="10" value="3" class="ai-input">
+                                                        </div>
+                                                        <div class="ai-input-group">
+                                                            <label for="aiInstructions">Instrucoes adicionais:</label>
+                                                            <textarea id="aiInstructions" placeholder="Ex: Torne a mensagem mais persuasiva, use tom profissional, inclua call-to-action..." class="ai-textarea"></textarea>
+                                                        </div>
+                                                        <div class="ai-note">
+                                                            <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                                            </svg>
+                                                            <span>A mensagem sera gerada a partir das mensagens ja inseridas e dessas instrucoes adicionais.</span>
+                                                        </div>
+                                                        <button type="button" class="generate-ai-btn">
+                                                            <svg class="chatgpt-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142-.0852 4.783-2.7582a.7712.7712 0 0 0 .7806 0l5.8428 3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
+                                                            </svg>
+                                                            <span>Gerar mensagens com IA</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- =================== STEP 3: REGRAS =================== -->
+                            <div class="step-content" id="stepContent3" style="display:none;">
+                                <div class="step-card">
+                                    <h2 class="step-card-title">Regras e Agendamento</h2>
+                                    <p class="step-card-desc">Defina os horários, intervalos e proteções anti-bloqueio.</p>
+
+                                    <div class="main-schedule-container">
+                                        <!-- Agendar disparo -->
+                                        <div class="schedule-section">
+                                            <div class="schedule-title"><span class="schedule-title-bar"></span>Agendar disparo</div>
+                                            <div class="schedule-toggle-row">
+                                                <label class="toggle-label">Agendar para data específica</label>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" id="scheduleToggle">
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="schedule-input-container" id="scheduleInputContainer" style="display: none;">
+                                                <input type="datetime-local" id="scheduleDateTime" class="schedule-datetime-input">
+                                            </div>
+                                        </div>
+
+                                        <!-- Intervalo -->
+                                        <div class="schedule-section">
+                                            <div class="schedule-title"><span class="schedule-title-bar"></span>Intervalo entre mensagens</div>
+                                            <div class="interval-row">
+                                                <input type="number" id="intervalMin" name="intervalMin" min="1" max="300" value="30" required class="interval-input">
+                                                <span class="interval-label">e</span>
+                                                <input type="number" id="intervalMax" name="intervalMax" min="1" max="300" value="60" required class="interval-input">
+                                                <span class="interval-label">segundos</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Pausa automática -->
+                                        <div class="schedule-section">
+                                            <div class="schedule-title"><span class="schedule-title-bar"></span>Pausa automática</div>
+                                            <div class="pause-row">
+                                                <span class="pause-label">Após</span>
+                                                <input type="number" id="pauseAfterMessages" name="pauseAfterMessages" min="1" max="1000" value="20" required class="pause-input">
+                                                <span class="pause-label">mensagens, aguardar</span>
+                                                <input type="number" id="pauseMinutes" name="pauseMinutes" min="1" max="1440" value="10" required class="pause-input">
+                                                <span class="pause-label">minutos</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Horário de envio -->
+                                        <div class="schedule-section">
+                                            <div class="schedule-title"><span class="schedule-title-bar"></span>Horário de envio</div>
+                                            <div class="time-row" style="justify-content: flex-start;">
+                                                <div class="time-input"><input type="time" id="startTime" name="startTime" value="08:00" required></div>
+                                                <span class="time-label">às</span>
+                                                <div class="time-input"><input type="time" id="endTime" name="endTime" value="18:00" required></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Dias da semana -->
+                                        <div class="schedule-section days-section">
+                                            <div class="schedule-title"><span class="schedule-title-bar"></span>Dias da semana</div>
+                                            <div class="days-grid" id="daysGrid">
+                                                <div class="day-btn" data-day="1"><span class="day-full">SEGUNDA</span><span class="day-abbr">SEG</span></div>
+                                                <div class="day-btn" data-day="2"><span class="day-full">TERÇA</span><span class="day-abbr">TER</span></div>
+                                                <div class="day-btn" data-day="3"><span class="day-full">QUARTA</span><span class="day-abbr">QUA</span></div>
+                                                <div class="day-btn" data-day="4"><span class="day-full">QUINTA</span><span class="day-abbr">QUI</span></div>
+                                                <div class="day-btn" data-day="5"><span class="day-full">SEXTA</span><span class="day-abbr">SEX</span></div>
+                                                <div class="day-btn" data-day="6"><span class="day-full">SÁBADO</span><span class="day-abbr">SAB</span></div>
+                                                <div class="day-btn" data-day="0"><span class="day-full">DOMINGO</span><span class="day-abbr">DOM</span></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Marcar todos do grupo -->
+                                        <div class="schedule-section">
+                                            <div class="schedule-title"><span class="schedule-title-bar"></span>Marcar todos do grupo</div>
+                                            <div class="schedule-toggle-row">
+                                                <label class="toggle-label">Marcar @todos na mensagem do grupo</label>
+                                                <div class="toggle-container">
+                                                    <input type="checkbox" id="selectAll" class="toggle-checkbox">
+                                                    <div class="toggle-switch" id="toggleSwitch">
+                                                        <div class="toggle-slider">
+                                                            <span id="toggleIcon">&#10007;</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Validation warnings -->
+                                    <div class="error-message" id="validationWarnings">
+                                        <div class="warning-messages" id="warningMessages"></div>
+                                    </div>
+
+                                    <!-- Dispatch Button -->
+                                    <button type="button" class="dispatch-btn" id="dispatchBtn">
+                                        <div class="loading-spinner"></div>
+                                        <span id="btnText">Iniciar Disparo</span>
+                                    </button>
+                                </div>
+
+                                <div class="success-message" id="successMessage"></div>
+                                <div class="error-message" id="errorMessage"></div>
+
+                                <div class="stats" id="stats" style="display: none;">
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="statGroupsCount">0</div>
+                                        <div class="stat-label">Quantidade de grupos</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value stat-value-compact" id="statETA">—</div>
+                                        <div class="stat-label">Previsão de finalização</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Wizard Navigation Bar (Floating) -->
+                    <div class="wizard-nav">
+                        <button type="button" class="btn-wizard-back" id="wizardBackBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5"></path>
+                                <polyline points="12,19 5,12 12,5"></polyline>
+                            </svg>
+                            <span id="wizardBackText">Cancelar</span>
+                        </button>
+                        <button type="button" class="btn-wizard-next" id="wizardNextBtn">
+                            <span id="wizardNextText">Proximo Passo</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="wizardNextIcon">
+                                <path d="M5 12h14"></path>
+                                <polyline points="12,5 19,12 12,19"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Phone Preview (visible only on step 2) -->
+                <div class="phone-preview" id="phonePreviewColumn" style="display:none;">
+                    <div class="phone-preview-title">Preview no Celular</div>
+                    <p class="phone-preview-subtitle">Como vai aparecer no grupo</p>
+                    <div class="phone-container">
+                        <div class="phone-screen">
+                            <div class="whatsapp-header">
+                                <div class="contact-avatar">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Grupo Exemplo</div>
+                                    <div class="contact-status">42 participantes</div>
+                                </div>
+                            </div>
+                            <div class="chat-area" id="chatArea">
+                                <div class="no-messages">
+                                    Digite uma mensagem para ver o preview
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wizard Step Navigation Script -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+
+</body>
+</html>

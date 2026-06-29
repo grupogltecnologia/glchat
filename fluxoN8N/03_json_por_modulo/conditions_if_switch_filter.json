@@ -1,0 +1,1685 @@
+[
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "cb1408fb-482d-4102-8b74-f557843fd424",
+            "leftValue": "={{ $('DISPARAR MENSAGEM').item.json.body.KeyRedis }}",
+            "rightValue": "",
+            "operator": {
+              "type": "string",
+              "operation": "notEmpty",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      3360,
+      1456
+    ],
+    "id": "34a8c0e3-0401-4514-ad55-f2a1ce10577f",
+    "name": "TEM MEDIA?"
+  },
+  {
+    "parameters": {
+      "rules": {
+        "values": [
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "leftValue": "={{ $json.error.status }}",
+                  "rightValue": 504,
+                  "operator": {
+                    "type": "number",
+                    "operation": "equals"
+                  },
+                  "id": "1e4fdcaa-6f5a-48bd-938a-6dfaaf3eb97c"
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "TIMEOUT"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "3ca3b2c3-425d-4905-aa16-87e44c6349fb",
+                  "leftValue": "={{ $json.error.status }}",
+                  "rightValue": 502,
+                  "operator": {
+                    "type": "number",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "FORA DO AR"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "7a013dfa-a8c6-48f7-8e98-4afbc1cbb987",
+                  "leftValue": "={{ $json.error.message.false }}",
+                  "rightValue": 400,
+                  "operator": {
+                    "type": "boolean",
+                    "operation": "false",
+                    "singleValue": true
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "NUMERO NAO EXISTE"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "a82245de-a9cc-4cb3-8c1b-d6785417dc0d",
+                  "leftValue": "={{ $json.error.status }}",
+                  "rightValue": 500,
+                  "operator": {
+                    "type": "number",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "DESCONECTADO"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "f817d7cb-996e-4892-9e55-00e2a65cf559",
+                  "leftValue": "={{ $json.error.message }}",
+                  "rightValue": "Connection Closed",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "DESCONECTADO"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.switch",
+    "typeVersion": 3.2,
+    "position": [
+      5104,
+      1552
+    ],
+    "id": "92aa9b10-9b14-4b75-9f6b-4a761176e390",
+    "name": "Switch"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "cb1408fb-482d-4102-8b74-f557843fd424",
+            "leftValue": "={{ $('DISPARAR MENSAGEM1').item.json.body.KeyRedis }}",
+            "rightValue": "",
+            "operator": {
+              "type": "string",
+              "operation": "notEmpty",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      2848,
+      3120
+    ],
+    "id": "864b6e34-6575-4dd9-a260-ca9175d74bf9",
+    "name": "TEM MEDIA?1"
+  },
+  {
+    "parameters": {
+      "rules": {
+        "values": [
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "leftValue": "={{ $json.error.status }}",
+                  "rightValue": 504,
+                  "operator": {
+                    "type": "number",
+                    "operation": "equals"
+                  },
+                  "id": "1e4fdcaa-6f5a-48bd-938a-6dfaaf3eb97c"
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "TIMEOUT"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "3ca3b2c3-425d-4905-aa16-87e44c6349fb",
+                  "leftValue": "={{ $json.error.status }}",
+                  "rightValue": 502,
+                  "operator": {
+                    "type": "number",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "FORA DO AR"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "7a013dfa-a8c6-48f7-8e98-4afbc1cbb987",
+                  "leftValue": "={{ $json.error.status }}",
+                  "rightValue": 400,
+                  "operator": {
+                    "type": "number",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "NUMERO NAO EXISTE"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "a82245de-a9cc-4cb3-8c1b-d6785417dc0d",
+                  "leftValue": "={{ $json.error.status }}",
+                  "rightValue": 500,
+                  "operator": {
+                    "type": "number",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "DESCONECTADO"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.switch",
+    "typeVersion": 3.2,
+    "position": [
+      4224,
+      3168
+    ],
+    "id": "a273d300-ae08-46c3-a1df-0f2adca0ac2a",
+    "name": "Switch1"
+  },
+  {
+    "parameters": {
+      "rules": {
+        "values": [
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "leftValue": "={{ $json.TipoDisparo }}",
+                  "rightValue": "Individual",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  },
+                  "id": "f8d95b81-af2c-42b9-93f7-759e715cd2cf"
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "Individual"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "1e9be2b3-a5c1-48ed-b625-88428ea791f4",
+                  "leftValue": "={{ $json.TipoDisparo }}",
+                  "rightValue": "Grupos",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "Grupos"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.switch",
+    "typeVersion": 3.2,
+    "position": [
+      2816,
+      2432
+    ],
+    "id": "f001fc8d-1069-4deb-9b82-88dc61778213",
+    "name": "Switch2"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "ff54ee3d-a3e3-48ec-b2c6-067bc36e63ee",
+            "leftValue": "={{ $('CRIAR CONEXAO2').item.json.body.pairCode }}",
+            "rightValue": "",
+            "operator": {
+              "type": "boolean",
+              "operation": "false",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      624,
+      1856
+    ],
+    "id": "968792a9-c91f-4024-963a-d649587863b2",
+    "name": "If5"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "f031a5e7-c58b-45bf-af5e-20ffcf2e8a7c",
+            "leftValue": "={{ $json.mimetype }}",
+            "rightValue": "audio",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          }
+        ],
+        "combinator": "or"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      4160,
+      1360
+    ],
+    "id": "82f6fd02-c01b-40b9-9cf4-4a8b584b86ae",
+    "name": "AUDIO?"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "f031a5e7-c58b-45bf-af5e-20ffcf2e8a7c",
+            "leftValue": "={{ $json.mimetype }}",
+            "rightValue": "audio",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          }
+        ],
+        "combinator": "or"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      3536,
+      2960
+    ],
+    "id": "5fd7a3de-2272-46ca-b59e-9d1684c4e857",
+    "name": "AUDIO?1"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "895c9b26-5bb4-4a4d-9cab-0e908c29df32",
+            "leftValue": "={{ $json.total_conexoes }}",
+            "rightValue": "={{ $json.plano_qntConexoes }}",
+            "operator": {
+              "type": "number",
+              "operation": "lt"
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      432,
+      1856
+    ],
+    "id": "5cbf9333-98e8-42d2-84f5-710acea86e1e",
+    "name": "PODE CRIAR?"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "6824534c-9ff1-4ad9-8017-9e200096fdee",
+            "leftValue": "={{ $json.error.message }}",
+            "rightValue": "Connection Closed",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          },
+          {
+            "id": "4da194b6-9a2b-40a9-8474-7d62be157132",
+            "leftValue": "={{ $json.error.message }}",
+            "rightValue": "exist",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "name": "filter.operator.equals"
+            }
+          }
+        ],
+        "combinator": "or"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      5312,
+      1760
+    ],
+    "id": "be9e334d-e250-4b61-bdfb-cb600e21f141",
+    "name": "CONEXAO"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "6824534c-9ff1-4ad9-8017-9e200096fdee",
+            "leftValue": "={{ $json.error.message }}",
+            "rightValue": "Connection Closed",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          },
+          {
+            "id": "4da194b6-9a2b-40a9-8474-7d62be157132",
+            "leftValue": "={{ $json.error.message }}",
+            "rightValue": "exist",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "name": "filter.operator.equals"
+            }
+          }
+        ],
+        "combinator": "or"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      4480,
+      3360
+    ],
+    "id": "2fea5ace-b7a6-4ea5-b513-f698d3189ed8",
+    "name": "CONEXAO1"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "loose",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "27cf15c2-0d9a-4b5a-ac9e-af8ced239d9d",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.key.remoteJid }}",
+            "rightValue": "@s.whatsapp.net",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          },
+          {
+            "id": "28adb547-5f70-4ef0-ae19-92d29be6f5ca",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.key.remoteJid }}",
+            "rightValue": "@lid",
+            "operator": {
+              "type": "string",
+              "operation": "contains"
+            }
+          }
+        ],
+        "combinator": "or"
+      },
+      "looseTypeValidation": true,
+      "options": {}
+    },
+    "type": "n8n-nodes-base.filter",
+    "typeVersion": 2.2,
+    "position": [
+      2672,
+      5728
+    ],
+    "id": "a930ee49-1b72-492a-ae00-dfb9102ddb85",
+    "name": "FILTRO DE GRUPO"
+  },
+  {
+    "parameters": {
+      "rules": {
+        "values": [
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "leftValue": "={{ $('ORGANIZAR - INFOS').item.json.data.messageType }}",
+                  "rightValue": "=conversation",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  },
+                  "id": "ceda4289-c1e5-4f69-bca3-3a1c2c1220ce"
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "texto"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "5559b519-5480-46d6-997e-e58b976a679b",
+                  "leftValue": "={{ $('ORGANIZAR - INFOS').item.json.data.messageType }}",
+                  "rightValue": "=audioMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "audio"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "18dc2e91-4413-454c-9f82-6adfdebf8d55",
+                  "leftValue": "={{ $('ORGANIZAR - INFOS').item.json.data.messageType }}",
+                  "rightValue": "imageMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "image"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "6aeb9672-7846-47c2-8f96-4cd8699e268b",
+                  "leftValue": "={{ $('ORGANIZAR - INFOS').item.json.data.messageType }}",
+                  "rightValue": "documentMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "documento"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.switch",
+    "typeVersion": 3.2,
+    "position": [
+      4480,
+      5696
+    ],
+    "id": "3eccebc2-89d2-4afe-96e7-0b12700a1204",
+    "name": "TIPO MENSAGEM"
+  },
+  {
+    "parameters": {
+      "rules": {
+        "values": [
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "18dc2e91-4413-454c-9f82-6adfdebf8d55",
+                  "leftValue": "={{ $('ORGANIZAR - INFOS').item.json.data.messageType }}",
+                  "rightValue": "imageMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "image"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "leftValue": "={{ $('ORGANIZAR - INFOS').item.json.data.messageType }}",
+                  "rightValue": "=conversation",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  },
+                  "id": "3a1c9d65-07d5-4304-afd9-9640cc0b187f"
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "texto"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "5559b519-5480-46d6-997e-e58b976a679b",
+                  "leftValue": "={{ $('ORGANIZAR - INFOS').item.json.data.messageType }}",
+                  "rightValue": "=audioMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "audio"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.switch",
+    "typeVersion": 3.2,
+    "position": [
+      7488,
+      5616
+    ],
+    "id": "4948340d-1347-4996-9e6a-79dafebe3f76",
+    "name": "TIPO MENSAGEM1"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "7fb353d5-8c8e-4ff8-b03b-30353905bde5",
+            "leftValue": "={{ $json.combinacaoTexto1 }}",
+            "rightValue": "={{ $json.combinacaoTexto2 }}",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "name": "filter.operator.equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.filter",
+    "typeVersion": 2.2,
+    "position": [
+      6784,
+      5632
+    ],
+    "id": "ad3fa60c-0c73-47ce-a077-3de47f58a193",
+    "name": "Filter"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "79b0ad76-e818-4c5a-8210-bd957a975865",
+            "leftValue": "={{ $('ORGANIZAR - INFOS AGENTE').item.json.agente.ouvirAudio }}",
+            "rightValue": "",
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      4672,
+      5728
+    ],
+    "id": "609ba4b9-e327-4c8f-a492-6d2cfd28f453",
+    "name": "OUVIR AUDIO1"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "9dea4aa5-5c77-43a5-96d5-59c77070d76a",
+            "leftValue": "={{ $('ORGANIZAR - INFOS AGENTE').item.json.agente.agruparMensagens }}",
+            "rightValue": "",
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      5936,
+      5632
+    ],
+    "id": "2598aeab-a237-4bb7-98a8-7d13f727c6c8",
+    "name": "AGRUPAR?"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 2
+        },
+        "conditions": [
+          {
+            "id": "79b0ad76-e818-4c5a-8210-bd957a975865",
+            "leftValue": "={{ $('ORGANIZAR - INFOS AGENTE').item.json.agente.analisarImagens }}",
+            "rightValue": "",
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.2,
+    "position": [
+      4800,
+      6096
+    ],
+    "id": "219fc07f-8127-4afd-8931-fd760821a232",
+    "name": "ANALISAR IMAGEM"
+  },
+  {
+    "parameters": {
+      "rules": {
+        "values": [
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "leftValue": "={{ $json.text }}",
+                  "rightValue": "(image)",
+                  "operator": {
+                    "type": "string",
+                    "operation": "contains"
+                  },
+                  "id": "87c0f450-0775-4705-b2a5-0daa479b7190"
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "IMAGEM"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "77d741af-8ebb-4ce4-a354-b899444781b5",
+                  "leftValue": "={{ $json.text }}",
+                  "rightValue": "(video)",
+                  "operator": {
+                    "type": "string",
+                    "operation": "contains"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "VIDEO"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "cd7a9822-7516-4b42-9671-e0af27390e7d",
+                  "leftValue": "={{ $json.text }}",
+                  "rightValue": "(audio)",
+                  "operator": {
+                    "type": "string",
+                    "operation": "contains"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "AUDIO"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "8faa43bb-1fed-4a6e-95c9-fbaadd7d66cf",
+                  "leftValue": "={{ $json.text }}",
+                  "rightValue": "(file)",
+                  "operator": {
+                    "type": "string",
+                    "operation": "contains"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "FILE"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "1a9039ad-64b8-416b-808a-ec736796d89d",
+                  "leftValue": "={{ $json.text }}",
+                  "rightValue": "(pdf)",
+                  "operator": {
+                    "type": "string",
+                    "operation": "contains"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "FILE"
+          }
+        ]
+      },
+      "options": {
+        "fallbackOutput": "extra"
+      }
+    },
+    "type": "n8n-nodes-base.switch",
+    "typeVersion": 3.4,
+    "position": [
+      8672,
+      5728
+    ],
+    "id": "8a893637-8eed-4e4c-9239-d080bebc3631",
+    "name": "Switch3"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "f0297b74-c5cd-4b0d-b7ee-26704cda6364",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.messageType }}",
+            "rightValue": "imageMessage",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          },
+          {
+            "id": "fa856b23-08d7-4a46-a30a-180a66564952",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.messageType }}",
+            "rightValue": "videoMessage",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "name": "filter.operator.equals"
+            }
+          },
+          {
+            "id": "04932fab-5d74-4cf4-8855-94354ca7e951",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.messageType }}",
+            "rightValue": "audioMessage",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "name": "filter.operator.equals"
+            }
+          },
+          {
+            "id": "48c0346f-d3b7-424e-9d4f-2c1cf414225f",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.messageType }}",
+            "rightValue": "documentMessage",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "name": "filter.operator.equals"
+            }
+          },
+          {
+            "id": "2a4ded21-ed9f-43ee-bf9c-5ccae4e5eeb3",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.messageType }}",
+            "rightValue": "stickerMessage",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "name": "filter.operator.equals"
+            }
+          }
+        ],
+        "combinator": "or"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      3088,
+      5728
+    ],
+    "id": "187208dc-d20c-4440-93d9-36287ed7e3f2",
+    "name": "If6"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "967486ed-d0a3-4642-83a7-7e2fd3f1a78b",
+            "leftValue": "={{ $json.body.mensagemRespondida }}",
+            "rightValue": "",
+            "operator": {
+              "type": "string",
+              "operation": "exists",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      256,
+      5008
+    ],
+    "id": "165ad825-a288-4f19-9494-17755e465edf",
+    "name": "If7"
+  },
+  {
+    "parameters": {
+      "rules": {
+        "values": [
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "leftValue": "={{ $('ENVIAR MIDIA').item.json.body.type }}",
+                  "rightValue": "audioMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  },
+                  "id": "f7c489f9-4bea-4023-827f-972b39a167ef"
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "AUDIO"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "bc98a2be-157f-4932-aaa4-5ad6c7c984e2",
+                  "leftValue": "={{ $('ENVIAR MIDIA').item.json.body.type }}",
+                  "rightValue": "imageMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "IMAGEM"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "542dcaa6-6633-4b74-a2fe-51b773a31754",
+                  "leftValue": "={{ $('ENVIAR MIDIA').item.json.body.type }}",
+                  "rightValue": "videoMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "VIDEO"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "20b0e712-c06a-4de9-8af2-174e944f89bb",
+                  "leftValue": "={{ $('ENVIAR MIDIA').item.json.body.type }}",
+                  "rightValue": "documentMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "DOCUMENTO"
+          },
+          {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 3
+              },
+              "conditions": [
+                {
+                  "id": "cc221199-89f9-422e-8800-a479443f95d2",
+                  "leftValue": "={{ $('ENVIAR MIDIA').item.json.body.type }}",
+                  "rightValue": "stickerMessage",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "renameOutput": true,
+            "outputKey": "STICKER"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.switch",
+    "typeVersion": 3.4,
+    "position": [
+      688,
+      5360
+    ],
+    "id": "898ef2f0-76f8-4b4e-88f8-8b393d977576",
+    "name": "Switch4"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "7b8c1ce3-f7d5-410c-a0b2-73961c75a90e",
+            "leftValue": "={{ $('Webhook1').item.json.body.data.message.reactionMessage.text }}",
+            "rightValue": "",
+            "operator": {
+              "type": "string",
+              "operation": "notExists",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.filter",
+    "typeVersion": 2.3,
+    "position": [
+      2880,
+      5728
+    ],
+    "id": "1aa0ee15-8fe1-4196-b535-af5f2d999037",
+    "name": "FILTRO REAÇÃO"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "e0ffc2fb-076a-44d7-87e8-0f3d05cd0ac6",
+            "leftValue": "={{ $json.remoteJid }}",
+            "rightValue": "@g.us",
+            "operator": {
+              "type": "string",
+              "operation": "notContains"
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.filter",
+    "typeVersion": 2.3,
+    "position": [
+      448,
+      2208
+    ],
+    "id": "8f4fa0f7-4310-457e-ad04-df971301c5a9",
+    "name": "Filter1"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "1835eb0a-f1ef-4531-b11c-a4d9afb49dbf",
+            "leftValue": "={{ $json.teste }}",
+            "rightValue": false,
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      448,
+      6208
+    ],
+    "id": "77428b17-ed8a-41fe-9fea-7ed2fb93b7a2",
+    "name": "TESTE?"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "d0778aa1-d3ed-4b01-8e3a-01c19d2d28b9",
+            "leftValue": "={{ $('PUXAR WEBHOOK').item.json.status }}",
+            "rightValue": "",
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      656,
+      6304
+    ],
+    "id": "8c383448-f360-48ed-bcfe-ed41f666e6fd",
+    "name": "ATIVO"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "a05d613a-467e-46e5-9dcc-99d593015df9",
+            "leftValue": "={{ $('ENVIAR MIDIA').item.json.body.caption }}",
+            "rightValue": "",
+            "operator": {
+              "type": "string",
+              "operation": "exists",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      960,
+      5600
+    ],
+    "id": "3a768f8a-97fe-4bae-b679-a555c00a20b3",
+    "name": "If8"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "a05d613a-467e-46e5-9dcc-99d593015df9",
+            "leftValue": "={{ $('ENVIAR MIDIA').item.json.body.caption }}",
+            "rightValue": "",
+            "operator": {
+              "type": "string",
+              "operation": "exists",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      928,
+      5216
+    ],
+    "id": "5edd8c83-b7f3-4e22-8675-6b408f45c80e",
+    "name": "If9"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "1835eb0a-f1ef-4531-b11c-a4d9afb49dbf",
+            "leftValue": "={{ $json.teste }}",
+            "rightValue": false,
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      448,
+      6672
+    ],
+    "id": "8dd6c20b-feaa-4a5b-8203-f61a0f8210ba",
+    "name": "TESTE?1"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "d0778aa1-d3ed-4b01-8e3a-01c19d2d28b9",
+            "leftValue": "={{ $('PUXAR WEBHOOK1').item.json.status }}",
+            "rightValue": "",
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.if",
+    "typeVersion": 2.3,
+    "position": [
+      656,
+      6768
+    ],
+    "id": "5b7a138c-0238-4603-b411-7df277f085f8",
+    "name": "ATIVO1"
+  },
+  {
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "strict",
+          "version": 3
+        },
+        "conditions": [
+          {
+            "id": "c2f0aa70-d42b-4507-bcc7-cdab28e26bd8",
+            "leftValue": "={{ $json.resultado.segueFluxoIA }}",
+            "rightValue": false,
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.filter",
+    "typeVersion": 2.3,
+    "position": [
+      3760,
+      5728
+    ],
+    "id": "4c766e8f-b6dc-4c91-934e-33bae34dc913",
+    "name": "SEGUE"
+  }
+]

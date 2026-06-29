@@ -1,0 +1,2353 @@
+<?php
+/**
+ * HTML/CSS original do n8n (limpo)
+ */
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Versão limpa: HTML + CSS apenas. JavaScript removido. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - IA Chatconversa</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="shortcut icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="apple-touch-icon" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+
+    <!-- Tailwind CSS -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-500': '#6C63FF',
+                        'brand-50': 'rgba(108, 99, 255, 0.1)',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Alpine.js -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    <style>
+        .main-content,
+        .admin-main-content,
+        .main-content-wrapper {
+            max-width: none !important;
+            width: 100% !important;
+        }
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            --bg-body: #f4f4f5;
+            --bg-surface: #fbfcfd;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --bg-input-disabled: #f1f5f9;
+            --border-card: #f1f5f9;
+            --border-input: #e2e8f0;
+            --text-primary: #18181b;
+            --text-heading: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --text-input: #334155;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.03);
+            --sidebar-bg: #1A202C;
+            --sidebar-active: #2D3748;
+            --sidebar-hover: rgba(255, 255, 255, 0.08);
+            --sidebar-text: rgba(255, 255, 255, 0.7);
+            --sidebar-text-active: #ffffff;
+            --sidebar-divider: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode {
+            --bg-body: #0a0a0a;
+            --bg-surface: transparent;
+            --bg-card: #1e293b;
+            --bg-input: #1e293b;
+            --bg-input-disabled: #334155;
+            --border-card: #334155;
+            --border-input: #475569;
+            --text-primary: #e2e8f0;
+            --text-heading: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-input: #e2e8f0;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --sidebar-bg: #1A202C;
+            --sidebar-active: #2D3748;
+            --sidebar-hover: rgba(255, 255, 255, 0.08);
+            --sidebar-text: rgba(255, 255, 255, 0.7);
+            --sidebar-text-active: #ffffff;
+            --sidebar-divider: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e2e8f0;
+        }
+
+        body { background-color: var(--bg-body); color: var(--text-primary); }
+
+        /* ===== SIDEBAR STYLES (from dashboard.html) ===== */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 72px;
+            overflow: hidden;
+            background: var(--sidebar-bg);
+            border-right: none;
+            transition: width 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .sidebar:hover {
+            width: 250px;
+            overflow: visible;
+        }
+
+        .sidebar.sidebar-expanded {
+            width: 250px;
+            overflow: visible;
+            transition-duration: 0s;
+        }
+
+        .sidebar-header {
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-height: 96px;
+        }
+
+        .sidebar-logo-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 40px;
+            min-width: 32px;
+            flex-shrink: 0;
+            transition: width 0.3s ease, min-width 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-logo-link,
+        .sidebar.sidebar-expanded .sidebar-logo-link,
+        .sidebar.mobile-open .sidebar-logo-link {
+            width: 100%;
+            min-width: 180px;
+            justify-content: center;
+            padding: 0 16px;
+        }
+
+        .sidebar-logo-img {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            object-fit: contain;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-logo-img,
+        .sidebar.sidebar-expanded .sidebar-logo-img,
+        .sidebar.mobile-open .sidebar-logo-img {
+            width: auto;
+            max-width: 100%;
+            height: 45px;
+            min-width: 0;
+        }
+
+        .sidebar-menu {
+            padding: 4px 0;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .sidebar-nav-divider {
+            height: 1px;
+            background: var(--sidebar-divider);
+            margin: 4px 16px;
+            flex-shrink: 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            margin: 2px 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            white-space: nowrap;
+            border-radius: 16px;
+            text-align: left;
+        }
+
+        .sidebar:hover .menu-item,
+        .sidebar.sidebar-expanded .menu-item,
+        .sidebar.mobile-open .menu-item {
+            justify-content: flex-start;
+            padding: 10px 12px;
+        }
+
+        .menu-item:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-active);
+        }
+
+        .menu-item.active {
+            background: var(--sidebar-active);
+            color: var(--sidebar-text-active);
+            border-right: none;
+        }
+        .menu-item-admin { font-weight: 700 !important; }
+        .menu-badge-admin {
+            display: none;
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #6C63FF;
+            color: #fff;
+        }
+        .sidebar:hover .menu-badge-admin,
+        .sidebar.sidebar-expanded .menu-badge-admin,
+        .sidebar.mobile-open .menu-badge-admin { display: inline-block; }
+
+        .menu-icon {
+            width: 25px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-icon svg {
+            width: 16px;
+            height: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon svg {
+            transform: scale(1.1);
+        }
+
+
+        .menu-icon .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded', sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: normal;
+            font-style: normal;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-item:hover .menu-icon .material-symbols-rounded {
+            transform: scale(1.1);
+        }
+
+        .menu-text {
+            margin-left: 0;
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            flex: 0;
+            transition: opacity 0.3s ease, margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        .sidebar:hover .menu-text,
+        .sidebar.sidebar-expanded .menu-text,
+        .sidebar.mobile-open .menu-text {
+            margin-left: 16px;
+            opacity: 1;
+            width: auto;
+            flex: 1;
+        }
+
+        .menu-badge-novidade {
+            display: none;
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        .sidebar:hover .menu-badge-novidade,
+        .sidebar.sidebar-expanded .menu-badge-novidade,
+        .sidebar.mobile-open .menu-badge-novidade {
+            display: inline-block;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--sidebar-divider);
+            padding: 10px 0;
+            flex-shrink: 0;
+        }
+
+        .version-text {
+            color: #666;
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 8px 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .sidebar:hover .version-text,
+        .sidebar.sidebar-expanded .version-text {
+            opacity: 1;
+        }
+
+        .logout-item {
+            color: #ff6b6b !important;
+        }
+
+        .logout-item:hover {
+            background: rgba(255, 107, 107, 0.1) !important;
+            color: #ff6b6b !important;
+        }
+
+        @media (max-height: 800px) {
+            .sidebar-header { padding: 12px 20px; }
+            .sidebar-logo-img { width: 40px; height: 40px; min-width: 40px; }
+            .sidebar-menu { padding: 12px 0; }
+            .menu-item { padding: 10px 20px; }
+            .menu-icon { width: 26px; }
+            .menu-icon svg { width: 18px; height: 18px; }
+            .menu-icon .material-symbols-rounded { font-size: 18px; }
+            .version-text { padding: 6px 20px; font-size: 0.55rem; }
+            .sidebar-footer { padding: 8px 0; }
+        }
+        @media (max-height: 700px) {
+            .sidebar-header { padding: 8px 20px; }
+            .sidebar-logo-img { width: 36px; height: 36px; min-width: 36px; }
+            .sidebar-menu { padding: 8px 0; }
+            .menu-item { padding: 8px 20px; }
+            .menu-icon { width: 22px; }
+            .menu-icon svg { width: 16px; height: 16px; }
+            .menu-icon .material-symbols-rounded { font-size: 16px; }
+            .menu-text { font-size: 0.85rem; }
+            .version-text { padding: 4px 20px; font-size: 0.5rem; }
+            .sidebar-footer { padding: 6px 0; }
+            .theme-switch { width: 38px; height: 20px; }
+        }
+        @media (max-height: 600px) {
+            .sidebar-header { padding: 6px 20px; }
+            .sidebar-logo-img { width: 32px; height: 32px; min-width: 32px; }
+            .sidebar-menu { padding: 4px 0; }
+            .menu-item { padding: 6px 20px; }
+            .menu-icon { width: 20px; }
+            .menu-icon svg { width: 14px; height: 14px; }
+            .menu-icon .material-symbols-rounded { font-size: 14px; }
+            .menu-text { font-size: 0.8rem; margin-left: 10px; }
+            .version-text { padding: 2px 20px; font-size: 0.45rem; }
+            .sidebar-footer { padding: 4px 0; }
+            .theme-switch { width: 34px; height: 18px; }
+        }
+
+        .theme-toggle-item {
+            cursor: default;
+        }
+
+        .theme-toggle-item:hover {
+            background: transparent !important;
+            color: inherit !important;
+        }
+
+        .theme-switch {
+            display: none;
+            position: relative;
+            width: 44px;
+            height: 24px;
+            margin-left: auto;
+        }
+
+        .sidebar:hover .theme-switch,
+        .sidebar.sidebar-expanded .theme-switch,
+        .sidebar.mobile-open .theme-switch {
+            display: inline-block;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .theme-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #444;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .theme-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .theme-switch input:checked + .slider {
+            background-color: #6C63FF;
+        }
+
+        .theme-switch input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Light Mode Styles (copiado do dashboard para sidebar) */
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .menu-item {
+            color: #666;
+        }
+
+        body.light-mode .menu-item:hover {
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+        }
+
+        body.light-mode .menu-item.active {
+            background: rgba(108, 99, 255, 0.15);
+            color: #6C63FF;
+        }
+
+        body.light-mode .version-text {
+            color: #999;
+        }
+
+        body.light-mode .menu-badge-admin {
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        body.light-mode .menu-badge-novidade {
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        body.light-mode .sidebar-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .sidebar-nav-divider {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        body.light-mode .theme-switch .slider {
+            background-color: #d1d5db;
+            border: 1px solid #cbd5e1;
+        }
+
+        body.light-mode .theme-switch .slider:before {
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        body.light-mode .theme-switch input:checked + .slider {
+            background-color: #6C63FF;
+            border-color: #6C63FF;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .mobile-close-btn {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            z-index: 10;
+            padding: 4px;
+        }
+
+        .main-content {
+            margin-left: 72px;
+            flex: 1;
+            width: calc(100vw - 72px);
+            max-width: calc(100vw - 72px);
+            min-height: 100vh;
+            overflow-y: auto;
+            background: var(--bg-surface);
+            position: relative;
+        }
+
+        body.dark-mode .main-content {
+            background: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+                transform: translateX(-100%);
+                z-index: 1001;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .mobile-close-btn {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100vw;
+                max-width: 100vw;
+            }
+        }
+        /* ===== DARK MODE OVERRIDES ===== */
+        body.dark-mode .bg-white { background-color: var(--bg-card) !important; }
+        body.dark-mode .bg-slate-50 { background-color: #1e293b !important; }
+        body.dark-mode .bg-slate-100 { background-color: #334155 !important; }
+        body.dark-mode .border-slate-100 { border-color: var(--border-card) !important; }
+        body.dark-mode .border-slate-200 { border-color: var(--border-input) !important; }
+        body.dark-mode .text-slate-900 { color: var(--text-heading) !important; }
+        body.dark-mode .text-slate-700 { color: var(--text-input) !important; }
+        body.dark-mode .text-slate-500 { color: var(--text-secondary) !important; }
+        body.dark-mode .text-slate-400 { color: var(--text-muted) !important; }
+        body.dark-mode .texto-info-senha-novo-membro { color: #ffffff !important; }
+        body.dark-mode .shadow-soft { box-shadow: var(--shadow-soft) !important; }
+        body.dark-mode .form-input-tw {
+            background-color: var(--bg-input) !important;
+            border-color: var(--border-input) !important;
+            color: var(--text-input) !important;
+        }
+        body.dark-mode .form-input-tw:disabled,
+        body.dark-mode .form-input-tw[disabled] {
+            background-color: var(--bg-input-disabled) !important;
+            color: var(--text-muted) !important;
+        }
+        body.dark-mode .config-tab { color: var(--text-secondary); }
+        body.dark-mode .config-tab:hover { background: #1e293b; color: var(--text-primary); }
+        body.dark-mode .config-tab.active { background: rgba(108, 99, 255, 0.1); color: #6C63FF; }
+        body.dark-mode .border-t { border-color: var(--border-card) !important; }
+        body.dark-mode .divide-slate-100 > * + * { border-color: var(--border-card) !important; }
+        body.dark-mode .hover\:bg-slate-50:hover { background-color: #1e293b !important; }
+        body.dark-mode .bg-brand-50 { background-color: rgba(108, 99, 255, 0.1) !important; }
+        body.dark-mode .border-brand-100 { border-color: rgba(108, 99, 255, 0.2) !important; }
+        body.dark-mode .badge-funcao-membro {
+            background-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode #textoInfoPermissao,
+        body.dark-mode #textoInfoPermissao strong {
+            color: #ffffff !important;
+        }
+        body.dark-mode #usageContent .usage-item-label { color: #e2e8f0 !important; }
+        body.dark-mode #usageContent .usage-item-value { color: #6C63FF !important; }
+        body.dark-mode .usage-bar { background: rgba(255,255,255,0.08) !important; }
+        body.dark-mode .strength-bar { background: rgba(255,255,255,0.08) !important; }
+        body.dark-mode .border-red-200 { border-color: rgba(239, 68, 68, 0.3) !important; }
+        body.dark-mode select { background-color: var(--bg-input) !important; color: var(--text-input) !important; }
+        /* Tipo do campo personalizado: contraste no dark (fundo mais escuro + texto claro; options legíveis onde o browser permite) */
+        body.dark-mode select#modalCampoPersonalizadoTipo,
+        body.dark-mode select.campo-personalizado-tipo-select {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #64748b !important;
+        }
+        body.dark-mode select#modalCampoPersonalizadoTipo option,
+        body.dark-mode select.campo-personalizado-tipo-select option {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+        body.dark-mode .modal-overlay .bg-white { background-color: var(--bg-card) !important; }
+        body.dark-mode .modal-webhook-payload { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.08) !important; color: var(--text-secondary) !important; }
+        /* ===== END SIDEBAR STYLES ===== */
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        [x-cloak] { display: none !important; }
+
+        /* Modal overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10002;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+
+        .usuario-acoes-menu {
+            display: none;
+            position: fixed;
+            z-index: 10020;
+            min-width: 170px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+            padding: 6px;
+        }
+        .usuario-acoes-menu.show { display: block; }
+        .usuario-acoes-menu-item {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            padding: 9px 10px;
+            border-radius: 10px;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .usuario-acoes-menu-item:hover { background: #f8fafc; }
+        .usuario-acoes-menu-item.danger { color: #dc2626; }
+        .usuario-acoes-menu-item.danger:hover { background: #fef2f2; }
+        body.dark-mode .usuario-acoes-menu {
+            background: #0f172a;
+            border-color: #334155;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+        }
+        body.dark-mode .usuario-acoes-menu-item { color: #e2e8f0; }
+        body.dark-mode .usuario-acoes-menu-item:hover { background: #1e293b; }
+        body.dark-mode .usuario-acoes-menu-item.danger { color: #f87171; }
+        body.dark-mode .usuario-acoes-menu-item.danger:hover { background: rgba(220, 38, 38, 0.2); }
+
+        /* Tags de tipo — campos personalizados (alinhado às demais tabelas / webhooks) */
+        body.dark-mode .campo-pers-tipo--texto { background: rgba(148, 163, 184, 0.22) !important; color: #e2e8f0 !important; }
+        body.dark-mode .campo-pers-tipo--numero { background: rgba(59, 130, 246, 0.22) !important; color: #93c5fd !important; }
+        body.dark-mode .campo-pers-tipo--data { background: rgba(139, 92, 246, 0.22) !important; color: #c4b5fd !important; }
+        body.dark-mode .campo-pers-tipo--boolean { background: rgba(16, 185, 129, 0.22) !important; color: #6C63FF !important; }
+        body.dark-mode .campos-personalizados-row:hover { background: #1e293b !important; }
+
+        /* Etiquetas (config) — mesma base visual que campos personalizados */
+        .config-etiquetas-row .config-etiqueta-cor-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            flex-shrink: 0;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+        }
+        body.dark-mode .config-etiquetas-row:hover { background: #1e293b !important; }
+        body.dark-mode .config-etiquetas-row .config-etiqueta-cor-dot {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        /* Color input: borda arredondada visível (o próprio <input type="color"> é quadrado no Chrome/Safari) */
+        .config-color-picker-shell {
+            flex-shrink: 0;
+            height: 2.75rem;
+            width: 3.5rem;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .config-color-picker-input {
+            -webkit-appearance: none;
+            appearance: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: 2.75rem;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .config-color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 3px;
+            border-radius: 0.65rem;
+        }
+        .config-color-picker-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 0.5rem;
+        }
+        .config-color-picker-input::-moz-color-swatch {
+            border: none;
+            border-radius: 0.5rem;
+        }
+        body.dark-mode .config-color-picker-shell {
+            border-color: var(--border-input) !important;
+            background: var(--bg-input) !important;
+        }
+
+        /* Confirm overlay */
+        .confirm-webhook-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10003;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-webhook-overlay.show { display: flex; }
+
+        /* Toast animations */
+        .toast-notification {
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: auto;
+        }
+        .toast-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        /* Spinner animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-spinner-btn {
+            width: 14px; height: 14px; flex-shrink: 0;
+            border: 2px solid rgba(0, 0, 0, 0.15);
+            border-top-color: #6C63FF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Loading dots */
+        @keyframes loading-dots-pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .loading-dots .dot {
+            display: inline-block; width: 5px; height: 5px; margin: 0 2px;
+            border-radius: 50%; background: currentColor;
+            animation: loading-dots-pulse 1.2s ease-in-out infinite;
+        }
+        .loading-dots .dot:nth-child(2) { animation-delay: 0.15s; }
+        .loading-dots .dot:nth-child(3) { animation-delay: 0.3s; }
+
+        /* RR upload spinner */
+        @keyframes rr-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .rr-upload-spinner {
+            width: 20px; height: 20px;
+            border: 2px solid #d1fae5;
+            border-top: 2px solid #6C63FF;
+            border-radius: 50%;
+            animation: rr-spin 1s linear infinite;
+        }
+
+        /* Payload draggable */
+        .payload-draggable {
+            cursor: grab; padding: 2px 6px; margin: 0 1px;
+            border-radius: 4px;
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px dashed rgba(108, 99, 255, 0.4);
+            font-size: 0.8rem; font-family: monospace;
+            user-select: none; -webkit-user-drag: element;
+            display: inline;
+        }
+        .payload-draggable:hover { background: rgba(108, 99, 255, 0.2); }
+        .payload-draggable:active { cursor: grabbing; }
+
+        /* Drag over state for form inputs */
+        .form-input-tw.drag-over {
+            border-color: rgba(108, 99, 255, 0.6) !important;
+            background: rgba(108, 99, 255, 0.05) !important;
+        }
+
+        /* Mensagem padrao chips */
+        .mensagem-padrao-chip {
+            cursor: grab; padding: 4px 10px; border-radius: 6px;
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px dashed rgba(108, 99, 255, 0.4);
+            font-size: 0.8rem; font-family: monospace;
+            user-select: none;
+        }
+        .mensagem-padrao-chip:hover { background: rgba(108, 99, 255, 0.2); }
+        .mensagem-padrao-chip:active { cursor: grabbing; }
+
+        #modalWebhookMensagemPadrao.drag-over {
+            border-color: rgba(108, 99, 255, 0.6) !important;
+            background: rgba(108, 99, 255, 0.05) !important;
+        }
+
+        /* Collapsible sections */
+        .config-section-content {
+            overflow: hidden;
+            max-height: 2500px;
+            transition: max-height 0.35s ease;
+            padding-top: 20px;
+        }
+        .config-section.collapsed .config-section-content {
+            max-height: 0 !important;
+            padding-top: 0 !important;
+            overflow: hidden;
+        }
+        .config-section.collapsed .config-section-chevron {
+            transform: rotate(-90deg);
+        }
+
+        /* Password strength bar */
+        .strength-bar {
+            width: 100%; height: 6px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px; margin-top: 8px; overflow: hidden;
+        }
+        .strength-fill {
+            height: 100%; border-radius: 4px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+            width: 0%;
+        }
+
+        /* Usage bar */
+        .usage-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.05); border-radius: 4px; overflow: hidden; }
+        .usage-fill { height: 100%; background: #6C63FF; border-radius: 4px; transition: width 0.3s ease; }
+        .usage-fill.warning { background: linear-gradient(90deg, #ffa726 0%, #ff9800 100%); }
+        .usage-fill.danger { background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%); }
+        .usage-fill.unlimited { background: linear-gradient(90deg, #6C63FF 0%, #6C63FF 100%); }
+
+        /* Plan features list */
+        .plan-features { list-style: none; margin: 10px 0; padding: 0; }
+        .plan-features li { color: #cbd5e1; margin-bottom: 5px; padding-left: 20px; position: relative; }
+        .plan-features li::before { content: '\2713'; position: absolute; left: 0; color: #6C63FF; font-weight: bold; }
+
+        .modal-shell-nc.modal-nc-overlay {
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-shell-nc .modal-content.modal-nc {
+            background: #ffffff;
+            color: #1a1c1e;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            max-width: 560px;
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            backdrop-filter: none;
+        }
+        .modal-shell-nc .modal-nc-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            border: none;
+            background: #f3f4f6;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            line-height: 1;
+            transition: background 0.2s, color 0.2s;
+            z-index: 2;
+        }
+        .modal-shell-nc .modal-nc-close:hover { background: #e5e7eb; color: #374151; }
+        .modal-shell-nc .modal-nc-header { padding: 28px 56px 0 28px; }
+        .modal-shell-nc .modal-nc-title {
+            font-size: 1.375rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.25;
+        }
+        .modal-shell-nc .modal-nc-kicker {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            color: #9ca3af;
+            margin: 10px 0 0;
+            text-transform: uppercase;
+        }
+        .modal-shell-nc .modal-nc-divider { height: 1px; background: #e5e7eb; margin-top: 24px; }
+        .modal-shell-nc .modal-nc-body { padding: 24px 28px; margin: 0; }
+        .modal-shell-nc .modal-nc-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        .modal-shell-nc .modal-nc-label .modal-nc-req { color: #ef4444; font-weight: 700; }
+        .modal-shell-nc .modal-nc-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0 14px;
+            min-height: 48px;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .modal-shell-nc .modal-nc-input-wrap:focus-within {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+        }
+        .modal-shell-nc .modal-nc-input-wrap > .modal-nc-ico {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            width: 1.1rem;
+            text-align: center;
+        }
+        .modal-shell-nc .modal-nc-input,
+        .modal-shell-nc .modal-nc-select {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            font-size: 0.9375rem;
+            color: #0f172a;
+            outline: none;
+            font-family: inherit;
+        }
+        .modal-shell-nc .modal-nc-select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 4px; }
+        .modal-shell-nc .modal-nc-input::placeholder { color: #9ca3af; }
+        .modal-shell-nc .modal-nc-chevron {
+            color: #9ca3af;
+            font-size: 0.65rem;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+        .modal-shell-nc .modal-nc-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 28px 28px;
+        }
+        .modal-shell-nc .modal-nc-footer.modal-nc-footer--webhook {
+            justify-content: space-between;
+        }
+        .modal-shell-nc .modal-nc-footer.modal-nc-footer--webhook #btnExcluirWebhook {
+            margin-right: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ef4444;
+            border-color: rgba(239,68,68,0.35);
+        }
+        .modal-shell-nc .modal-nc-footer.modal-nc-footer--webhook .modal-nc-footer-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .modal-shell-nc .modal-nc-btn-ghost {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            padding: 12px 16px;
+            font-family: inherit;
+        }
+        .modal-shell-nc .modal-nc-btn-ghost:hover { color: #374151; }
+        .modal-shell-nc .modal-nc-btn-primary {
+            background: #6C63FF;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 22px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 10px 24px rgba(108, 99, 255, 0.28);
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .modal-shell-nc .modal-nc-btn-primary:hover:not(:disabled) { background: #6C63FF; transform: translateY(-1px); }
+        .modal-shell-nc .modal-nc-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+        .modal-shell-nc .modal-nc-input-wrap--readonly { background: #f3f4f6; border-color: #e5e7eb; }
+        .modal-shell-nc .modal-nc-input-wrap--readonly:focus-within { border-color: #e5e7eb; box-shadow: none; }
+        .modal-shell-nc .modal-nc-input-wrap--readonly .modal-nc-input { color: #64748b; cursor: default; }
+        .modal-shell-nc--wide .modal-content.modal-nc {
+            max-width: 960px;
+            max-height: min(92vh, 900px);
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-shell-nc--wide .modal-nc-body--webhook {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+        }
+        .modal-webhook-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 320px;
+        }
+        .modal-webhook-col {
+            padding: 20px 24px;
+            overflow-y: auto;
+            border-right: 1px solid #e5e7eb;
+        }
+        .modal-webhook-col:last-child { border-right: none; }
+        .integ-pag-kicker {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        .integ-pag-url-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+            margin-bottom: 12px;
+        }
+        .integ-pag-url-row .modal-nc-input-wrap { flex: 1; margin: 0; }
+        .integ-pag-payload {
+            min-height: 140px;
+            max-height: 240px;
+            overflow: auto;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            font-size: 0.75rem;
+            font-family: ui-monospace, monospace;
+        }
+        .integ-pag-payload:empty::before { content: 'Payload do teste aparecera aqui apos enviar...'; color: rgba(0, 0, 0, 0.3); }
+        .integ-pag-payload.aguardando-dados {
+            color: #64748b;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .integ-pag-payload .payload-json-pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 0.85rem;
+            line-height: 1.35;
+        }
+        .integ-pag-payload .payload-draggable {
+            cursor: grab;
+            background: rgba(108, 99, 255, 0.12);
+            border-radius: 4px;
+            padding: 0 2px;
+        }
+        .modal-webhook-col .modal-nc-input.drag-over {
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+        .integ-pag-teste-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .integ-pag-teste-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .integ-pag-teste-dot.vermelho { background: #ef4444; }
+        .integ-pag-teste-dot.verde { background: #22c55e; }
+        .integ-pag-btn-teste,
+        .integ-pag-btn-atualizar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .integ-pag-btn-teste:hover,
+        .integ-pag-btn-atualizar:hover { background: #f1f5f9; }
+        .integ-pag-map-input.tagged-value {
+            background: rgba(108, 99, 255, 0.14);
+            border-radius: 999px;
+            color: #6C63FF;
+            font-weight: 700;
+            padding-left: 0.9rem;
+            padding-right: 0.9rem;
+        }
+        .integ-pag-field-path {
+            margin-top: 0.35rem;
+            font-size: 0.72rem;
+            color: #64748b;
+            line-height: 1.25;
+            min-height: 1em;
+        }
+        .modal-webhook-btn-copy.copied { color: #22c55e; box-shadow: 0 0 12px rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08); border-color: rgba(34, 197, 94, 0.4); }
+        .modal-webhook-btn-copy.copied .icon-copy { display: none; }
+        .modal-webhook-btn-copy.copied .icon-check { display: block !important; }
+        .modal-webhook-btn-atualizar.loading .icon-refresh { display: none; }
+        .modal-webhook-btn-atualizar.loading .loading-spinner-btn { display: inline-block !important; }
+        @media (max-width: 900px) {
+            .modal-webhook-grid { grid-template-columns: 1fr; }
+            .modal-webhook-col { border-right: none; border-bottom: 1px solid #e5e7eb; }
+            .modal-webhook-col:last-child { border-bottom: none; }
+        }
+        @media (max-width: 540px) {
+            .modal-shell-nc .modal-nc-header { padding-right: 48px; }
+        }
+
+        body.dark-mode .modal-shell-nc.modal-nc-overlay {
+            background: rgba(2, 6, 23, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body.dark-mode .modal-shell-nc .modal-content.modal-nc {
+            background: rgba(30, 41, 59, 0.98);
+            color: #e2e8f0;
+            border-color: rgba(71, 85, 105, 0.6);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+        }
+        body.dark-mode .modal-webhook-col { border-right-color: rgba(71, 85, 105, 0.6); border-bottom-color: rgba(71, 85, 105, 0.6); }
+        body.dark-mode .integ-pag-payload { background: rgba(15, 23, 42, 0.6); border-color: rgba(71, 85, 105, 0.6); color: #94a3b8; }
+        body.dark-mode #modalWebhookPayload,
+        body.dark-mode #modalWebhookPayload .payload-json-pre {
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode #modalWebhookPayload:empty::before,
+        body.dark-mode #modalWebhookPayload.aguardando-dados {
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .integ-pag-map-input.tagged-value { background: rgba(108, 99, 255, 0.2); color: #6C63FF; }
+        body.dark-mode .integ-pag-field-path { color: #94a3b8; }
+        body.dark-mode .integ-pag-kicker { color: #94a3b8; }
+        body.dark-mode .integ-pag-btn-teste,
+        body.dark-mode .integ-pag-btn-atualizar {
+            background: rgba(51, 65, 85, 0.45);
+            border-color: rgba(71, 85, 105, 0.6);
+            color: #e2e8f0;
+        }
+        body.dark-mode .modal-shell-nc .modal-nc-close { background: rgba(51, 65, 85, 0.65); color: #cbd5e1; }
+        body.dark-mode .modal-shell-nc .modal-nc-close:hover { background: rgba(71, 85, 105, 0.8); color: #f8fafc; }
+        body.dark-mode .modal-shell-nc .modal-nc-title { color: #f8fafc; }
+        body.dark-mode .modal-shell-nc .modal-nc-kicker { color: #94a3b8; }
+        body.dark-mode .modal-shell-nc .modal-nc-divider { background: rgba(71, 85, 105, 0.45); }
+        body.dark-mode .modal-shell-nc .modal-nc-label { color: #cbd5e1; }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap { background: rgba(15, 23, 42, 0.65); border-color: rgba(71, 85, 105, 0.55); }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap:focus-within { border-color: #6C63FF; box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2); }
+        body.dark-mode .modal-shell-nc .modal-nc-chevron { color: #94a3b8; }
+        body.dark-mode .modal-shell-nc .modal-nc-input,
+        body.dark-mode .modal-shell-nc .modal-nc-select { color: #f8fafc; }
+        body.dark-mode .modal-shell-nc .modal-nc-input::placeholder { color: #64748b; }
+        body.dark-mode .modal-shell-nc .modal-nc-select option { background: #0f172a; color: #e2e8f0; }
+        body.dark-mode .modal-shell-nc .modal-nc-btn-ghost { color: #cbd5e1; }
+        body.dark-mode .modal-shell-nc .modal-nc-btn-ghost:hover { color: #f1f5f9; }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap--readonly { background: rgba(15, 23, 42, 0.88); border-color: rgba(71, 85, 105, 0.45); }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap--readonly:focus-within { border-color: rgba(71, 85, 105, 0.45); box-shadow: none; }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap--readonly .modal-nc-input { color: #cbd5e1; }
+
+        /* Menu ocultar classes */
+        body.menu-oculta-chat [data-menu-id="chat"] { display: none !important; }
+        body.menu-oculta-agentes-ia [data-menu-id="agentes-ia"] { display: none !important; }
+        body.menu-oculta-crm [data-menu-id="crm"] { display: none !important; }
+        body.menu-oculta-conexoes [data-menu-id="conexoes"] { display: none !important; }
+        body.menu-oculta-disparos [data-menu-id="disparos"] { display: none !important; }
+        body.menu-oculta-contatos [data-menu-id="contatos"] { display: none !important; }
+        body.menu-oculta-listas [data-menu-id="listas"] { display: none !important; }
+        body.menu-oculta-ajuda [data-menu-id="ajuda"] { display: none !important; }
+        body.menu-oculta-configuracoes [data-menu-id="configuracoes"] { display: none !important; }
+
+        /* Mobile (old sidebar-mobile rules removed, now handled by .sidebar styles) */
+
+        /* RR media btn */
+        .rr-media-btn { position: relative; }
+        .rr-media-btn input[type="file"] {
+            position: absolute; opacity: 0; width: 100%; height: 100%;
+            cursor: pointer; z-index: 10; top: 0; left: 0;
+        }
+        .rr-media-btn.active {
+            background: rgba(108, 99, 255, 0.1) !important;
+            border-color: #6C63FF !important;
+            color: #6C63FF !important;
+        }
+
+        /* ===== CONFIG TAB STYLES ===== */
+        .config-tab {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+
+        .config-tab:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .config-tab.active {
+            background: rgba(108, 99, 255, 0.06);
+            color: #6C63FF;
+            font-weight: 700;
+            border-left-color: #6C63FF;
+        }
+
+        .config-tab i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* Mobile config layout */
+        @media (max-width: 768px) {
+            #configLayout {
+                flex-direction: column !important;
+            }
+            #configLayout > .w-\[280px\] {
+                width: 100% !important;
+            }
+            #configNav {
+                flex-direction: row !important;
+                overflow-x: auto;
+                gap: 4px !important;
+                padding-bottom: 8px;
+            }
+            #configNav .border-t {
+                display: none;
+            }
+            .config-tab {
+                white-space: nowrap;
+                flex-shrink: 0;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+            .config-tab.active {
+                border-left-color: transparent;
+                border-bottom-color: #6C63FF;
+            }
+            .config-tab span {
+                display: inline;
+            }
+        }
+
+        /* === Dropdowns <select>: fundo branco e texto preto (light e dark) === */
+        body.light-mode select,
+        body.dark-mode select,
+        body:not(.light-mode) select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select option,
+        body.dark-mode select option,
+        body:not(.light-mode) select option,
+        body.light-mode select optgroup,
+        body.dark-mode select optgroup,
+        body:not(.light-mode) select optgroup {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.light-mode select[class],
+        body.dark-mode select[class],
+        body:not(.light-mode) select[class] {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select[class] option,
+        body.dark-mode select[class] option,
+        body:not(.light-mode) select[class] option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+    </style>
+
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    <style>
+        .toast-container{position:fixed!important;top:max(20px,env(safe-area-inset-top,0px))!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;z-index:200100!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;width:min(380px,calc(100vw - 28px))!important;pointer-events:none!important;box-sizing:border-box!important}
+        .toast-notification{pointer-events:auto!important;margin:0!important;padding:10px 14px 10px 0!important;border-radius:12px!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif!important;font-size:13px!important;line-height:1.35!important;letter-spacing:-.01em!important;font-weight:400!important;display:flex!important;align-items:center!important;gap:0!important;opacity:0!important;transform:translateY(-8px) scale(.98)!important;transition:opacity .22s ease,transform .22s ease!important;color:rgba(0,0,0,.88)!important;background:rgba(255,255,255,.76)!important;backdrop-filter:saturate(180%) blur(22px)!important;-webkit-backdrop-filter:saturate(180%) blur(22px)!important;border:1px solid rgba(0,0,0,.09)!important;box-shadow:0 4px 16px rgba(0,0,0,.1),0 0 0 .5px rgba(0,0,0,.04) inset!important;max-width:none!important}
+        .toast-notification.show{opacity:1!important;transform:translateY(0) scale(1)!important}
+        .toast-notification::before{content:''!important;align-self:stretch!important;width:4px!important;min-height:2.5em!important;margin:6px 12px 6px 8px!important;border-radius:3px!important;flex-shrink:0!important;background:rgba(0,122,255,.95)!important}
+        .toast-notification.info::before{background:rgba(0,122,255,.95)!important}.toast-notification.success::before{background:rgba(52,199,89,.95)!important}.toast-notification.error::before{background:rgba(255,59,48,.95)!important}
+        .toast-notification .toast-message{flex:1!important;min-width:0!important;word-break:break-word!important;padding-right:4px!important}
+        body.dark-mode .toast-notification{color:rgba(255,255,255,.92)!important;background:rgba(44,44,46,.78)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 0 .5px rgba(255,255,255,.06) inset!important}
+        body.dark-mode .toast-notification.info::before{background:rgba(10,132,255,.95)!important}body.dark-mode .toast-notification.success::before{background:rgba(48,209,88,.95)!important}body.dark-mode .toast-notification.error::before{background:rgba(255,69,58,.95)!important}
+    </style>
+    <link rel="stylesheet" href="dropdowns-global.css">
+    <!-- Depois de dropdowns-global + select[class]: tipo de campo personalizado no dark -->
+    <style>
+        body.dark-mode #modalCampoPersonalizadoTipo,
+        body.dark-mode select.campo-personalizado-tipo-select {
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-color: var(--bg-input) !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 12px center !important;
+            border: 1px solid var(--border-input) !important;
+            border-radius: 0.75rem !important;
+            color: var(--text-input) !important;
+            -webkit-text-fill-color: var(--text-input) !important;
+            padding: 0.75rem 2.25rem 0.75rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            line-height: 1.25rem !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            box-shadow: none !important;
+        }
+
+        body.dark-mode #modalCampoPersonalizadoTipo:hover,
+        body.dark-mode select.campo-personalizado-tipo-select:hover {
+            border-color: #64748b !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+        }
+
+        body.dark-mode #modalCampoPersonalizadoTipo:focus,
+        body.dark-mode select.campo-personalizado-tipo-select:focus {
+            outline: none !important;
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2) !important;
+        }
+
+        body.dark-mode #modalCampoPersonalizadoTipo option,
+        body.dark-mode select.campo-personalizado-tipo-select option {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Modal webhook: evita fundo branco nos selects no dark mode */
+        body.dark-mode #modalWebhookConexao,
+        body.dark-mode #modalWebhookAgente {
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-color: transparent !important;
+            background-image: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #f8fafc !important;
+            -webkit-text-fill-color: #f8fafc !important;
+        }
+
+        body.dark-mode #modalWebhookConexao option,
+        body.dark-mode #modalWebhookAgente option {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Modal webhook (dark): evita borda dupla/azulada dos form-input-tw */
+        body.dark-mode #modalWebhookOverlay .modal-nc-input.form-input-tw,
+        body.dark-mode #modalWebhookOverlay .modal-nc-select.form-input-tw {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        body.dark-mode #modalWebhookOverlay .modal-nc-input.form-input-tw:focus,
+        body.dark-mode #modalWebhookOverlay .modal-nc-select.form-input-tw:focus {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex selection:bg-brand-500 selection:text-white">
+    <!-- Tema antes da primeira pintura: evita flash claro (cookie darkMode, mesma lógica que getCookie) -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+
+    <!-- Toast Container -->
+    <div class="fixed top-5 right-5 z-[10010] pointer-events-none" id="toastContainer"></div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebarEl">
+            <!-- Botão de fechar para mobile -->
+            <button class="mobile-close-btn" id="mobileCloseBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo-link">
+                    <img class="sidebar-logo-img" src="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/logo" alt="IA Chatconversa">
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item" title="Dashboard">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">analytics</span>
+                    </span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="chat">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+                    </span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="agentes-ia">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">network_intel_node</span>
+                    </span>
+                    <span class="menu-text">Agentes IA</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="crm">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">view_kanban</span>
+                    </span>
+                    <span class="menu-text">CRM</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="conexoes">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">qr_code</span>
+                    </span>
+                    <span class="menu-text">Conexões</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="disparos">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+                    </span>
+                    <span class="menu-text">Disparos</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="contatos">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">contacts</span>
+                    </span>
+                    <span class="menu-text">Contatos</span>
+                </a>
+                <div class="sidebar-nav-divider"></div>
+                <a href="#" class="menu-item" data-menu-id="ajuda">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">help</span>
+                    </span>
+                    <span class="menu-text">Ajuda</span>
+                </a>
+                <a href="#" class="menu-item active" data-menu-id="configuracoes">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Configurações</span>
+                </a>
+                <a href="#" id="menu-item-admin" class="menu-item menu-item-admin" style="display: none;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">admin_panel_settings</span>
+                    </span>
+                    <span class="menu-text">Administração</span>
+                    <span class="menu-badge-admin">Admin</span>
+                </a>
+            </nav>
+            <div class="version-text" id="versaoAtualTexto">Versão atual: -</div>
+            <div class="sidebar-footer">
+                <!-- Dark Mode Toggle -->
+                <div class="menu-item theme-toggle-item">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text" id="themeToggleText">Modo Escuro</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#" class="menu-item logout-item">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Sair</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- MAIN CONTENT                                             -->
+        <!-- ======================================================= -->
+        <div class="main-content">
+            <div class="p-8 md:p-10 w-full max-w-none flex-1 flex flex-col">
+
+                <!-- Header -->
+                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+                    <div>
+                        <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Configurações da Conta</h1>
+                        <p class="text-slate-500 font-medium text-sm">Faça a gestão das suas informações, equipa e integrações do sistema.</p>
+                    </div>
+                    <!-- User badge top-right -->
+                    <div class="flex items-center gap-3 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-soft">
+                        <div class="w-9 h-9 rounded-full bg-brand-500 flex items-center justify-center text-white text-sm font-bold" id="headerUserInitials">VE</div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900" id="headerUserName">Carregando...</div>
+                            <div class="text-xs text-slate-400" id="headerUserRole">Administrador</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-column layout: Settings Nav + Content -->
+                <div class="flex gap-8 flex-1" id="configLayout">
+
+                    <!-- Left: Settings Navigation Tabs -->
+                    <div class="w-[280px] flex-shrink-0">
+                        <nav class="flex flex-col gap-1" id="configNav">
+                            <button class="config-tab active" data-tab="perfil">
+                                <i class="fa-regular fa-user"></i>
+                                <span>Perfil Pessoal</span>
+                            </button>
+                            <button class="config-tab" data-tab="plano">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                                <span>Plano e Uso</span>
+                            </button>
+                            <button class="config-tab" data-tab="usuarios">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Membros da Equipe</span>
+                            </button>
+                            <button class="config-tab" data-tab="chat">
+                                <i class="fa-solid fa-comments"></i>
+                                <span>Chat</span>
+                            </button>
+                            <button class="config-tab" data-tab="campos-personalizados">
+                                <i class="fa-solid fa-sliders"></i>
+                                <span>Campos Personalizados</span>
+                            </button>
+                            <button class="config-tab" data-tab="etiquetas">
+                                <i class="fa-solid fa-tags"></i>
+                                <span>Etiquetas</span>
+                            </button>
+                            <button class="config-tab" data-tab="integracoes">
+                                <i class="fa-solid fa-puzzle-piece"></i>
+                                <span>Integrações</span>
+                            </button>
+                            <div class="border-t border-slate-100 my-3"></div>
+                            <button class="config-tab" data-tab="avancadas">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Opções Avançadas</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Right: Tab Content Panels -->
+                    <div class="flex-1 min-w-0">
+
+                        <!-- ========== TAB: Perfil Pessoal ========== -->
+                        <div class="config-panel" id="panel-perfil">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <!-- Avatar + Upload -->
+                                <div class="flex items-center gap-5 mb-8">
+                                    <div class="w-16 h-16 rounded-full bg-brand-500 flex items-center justify-center text-white text-2xl font-bold" id="avatarInitials">VE</div>
+                                    <div>
+                                        <button class="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold hover:bg-slate-50 transition-all">Alterar Foto</button>
+                                        <input type="file" id="avatarUpload" accept="image/*" class="hidden">
+                                        <p class="text-xs text-slate-400 mt-1.5">JPG, GIF ou PNG. Máximo 1MB.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Nome + Telefone -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                    <div>
+                                        <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nome Completo</label>
+                                        <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="userName" placeholder="Digite seu nome completo">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Telefone</label>
+                                        <input type="tel" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="userPhone" placeholder="+351 912 345 678">
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-6">
+                                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Email (Login)</label>
+                                    <input type="email" class="form-input-tw w-full bg-slate-100 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-400 cursor-not-allowed" id="userEmail" disabled>
+                                </div>
+
+                                <button class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    Salvar Alterações
+                                </button>
+
+                                <!-- Segurança -->
+                                <div class="border-t border-slate-100 mt-8 pt-8">
+                                    <h3 class="text-xl font-extrabold text-slate-900 mb-6">Segurança</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div>
+                                            <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nova Senha</label>
+                                            <div class="relative">
+                                                <input type="password" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pr-12 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="newPassword" placeholder="••••••••">
+                                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" id="toggleNewPassword">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="text-xs font-medium mt-2" id="newPasswordStrength"></div>
+                                            <div class="strength-bar">
+                                                <div class="strength-fill" id="newStrengthFill"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Confirmar Senha</label>
+                                            <div class="relative">
+                                                <input type="password" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pr-12 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="confirmNewPassword" placeholder="••••••••">
+                                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" id="toggleConfirmNewPassword">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+                                        <i class="fa-solid fa-key"></i>
+                                        Redefinir Senha
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Plano e Uso ========== -->
+                        <div class="config-panel" id="panel-plano" style="display: none;">
+                            <!-- O Seu Plano card -->
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8 mb-6">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 italic mb-1">Plano atual</h3>
+                                        <p class="text-sm text-slate-500">Gerencie seu plano e uso. Caso queira mudar de plano fale com o suporte</p>
+                                    </div>
+                                    <a href="https://wa.me/5591982448542" target="_blank" class="bg-brand-50 text-brand-600 border border-brand-100 px-5 py-2.5 rounded-2xl text-sm font-bold hover:bg-brand-100 transition-all flex-shrink-0">Falar com Suporte</a>
+                                </div>
+
+                                <!-- Plan Card Dark -->
+                                <div class="bg-slate-900 rounded-3xl p-7 text-white mb-8">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <div class="flex items-center gap-3 mb-3">
+                                                <div class="w-10 h-10 rounded-xl bg-brand-500/20 flex items-center justify-center">
+                                                    <i class="fa-solid fa-crown text-brand-500"></i>
+                                                </div>
+                                            </div>
+                                            <h4 class="text-3xl font-extrabold mb-2" id="currentPlan">Plano Gold</h4>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-white/10 mt-6 pt-5">
+                                        <ul class="plan-features grid grid-cols-1 md:grid-cols-2 gap-2 text-sm" id="planFeaturesList">
+                                            <li>Disparos: carregando...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Utilização do Ciclo Atual -->
+                                <div>
+                                    <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-5">Utilização do Ciclo Atual</h4>
+                                    <div class="space-y-4" id="usageContent">
+                                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-3">
+                                                    <i class="fa-solid fa-table-columns text-slate-400"></i>
+                                                    <span class="text-sm font-bold text-slate-700">Quadros CRM</span>
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-900"><span id="usageCrm">4</span>/<span id="usageCrmMax">5</span></span>
+                                            </div>
+                                            <div class="usage-bar"><div class="usage-fill warning" id="usageCrmBar" style="width: 80%"></div></div>
+                                        </div>
+                                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-3">
+                                                    <i class="fa-solid fa-robot text-slate-400"></i>
+                                                    <span class="text-sm font-bold text-slate-700">Agentes IA</span>
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-900"><span id="usageAgentes">1</span>/<span id="usageAgentesMax">5</span></span>
+                                            </div>
+                                            <div class="usage-bar"><div class="usage-fill" id="usageAgentesBar" style="width: 20%"></div></div>
+                                        </div>
+                                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-3">
+                                                    <i class="fa-solid fa-bolt text-slate-400"></i>
+                                                    <span class="text-sm font-bold text-slate-700">Créditos de IA (Tokens)</span>
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-900"><span id="usageTokens">58</span>/<span id="usageTokensMax">1.000</span></span>
+                                            </div>
+                                            <div class="usage-bar"><div class="usage-fill" id="usageTokensBar" style="width: 5.8%"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Usuários da Conta ========== -->
+                        <div class="config-panel" id="panel-usuarios" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Membros da Equipe</h3>
+                                        <p class="text-sm text-slate-500">Adicione ou remova membros que podem ter acesso à sua conta</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" id="btnAdicionarUsuario">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Convidar Membro
+                                    </button>
+                                </div>
+                                <!-- Users table -->
+                                <div class="border border-slate-100 rounded-2xl overflow-hidden">
+                                    <div class="grid grid-cols-[1fr_auto] gap-4 px-5 py-3 bg-slate-50 border-b border-slate-100">
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Usuário</span>
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Nível de Acesso</span>
+                                    </div>
+                                    <div id="usuariosListContainer">
+                                        <div class="text-center text-slate-400 text-sm py-8" id="usuariosListEmpty">Carregando usuarios...</div>
+                                        <div class="divide-y divide-slate-100" id="usuariosList" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Integrações ========== -->
+                        <div class="config-panel" id="panel-integracoes" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8 mb-6">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Integrações e Webhooks</h3>
+                                        <p class="text-sm text-slate-500">Conecte o seu SaaS a plataformas externas (Hotmart, Kiwify, ActiveCampaign).</p>
+                                    </div>
+                                    <button type="button" class="bg-[#6C63FF] hover:bg-[#1fb954] text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Novo Webhook
+                                    </button>
+                                </div>
+                                <div id="webhookListContainer">
+                                    <div class="text-center text-slate-400 text-sm py-8 border border-slate-100 rounded-2xl" id="webhookListEmpty">Nenhum webhook cadastrado</div>
+                                    <div id="webhookList" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Chat ========== -->
+                        <div class="config-panel" id="panel-chat" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Respostas Rápidas</h3>
+                                        <p class="text-sm text-slate-500">Mensagens pré-configuradas para uso rápido no chat.</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Criar resposta rápida
+                                    </button>
+                                </div>
+                                <div id="respostaRapidaListContainer">
+                                    <div class="text-center text-slate-400 text-sm py-8 border border-slate-100 rounded-2xl" id="respostaRapidaListEmpty">Nenhuma resposta rápida cadastrada</div>
+                                    <div class="divide-y divide-slate-100" id="respostaRapidaList" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Campos Personalizados ========== -->
+                        <div class="config-panel" id="panel-campos-personalizados" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Campos personalizados</h3>
+                                        <p class="text-sm text-slate-500">Defina campos reutilizáveis para contatos e variáveis em disparos (ex.: &lt;cidade&gt;).</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Novo campo
+                                    </button>
+                                </div>
+                                <div class="mb-4 max-w-md">
+                                    <label class="sr-only" for="camposPersonalizadosBusca">Buscar campo por nome</label>
+                                    <div class="relative">
+                                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" aria-hidden="true"></i>
+                                        <input type="search" id="camposPersonalizadosBusca" class="form-input-tw w-full pl-10 pr-3 py-2.5 rounded-xl text-sm font-medium border border-slate-200 bg-slate-50 text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Buscar por nome do campo..." autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="border border-slate-100 rounded-2xl overflow-hidden">
+                                    <div class="flex items-center pl-5 pr-3 py-3 bg-slate-50 border-b border-slate-100">
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest shrink-0">Nome</span>
+                                        <div class="flex-1 min-w-4 min-h-[1px]" aria-hidden="true"></div>
+                                        <div class="campos-pers-col-tipo shrink-0 -ml-[30px] w-32 flex flex-col items-center justify-center px-1">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Tipo</span>
+                                        </div>
+                                        <div class="w-3 shrink-0" aria-hidden="true"></div>
+                                        <div class="w-14 shrink-0 flex justify-center items-center">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Ações</span>
+                                        </div>
+                                    </div>
+                                    <div id="camposPersonalizadosListContainer">
+                                        <div class="text-center text-slate-400 text-sm py-8" id="camposPersonalizadosListEmpty">Carregando...</div>
+                                        <div class="divide-y divide-slate-100" id="camposPersonalizadosList" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Etiquetas ========== -->
+                        <div class="config-panel" id="panel-etiquetas" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Etiquetas</h3>
+                                        <p class="text-sm text-slate-500">Organize contatos com etiquetas coloridas. As alterações refletem no chat e na lista de contatos.</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Nova etiqueta
+                                    </button>
+                                </div>
+                                <div class="mb-4 max-w-md">
+                                    <label class="sr-only" for="etiquetasConfigBusca">Buscar etiqueta por nome</label>
+                                    <div class="relative">
+                                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" aria-hidden="true"></i>
+                                        <input type="search" id="etiquetasConfigBusca" class="form-input-tw w-full pl-10 pr-3 py-2.5 rounded-xl text-sm font-medium border border-slate-200 bg-slate-50 text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Buscar por nome da etiqueta..." autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="border border-slate-100 rounded-2xl overflow-hidden">
+                                    <div class="flex items-center pl-5 pr-3 py-3 bg-slate-50 border-b border-slate-100">
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest shrink-0">Etiqueta</span>
+                                        <div class="flex-1 min-w-4 min-h-[1px]" aria-hidden="true"></div>
+                                        <div class="config-etiquetas-col-cor shrink-0 w-36 flex flex-col items-center justify-center px-1">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Cor</span>
+                                        </div>
+                                        <div class="w-3 shrink-0" aria-hidden="true"></div>
+                                        <div class="w-14 shrink-0 flex justify-center items-center">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Ações</span>
+                                        </div>
+                                    </div>
+                                    <div id="etiquetasConfigListContainer">
+                                        <div class="text-center text-slate-400 text-sm py-8" id="etiquetasConfigListEmpty">Carregando...</div>
+                                        <div class="divide-y divide-slate-100" id="etiquetasConfigList" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Opções Avançadas ========== -->
+                        <div class="config-panel" id="panel-avancadas" style="display: none;">
+                            <div id="resetarDadosWrapper">
+                                <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                    <h3 class="text-xl font-extrabold text-slate-900 mb-2">Resetar Dados</h3>
+                                    <p class="text-sm text-slate-500 mb-6">As ações abaixo são irreversíveis. Use com cautela.</p>
+                                    <div class="flex flex-wrap gap-3">
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2">
+                                            <i class="fa-solid fa-comment"></i> Limpar todas conversas
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2">
+                                            <i class="fa-solid fa-link"></i> Limpar todas conexões
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2">
+                                            <i class="fa-solid fa-address-book"></i> Limpar todos contatos
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2">
+                                            <i class="fa-solid fa-paper-plane"></i> Limpar histórico de disparos
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2">
+                                            <i class="fa-solid fa-trash"></i> Resetar toda conta
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /flex-1 tab content -->
+                </div><!-- /flex gap-8 -->
+            </div><!-- /p-8 -->
+        </div><!-- main-content -->
+    </div><!-- app-layout -->
+
+    <!-- ======================================================= -->
+    <!-- MODALS                                                   -->
+    <!-- ======================================================= -->
+
+    <!-- Modal Novo Campo Personalizado -->
+    <div class="modal-overlay" id="modalCampoPersonalizadoOverlay" style="z-index: 10050;">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[440px] w-[90%]">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalCampoPersonalizadoTitulo">Novo campo personalizado</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-600 text-xl leading-none" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nome</label>
+                    <input type="text" id="modalCampoPersonalizadoNome" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Ex.: Cidade" maxlength="120">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Descrição <span class="font-normal normal-case text-slate-400">(opcional)</span></label>
+                    <textarea id="modalCampoPersonalizadoDescricao" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all resize-y min-h-[72px]" placeholder="Ex.: Cidade onde o contato reside" maxlength="2000" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Tipo</label>
+                    <select id="modalCampoPersonalizadoTipo" class="campo-personalizado-tipo-select form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all">
+                        <option value="texto">Texto</option>
+                        <option value="numero">Número</option>
+                        <option value="data">Data</option>
+                        <option value="boolean">Sim / Não</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all" id="btnSalvarCampoPersonalizado">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Etiqueta (criar / editar) -->
+    <div class="modal-overlay" id="modalEtiquetaConfigOverlay" style="z-index: 10050;">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[440px] w-[90%]">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalEtiquetaConfigTitulo">Nova etiqueta</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-600 text-xl leading-none" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nome</label>
+                    <input type="text" id="modalEtiquetaConfigNome" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Ex.: Cliente VIP" maxlength="120">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Descrição <span class="font-normal normal-case text-slate-400">(opcional)</span></label>
+                    <textarea id="modalEtiquetaConfigDescricao" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all resize-y min-h-[72px]" placeholder="Notas internas sobre o uso desta etiqueta" maxlength="2000" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Cor</label>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <div class="config-color-picker-shell" title="Seletor de cor">
+                            <input type="color" id="modalEtiquetaConfigCorPicker" class="config-color-picker-input" value="#6C63FF" aria-label="Seletor de cor">
+                        </div>
+                        <input type="text" id="modalEtiquetaConfigCorHex" class="form-input-tw flex-1 min-w-[140px] bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-mono font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="#6C63FF" maxlength="7" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all" id="btnSalvarEtiquetaConfig">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Resetar Dados -->
+    <div class="modal-overlay" id="modalResetarDadosOverlay">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[480px] w-[90%]">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-500"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalResetarDadosTitulo">Confirmar exclusao</h3>
+            </div>
+            <div id="modalResetarDadosBody">
+                <p class="text-sm text-slate-600" id="modalResetarDadosMensagem">Esta acao e irreversivel. Tem certeza que deseja continuar?</p>
+                <div id="modalResetarDadosInputWrap" style="display: none; margin-top: 20px;">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Digite <strong>Confirmar</strong> para prosseguir:</label>
+                    <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalResetarDadosInput" placeholder="Confirmar">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all" id="btnResetarDadosEtapa1">Confirmar</button>
+                <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" id="btnResetarDadosEtapa2" style="display: none;" disabled>
+                    <i class="fa-solid fa-trash"></i> Confirmar exclusao
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Criar Webhook -->
+    <div id="modalWebhookOverlay" class="modal-overlay modal-nc-overlay modal-shell-nc modal-shell-nc--wide">
+        <div class="modal-content modal-nc">
+            <button type="button" class="modal-nc-close" aria-label="Fechar">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+            <div class="modal-nc-header">
+                <h3 class="modal-nc-title" id="modalWebhookTitle">Criar webhook</h3>
+                <p class="modal-nc-kicker">Webhook e mapeamento</p>
+            </div>
+            <div class="modal-nc-divider" aria-hidden="true"></div>
+            <div class="modal-nc-body modal-nc-body--webhook">
+                <div class="modal-nc-body" style="padding: 16px 24px 0;">
+                    <label class="modal-nc-label" for="modalWebhookNome">Nome do webhook <span class="modal-nc-req" aria-hidden="true">*</span></label>
+                    <div class="modal-nc-input-wrap">
+                        <i class="fa-solid fa-tag modal-nc-ico" aria-hidden="true"></i>
+                        <input type="text" id="modalWebhookNome" class="modal-nc-input form-input-tw" placeholder="Nome do webhook">
+                    </div>
+                </div>
+                <div class="modal-webhook-grid">
+                    <div class="modal-webhook-col">
+                        <div class="integ-pag-kicker">URL do webhook</div>
+                        <div class="integ-pag-url-row">
+                            <div class="modal-nc-input-wrap modal-nc-input-wrap--readonly">
+                                <input type="text" id="modalWebhookUrl" class="modal-nc-input form-input-tw" readonly placeholder="URL gerada ao abrir">
+                            </div>
+                            <button type="button" class="modal-nc-btn-ghost modal-webhook-btn-copy" id="btnCopyWebhook" title="Copiar URL">
+                                <svg class="icon-copy" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="icon-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><polyline points="20,6 9,17 4,12"></polyline></svg>
+                            </button>
+                        </div>
+                        <div class="integ-pag-teste-row">
+                            <span class="integ-pag-kicker" style="margin: 0;">Payload (teste)</span>
+                            <button type="button" class="integ-pag-btn-teste" id="btnAtivarTeste">
+                                <span class="integ-pag-teste-dot vermelho teste-dot"></span>
+                                <span class="btn-test-text">Desativado</span>
+                            </button>
+                            <button type="button" class="integ-pag-btn-atualizar modal-webhook-btn-atualizar" id="btnAtualizarTeste">
+                                <svg class="icon-refresh" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,4 23,10 17,10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                <span class="loading-spinner-btn" style="display: none;"></span>
+                                <span>Atualizar</span>
+                            </button>
+                        </div>
+                        <div class="integ-pag-payload modal-webhook-payload" id="modalWebhookPayload"></div>
+                    </div>
+                    <div class="modal-webhook-col">
+                        <div class="integ-pag-kicker">Mapeamento (arraste do payload)</div>
+                        <div id="modalWebhookFieldList">
+                            <div class="modal-webhook-field-item modal-nc-field--full" style="margin-bottom: 14px;">
+                                <label class="modal-nc-label">Nome <span class="modal-nc-req">*</span></label>
+                                <div class="modal-nc-input-wrap">
+                                    <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="nome" placeholder="Campo do payload (ex: nome)">
+                                </div>
+                                <div class="integ-pag-field-path" data-field-path-hint="nome"></div>
+                            </div>
+                            <div class="modal-webhook-field-item modal-nc-field--full" style="margin-bottom: 14px;">
+                                <label class="modal-nc-label">Telefone <span class="modal-nc-req">*</span></label>
+                                <div class="modal-nc-input-wrap">
+                                    <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="telefone" placeholder="Campo do payload (ex: phone)">
+                                </div>
+                                <div class="integ-pag-field-path" data-field-path-hint="telefone"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="modal-nc-btn-ghost" style="padding-left:0;">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i> Adicionar campo
+                        </button>
+                        <div class="modal-nc-field--full" style="margin: 14px 0;">
+                            <label class="modal-nc-label" for="modalWebhookConexao">Conexao <span class="modal-nc-req">*</span></label>
+                            <div class="modal-nc-input-wrap">
+                                <select class="modal-nc-select form-input-tw" id="modalWebhookConexao" required>
+                                    <option value="">Selecione uma conexao</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down modal-nc-chevron" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="modal-nc-field--full" style="margin-bottom: 14px;">
+                            <label class="modal-nc-label" for="modalWebhookAgente">Agente (opcional)</label>
+                            <div class="modal-nc-input-wrap">
+                                <select class="modal-nc-select form-input-tw" id="modalWebhookAgente">
+                                    <option value="">Agente padrao da conexao</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down modal-nc-chevron" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="modal-nc-field--full" style="margin-bottom: 14px;">
+                            <label class="modal-nc-label" for="modalWebhookMensagemPadrao">Mensagem Inicial</label>
+                            <div id="mensagemPadraoChipsWrap" style="margin-bottom: 8px;">
+                                <span class="integ-pag-kicker" style="margin-bottom: 6px; display: block;">Campos mapeados - arraste para a mensagem</span>
+                                <div class="flex flex-wrap gap-2" id="mensagemPadraoChips"></div>
+                            </div>
+                            <div class="modal-nc-input-wrap" style="padding: 10px 14px;">
+                                <textarea class="modal-nc-input form-input-tw resize-y" id="modalWebhookMensagemPadrao" rows="4" style="min-height:88px;" placeholder="Mensagem inicial enviada ao contato. Arraste os campos acima ou digite [nome], [telefone]..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-nc-divider" aria-hidden="true"></div>
+            <div class="modal-nc-footer modal-nc-footer--webhook">
+                <button type="button" class="modal-nc-btn-ghost" id="btnExcluirWebhook" style="display: none;">
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i> Excluir webhook
+                </button>
+                <div class="modal-nc-footer-actions">
+                    <button type="button" class="modal-nc-btn-ghost">Cancelar</button>
+                    <button type="button" class="modal-nc-btn-primary">
+                        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Salvar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Ativar Webhook -->
+    <div class="confirm-webhook-overlay" id="modalConfirmarAtivarWebhook">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[420px] w-[90%]">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                <h3 class="text-lg font-extrabold text-slate-900">Ativar webhook</h3>
+            </div>
+            <p class="text-sm text-slate-600 mb-6">Deseja ativar o webhook? Ao ativar, o modo teste sera desativado e o webhook passara a processar as mensagens em producao.</p>
+            <div class="flex justify-end gap-3">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all">Nao, manter em teste</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" id="btnConfirmarAtivarWebhookSim">
+                    <i class="fa-solid fa-check"></i> Sim, ativar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Resposta Rapida -->
+    <div class="modal-overlay" id="modalRespostaRapidaOverlay">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating w-full max-w-[960px] max-h-[92vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b border-slate-100 flex-shrink-0">
+                <h3 class="text-lg font-extrabold text-slate-900">Criar resposta rapida</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-700 hover:bg-slate-50 p-2 rounded-xl transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Nome *</label>
+                    <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalRRNome" placeholder="Ex: Saudacao inicial">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Atalho</label>
+                    <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalRRAtalho" placeholder="Ex: oi">
+                </div>
+                <div class="mb-5" id="modalRRTextoWrap">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Texto</label>
+                    <textarea class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all resize-y" id="modalRRTexto" rows="4" placeholder="Digite aqui o seu texto completo."></textarea>
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Midia</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="imagem" accept=".png,.jpg,.jpeg,image/png,image/jpeg">
+                            <i class="fa-solid fa-image"></i> Imagem
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="video" accept="video/*">
+                            <i class="fa-solid fa-video"></i> Video
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="audio" accept="audio/*">
+                            <i class="fa-solid fa-music"></i> Audio
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="documento" accept=".pdf,.doc,.docx,.txt">
+                            <i class="fa-solid fa-file"></i> Documento
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 space-y-2" id="modalRRPreviewSection"></div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-slate-100 flex justify-end">
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Adicionar Usuario -->
+    <div class="modal-overlay" id="modalAdicionarUsuarioOverlay">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating w-full max-w-[440px] max-h-[92vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b border-slate-100 flex-shrink-0">
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalAdicionarUsuarioTitulo">Adicionar usuario</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-700 hover:bg-slate-50 p-2 rounded-xl transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Email *</label>
+                    <input type="email" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalUsuarioEmail" placeholder="email@exemplo.com">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Funcao</label>
+                    <select class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all cursor-pointer" id="modalUsuarioFuncao">
+                        <option value="membro">Membro</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="mb-4 p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-600" id="blocoInfoPermissoesPerfil">
+                    <p id="textoInfoPermissao"></p>
+                </div>
+                <p class="text-xs text-slate-400 texto-info-senha-novo-membro">A senha sera exibida apos a criacao para que voce possa compartilhar com o novo membro.</p>
+            </div>
+            <div class="p-6 border-t border-slate-100 flex justify-end gap-3">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" id="btnEnviarConvite">
+                    <i class="fa-solid fa-user-plus"></i> Adicionar membro
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="usuario-acoes-menu" id="usuarioAcoesMenu">
+        <button type="button" class="usuario-acoes-menu-item">
+            <i class="fa-solid fa-pen"></i> Editar
+        </button>
+        <button type="button" class="usuario-acoes-menu-item danger">
+            <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+    </div>
+
+    <div class="usuario-acoes-menu" id="campoPersonalizadoAcoesMenu">
+        <button type="button" class="usuario-acoes-menu-item">
+            <i class="fa-solid fa-pen"></i> Editar
+        </button>
+        <button type="button" class="usuario-acoes-menu-item danger">
+            <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+    </div>
+
+    <div class="usuario-acoes-menu" id="etiquetaConfigAcoesMenu">
+        <button type="button" class="usuario-acoes-menu-item">
+            <i class="fa-solid fa-pen"></i> Editar
+        </button>
+        <button type="button" class="usuario-acoes-menu-item danger">
+            <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+    </div>
+
+    <!-- Modal Usuario criado -->
+    <div class="modal-overlay" id="modalUsuarioCriadoOverlay">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating w-full max-w-[440px] max-h-[92vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b border-slate-100 flex-shrink-0">
+                <h3 class="text-lg font-extrabold text-slate-900">Usuario criado com sucesso</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-700 hover:bg-slate-50 p-2 rounded-xl transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <p class="text-sm font-bold text-slate-700 mb-3">Dados de acesso:</p>
+                <div class="relative bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-sm text-slate-700" id="modalUsuarioCriadoDados">
+                    <button type="button" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-brand-500 hover:bg-brand-50 rounded-lg transition-all" id="btnCopiarDadosAcesso" title="Copiar">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                    <div><strong>email:</strong> <span id="modalUsuarioCriadoEmail"></span></div>
+                    <div><strong>senha:</strong> <span id="modalUsuarioCriadoSenha"></span></div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-slate-100 flex justify-end">
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold transition-all">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- JAVASCRIPT (ALL LOGIC PRESERVED)                        -->
+    <!-- ======================================================= -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+
+<script src="/hublabel/public/assets/js/menu-global.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1696 @@
+[
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://evo.chatconversa.app.br/instance/create",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "2ae1d96f754a8aa60e1321ec10460285"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n\"instanceName\": \"{{ $('CRIAR CONEXAO2').item.json.body.instanceName }}-{{ Array.from({length: 6}, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('') }}\",\n\"qrcode\": true,\n\"integration\": \"WHATSAPP-BAILEYS\",\n \"rejectCall\": false,\n  \"groupsIgnore\": true,\n  \"alwaysOnline\": false,\n  \"readMessages\": false,\n  \"syncFullHistory\": false,\n  \"readStatus\": false\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      880,
+      1792
+    ],
+    "id": "f4279c0d-b2c6-4812-b3e6-6ca4c7101f58",
+    "name": "CRIAR INSTANCIA"
+  },
+  {
+    "parameters": {
+      "url": "https://evo.chatconversa.app.br/instance/fetchInstances",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $json.Apikey }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      464,
+      2560
+    ],
+    "id": "afceaf4e-4f47-4f1a-9a0a-1d48c0b674fe",
+    "name": "BUSCAR FOTO PERFIL"
+  },
+  {
+    "parameters": {
+      "url": "=https://evo.chatconversa.app.br/group/participants/{{ $json.instanceName }}?groupJid={{ $('CONTAR PARTICIPANTES').item.json.body.WhatsAppId }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "=2ae1d96f754a8aa60e1321ec10460285"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      464,
+      3072
+    ],
+    "id": "f71c07eb-f047-4eb0-aeaa-e3e17a518c49",
+    "name": "LISTAR GRUPO4"
+  },
+  {
+    "parameters": {
+      "url": "=https://evo.chatconversa.app.br/group/participants/{{ $json.instanceName }}?groupJid={{ $('EXPORTAR PARTICIPANTES').item.json.body.WhatsAppId }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "=2ae1d96f754a8aa60e1321ec10460285"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      480,
+      3280
+    ],
+    "id": "c283bdd6-0e71-4d63-8857-d62bec9e4b3d",
+    "name": "LISTAR GRUPO5"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/chat/findChats/{{ $json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "=2ae1d96f754a8aa60e1321ec10460285"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      240,
+      3456
+    ],
+    "id": "a8291500-6a05-47aa-bbe7-faf5618dcb70",
+    "name": "PUXAR CONTATOS3"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"TelefoneContato\"] }}"
+          },
+          {
+            "name": "text",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"Mensagem\"] }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      4544,
+      1712
+    ],
+    "id": "db7db206-f147-43fb-bba8-18adcd5fcd92",
+    "name": "MSG TEXTO2",
+    "retryOnFail": true,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendMedia/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"TelefoneContato\"] }}"
+          },
+          {
+            "name": "caption",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"Mensagem\"] }}"
+          },
+          {
+            "name": "media",
+            "value": "={{ $('DISPARAR MENSAGEM').item.json.body.KeyRedis }}"
+          },
+          {
+            "name": "fileName",
+            "value": "={{ decodeURIComponent($('DISPARAR MENSAGEM').item.json.body.KeyRedis.replaceAll('https://s3.chatconversa.app.br/n8n/','')) }}"
+          },
+          {
+            "name": "mediatype",
+            "value": "={{ $node[\"Code in JavaScript\"].json[\"mediaType\"] }}"
+          },
+          {
+            "name": "mimetype",
+            "value": "={{ $json[\"mimetype\"].replaceAll('quicktime','mp4') }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {
+            "followRedirects": false
+          }
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      4560,
+      1280
+    ],
+    "id": "df502467-d607-4998-a9ef-6e7b7ae2cc06",
+    "name": "MSG TEXTO + MEDIA2",
+    "retryOnFail": true,
+    "executeOnce": false,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"WhatsAppIdGrupo\"] }}"
+          },
+          {
+            "name": "text",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"Mensagem\"] }}"
+          },
+          {
+            "name": "mentionsEveryOne",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"FakeCall\"] }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3744,
+      3248
+    ],
+    "id": "9e8dca59-6c62-4b53-983b-9e87d5e53674",
+    "name": "MSG TEXTO",
+    "retryOnFail": true,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendMedia/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"WhatsAppIdGrupo\"] }}"
+          },
+          {
+            "name": "mediatype",
+            "value": "={{ $node[\"Code in JavaScript1\"].json[\"mediaType\"] }}"
+          },
+          {
+            "name": "caption",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"Mensagem\"] }}"
+          },
+          {
+            "name": "media",
+            "value": "={{ $('DISPARAR MENSAGEM1').item.json.body.KeyRedis }}"
+          },
+          {
+            "name": "fileName",
+            "value": "={{ decodeURIComponent($('DISPARAR MENSAGEM1').item.json.body.KeyRedis.replaceAll('https://s3.chatconversa.app.br/n8n/','')) }}"
+          },
+          {
+            "name": "mentionsEveryOne",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"FakeCall\"] }}"
+          },
+          {
+            "name": "mimetype",
+            "value": "={{ $json[\"mimetype\"].replaceAll('quicktime','mp4') }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3744,
+      2896
+    ],
+    "id": "547833e3-5003-4611-8348-aaf1cb86b2b2",
+    "name": "MSG TEXTO + MEDIA",
+    "retryOnFail": true,
+    "executeOnce": false,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://app.chatconversa.app.br/disparar",
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={{ $json }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3104,
+      2368
+    ],
+    "id": "35eef795-5452-4897-bf78-589234e2cf60",
+    "name": "DISPARAR INDIVIDUAL"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://app.chatconversa.app.br/disparar-grupos",
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={{ $json }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3104,
+      2544
+    ],
+    "id": "f0cc4a79-717d-4cf6-9d6b-b03b6a5308f3",
+    "name": "DISPARAR GRUPOS"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://evo.chatconversa.app.br/instance/create",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "2ae1d96f754a8aa60e1321ec10460285"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n\"instanceName\": \"{{ $('CRIAR CONEXAO2').item.json.body.instanceName }}-{{ Array.from({length: 6}, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('') }}\",\n\"qrcode\": true,\n\"number\": \"{{ $('CRIAR CONEXAO2').item.json.body.phoneNumber }}\",\n\"integration\": \"WHATSAPP-BAILEYS\",\n \"rejectCall\": false,\n  \"groupsIgnore\": true,\n  \"alwaysOnline\": false,\n  \"readMessages\": false,\n  \"syncFullHistory\": false,\n  \"readStatus\": false\n\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      880,
+      1952
+    ],
+    "id": "662a97d1-09b7-4058-adb9-dc7f2a1e7380",
+    "name": "CRIAR INSTANCIA1"
+  },
+  {
+    "parameters": {
+      "method": "HEAD",
+      "url": "={{ $json.body.KeyRedis }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3600,
+      1360
+    ],
+    "id": "6a546912-24e1-4369-9ec2-f58b7ee13af5",
+    "name": "mimetype"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"TelefoneContato\"] }}"
+          },
+          {
+            "name": "text",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"Mensagem\"] }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      4688,
+      1456
+    ],
+    "id": "858a76f0-ff2d-4a24-8d0c-56cd2ceabe98",
+    "name": "MSG TEXTO3",
+    "retryOnFail": true,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendWhatsAppAudio/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM\"].json[\"body\"][\"TelefoneContato\"] }}"
+          },
+          {
+            "name": "audio",
+            "value": "={{ $('DISPARAR MENSAGEM').item.json.body.KeyRedis }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      4464,
+      1456
+    ],
+    "id": "bfc0771c-61cd-4ac3-829f-8c6ff618c8b2",
+    "name": "AUDIO2",
+    "retryOnFail": true,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "HEAD",
+      "url": "={{ $json.body.KeyRedis }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3008,
+      2960
+    ],
+    "id": "a8126547-0795-462f-8759-a9efd5a7a5d9",
+    "name": "mimetype2"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendWhatsAppAudio/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"WhatsAppIdGrupo\"] }}"
+          },
+          {
+            "name": "audio",
+            "value": "={{ $('DISPARAR MENSAGEM1').item.json.body.KeyRedis }}"
+          },
+          {
+            "name": "mentionsEveryOne",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"FakeCall\"] }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3744,
+      3072
+    ],
+    "id": "c4c6063f-8314-4061-8aa4-2167920d9492",
+    "name": "MSG TEXTO1",
+    "retryOnFail": true,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"InstanceName\"] }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"ApikeyConexao\"] }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"WhatsAppIdGrupo\"] }}"
+          },
+          {
+            "name": "text",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"Mensagem\"] }}"
+          },
+          {
+            "name": "mentionsEveryOne",
+            "value": "={{ $item(\"0\").$node[\"DISPARAR MENSAGEM1\"].json[\"body\"][\"FakeCall\"] }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3952,
+      3072
+    ],
+    "id": "6b9aaba3-75f7-481a-9094-880e764a9d91",
+    "name": "MSG TEXTO4",
+    "retryOnFail": true,
+    "waitBetweenTries": 5000,
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "url": "=https://evo.chatconversa.app.br/group/fetchAllGroups/{{ $json.body.instanceName }}?getParticipants=false",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "=2ae1d96f754a8aa60e1321ec10460285"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      256,
+      2896
+    ],
+    "id": "a5e27dc3-381b-4657-93ac-f4ce6d26b954",
+    "name": "LISTAR GRUPO3"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://app.chatconversa.app.br/calcular-token",
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "idAgente",
+            "value": "={{ $('BUSCAR AGENTE').item.json.id }}"
+          },
+          {
+            "name": "idExecution",
+            "value": "={{ $execution.id }}"
+          },
+          {
+            "name": "telefone",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.3,
+    "position": [
+      9488,
+      5504
+    ],
+    "id": "9f250a3d-3210-40f0-a597-b624882677f7",
+    "name": "CONTAR TOKENS"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/message/sendText/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\"number\":\"{{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}\",\n\"text\":\"{{ $json.text.replaceAll('\\n','\\\\n').replaceAll('\"','') }}\",\n\"delay\": 1000\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      9200,
+      6416
+    ],
+    "id": "9b30fc95-31de-4c37-8b0e-b4fa8be05be8",
+    "name": "RESPOSTA13",
+    "alwaysOutputData": false,
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/message/sendText/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}"
+          },
+          {
+            "name": "text",
+            "value": "=infelizmente não consigo ouvir audios, pode digitar por favor"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      4896,
+      5824
+    ],
+    "id": "7f9f6cc0-e9d1-474a-a33c-cf88bc84d22f",
+    "name": "RESPOSTA14",
+    "alwaysOutputData": false
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/chat/getBase64FromMediaMessage/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"message\": {\n        \"key\": {\n            \"id\": \"{{ $('Webhook1').item.json.body.data.key.id }}\"\n        }\n    },\n    \"convertToMp4\": false\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      4992,
+      6096
+    ],
+    "id": "80049fa6-9765-45c3-89f7-3711b84fabd4",
+    "name": "PEGAR IMAGEM",
+    "alwaysOutputData": false
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/chat/getBase64FromMediaMessage/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"message\": {\n        \"key\": {\n            \"id\": \"{{ $('Webhook1').item.json.body.data.key.id }}\"\n        }\n    },\n    \"convertToMp4\": true\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      4880,
+      5632
+    ],
+    "id": "dc83a6fa-8d02-44a4-8ed8-73ee605b7123",
+    "name": "PEGAR AUDIO",
+    "alwaysOutputData": false
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/message/sendWhatsAppAudio/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}"
+          },
+          {
+            "name": "audio",
+            "value": "={{\n  (String($json.text || '').match(/\\]\\((https?:\\/\\/.*)\\)\\s*$/m) || [,''])[1]\n}}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      9200,
+      6064
+    ],
+    "id": "0426be48-f6f6-489a-8838-3965fc1866fe",
+    "name": "AUDIO",
+    "retryOnFail": true,
+    "waitBetweenTries": 1000,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/message/sendMedia/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"number\": \"{{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}\",\n    \"mediatype\": \"image\",\n    \"media\":\"{{\n  (String($json.text || '').match(/\\]\\((https?:\\/\\/.*)\\)\\s*$/m) || [,''])[1]\n}}\"\n}\n",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      9200,
+      5712
+    ],
+    "id": "20738284-8792-4b6c-b576-ffefc4aa1fea",
+    "name": "RESPOSTA image",
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/message/sendMedia/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"number\": \"{{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}\",\n    \"mediatype\": \"video\",\n    \"media\":\"{{\n  (String($json.text || '').match(/\\]\\((https?:\\/\\/.*)\\)\\s*$/m) || [,''])[1]\n}}\"\n}\n",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      9200,
+      5888
+    ],
+    "id": "f956b133-17ef-4f42-9946-bc7b653e9d27",
+    "name": "RESPOSTA video",
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('ORGANIZAR - INFOS').item.json.evolu.server_url }}/message/sendMedia/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"number\": \"{{ $('ORGANIZAR - INFOS').item.json.data.remoteJid }}\",\n    \"mediatype\": \"document\",\n    \"media\":\"{{\n  (String($json.text || '').match(/\\]\\((https?:\\/\\/.*)\\)\\s*$/m) || [,''])[1]\n}}\"\n}\n",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      9200,
+      6224
+    ],
+    "id": "e925a4a9-975a-44eb-92d2-f8d25eca5309",
+    "name": "RESPOSTA file",
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/webhook/set/{{ $('ORGANIZAR2').item.json.instance.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "2ae1d96f754a8aa60e1321ec10460285"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\"webhook\": {\n  \"enabled\": true,\n  \"url\": \"https://app.chatconversa.app.br/agente-no-whatsapp?idConexao={{ $json.id }}\",\n  \"byEvents\": false,\n  \"base64\": false,\n  \"events\": [\n\"MESSAGES_UPSERT\"\n  ]\n}}\n",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      1504,
+      1856
+    ],
+    "id": "f5870ef0-7e9d-42a8-8148-3dfc99c35721",
+    "name": "CONFIGURAR WEBHOOK3"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "={{ $('Webhook1').item.json.body.server_url }}/chat/getBase64FromMediaMessage/{{ $('Webhook1').item.json.body.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('Webhook1').item.json.body.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"message\": {\n        \"key\": {\n            \"id\": \"{{ $('Webhook1').item.json.body.data.key.id }}\"\n        }\n    },\n    \"convertToMp4\": false\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      3280,
+      5472
+    ],
+    "id": "60bc4065-835d-431c-86cb-02f1a9403a90",
+    "name": "PEGAR ARQUIVO",
+    "alwaysOutputData": false
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $json.body.Apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\"number\":\"{{ $json.body.telefone }}\",\n\"text\":\"{{ $json.body.mensagem.replaceAll('\\n','\\\\n') }}\"\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      432,
+      4944
+    ],
+    "id": "b28c13c1-09d6-4b92-8bcf-e617e5adde44",
+    "name": "MSG NORMAL",
+    "alwaysOutputData": false,
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $json.body.Apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\"number\":\"{{ $json.body.telefone }}\",\n\"text\":\"{{ $json.body.mensagem.replaceAll('\\n','\\\\n') }}\",\n\"quoted\": { \n     \"key\": {\n \"id\": \"{{ $json.body.mensagemRespondida }}\"\n }}\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      432,
+      5136
+    ],
+    "id": "14f30ba2-bd97-4338-bfb5-3b4429031e20",
+    "name": "MSG COM RESPOSTA",
+    "alwaysOutputData": false,
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://qlennkosykcblbhpbmqt.supabase.co/auth/v1/admin/users",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          },
+          {
+            "name": "apikey",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"email\": \"{{ $json.body.email }}\",\n    \"password\": \"{{ $json.body.senha }}\",\n    \"email_confirm\": true,\n    \"user_metadata\": {\n      \"nome\": \"{{ $json.body.nome }}\",\n      \"telefone\": \"{{ $json.body.telefone }}\"\n    }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.3,
+    "position": [
+      240,
+      1392
+    ],
+    "id": "fb53b43d-f54c-40df-a047-3b4fa4bc6e50",
+    "name": "CRIAR USUARIO",
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://qlennkosykcblbhpbmqt.supabase.co/auth/v1/admin/users",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          },
+          {
+            "name": "apikey",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"email\": \"{{ $json.body.email }}\",\n    \"password\": \"{{ $json.body.senha }}\",\n    \"email_confirm\": true,\n    \"user_metadata\": {\n      \"nome\": \"{{ $json.body.nome }}\",\n      \"telefone\": \"{{ $json.body.telefone }}\"\n    }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.3,
+    "position": [
+      2608,
+      4032
+    ],
+    "id": "d9b7f6c5-5183-4165-a403-41c8634a7381",
+    "name": "CRIAR USUARIO1",
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendWhatsAppAudio/{{ $('ENVIAR MIDIA').item.json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ENVIAR MIDIA').item.json.body.Apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\"number\":\"{{ $('ENVIAR MIDIA').item.json.body.telefone }}\",\n\"audio\":\"{{ $('LINK ARQUIVO1').item.json.link }}\"\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      1312,
+      5280
+    ],
+    "id": "16d7517b-9885-4b10-9f87-f80bd4e4e46d",
+    "name": "ENVIAR AUDIO1",
+    "alwaysOutputData": false,
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/chat/findChats/{{ $json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "=2ae1d96f754a8aa60e1321ec10460285"
+          },
+          {}
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      256,
+      2208
+    ],
+    "id": "cf975b86-d63b-49d1-a530-990d6e840909",
+    "name": "PUXAR CONTATOS5"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $json.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $json.Apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\"number\":\"{{ $('CAMPOS MAPEADOS').item.json.telefone }}\",\n\"text\":\"{{ $('SUBSTITUIR VARIAVEIS').item.json.mensagemFinal.replaceAll('\\n','') }}\",\n\"delay\": 1000\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      1472,
+      6288
+    ],
+    "id": "903ae87e-50fd-4ea1-a757-e184754ad63a",
+    "name": "RESPOSTA17",
+    "alwaysOutputData": false,
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendMedia/{{ $('ENVIAR MIDIA').item.json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ENVIAR MIDIA').item.json.body.Apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"number\": \"{{ $('ENVIAR MIDIA').item.json.body.telefone }}\",\n    \"mediatype\": \"{{ $('ENVIAR MIDIA').item.json.body.type.replaceAll('Message','') }}\",\n    \"mimetype\":\"{{\n(() => {\n  const url = $('LINK ARQUIVO1').item.json.link || '';\n\n  const ext = url\n    .toLowerCase()\n    .split('?')[0]\n    .split('.')\n    .pop();\n\n  const map = {\n    pdf: 'application/pdf',\n    jpg: 'image/jpeg',\n    jpeg: 'image/jpeg',\n    png: 'image/png',\n    gif: 'image/gif',\n    webp: 'image/webp',\n    svg: 'image/svg+xml',\n\n    mp4: 'video/mp4',\n    mov: 'video/mp4',\n    avi: 'video/x-msvideo',\n    mkv: 'video/x-matroska',\n\n    mp3: 'audio/mpeg',\n    wav: 'audio/wav',\n    ogg: 'audio/ogg',\n\n    txt: 'text/plain',\n    html: 'text/html',\n    css: 'text/css',\n    js: 'application/javascript',\n    json: 'application/json',\n\n    zip: 'application/zip',\n    rar: 'application/vnd.rar',\n    '7z': 'application/x-7z-compressed'\n  };\n\n  return map[ext] || 'application/octet-stream';\n})()\n}}\",\n    \"media\":\"{{ $('LINK ARQUIVO1').item.json.link }}\",\n    \"fileName\":\"{{\n(() => {\n  const url = $('LINK ARQUIVO1').item.json.link || '';\n\n  const fileName = url\n    .split('?')[0]\n    .split('/')\n    .pop();\n\n  return decodeURIComponent(fileName);\n})()\n}}\"\n    \n}\n",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      1152,
+      5664
+    ],
+    "id": "bebc20de-2be8-45c2-bf82-364f82d4cf4a",
+    "name": "ENVIAR MIDIA1",
+    "retryOnFail": true
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendMedia/{{ $('ENVIAR MIDIA').item.json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ENVIAR MIDIA').item.json.body.Apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"number\": \"{{ $('ENVIAR MIDIA').item.json.body.telefone }}\",\n    \"mediatype\": \"{{ $('ENVIAR MIDIA').item.json.body.type.replaceAll('Message','') }}\",\n    \"media\":\"{{ $('LINK ARQUIVO1').item.json.link }}\",\n    \"caption\":\"{{ $('ENVIAR MIDIA').item.json.body.caption.replaceAll('\\n','\\\\n') }}\",\n    \"mimetype\":\"{{\n(() => {\n  const url = $('LINK ARQUIVO1').item.json.link || '';\n\n  const ext = url\n    .toLowerCase()\n    .split('?')[0]\n    .split('.')\n    .pop();\n\n  const map = {\n    pdf: 'application/pdf',\n    jpg: 'image/jpeg',\n    jpeg: 'image/jpeg',\n    png: 'image/png',\n    gif: 'image/gif',\n    webp: 'image/webp',\n    svg: 'image/svg+xml',\n\n    mp4: 'video/mp4',\n    mov: 'video/mp4',\n    avi: 'video/x-msvideo',\n    mkv: 'video/x-matroska',\n\n    mp3: 'audio/mpeg',\n    wav: 'audio/wav',\n    ogg: 'audio/ogg',\n\n    txt: 'text/plain',\n    html: 'text/html',\n    css: 'text/css',\n    js: 'application/javascript',\n    json: 'application/json',\n\n    zip: 'application/zip',\n    rar: 'application/vnd.rar',\n    '7z': 'application/x-7z-compressed'\n  };\n\n  return map[ext] || 'application/octet-stream';\n})()\n}}\",\n    \"fileName\":\"{{\n(() => {\n  const url = $('LINK ARQUIVO1').item.json.link || '';\n\n  return url\n    .split('?')[0]      // remove query string\n    .split('/')         // separa por /\n    .pop();             // pega último item (nome do arquivo)\n})()\n}}\"\n}\n",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      1152,
+      5520
+    ],
+    "id": "d7f47166-4b75-4b13-9d8e-a28e45088c91",
+    "name": "ENVIAR MIDIA2",
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $('ENVIAR MIDIA').item.json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ENVIAR MIDIA').item.json.body.Apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\"number\":\"{{ $('ENVIAR MIDIA').item.json.body.telefone }}\",\n\"text\":\"{{ $('ENVIAR MIDIA').item.json.body.caption.replaceAll('\\n','\\\\n') }}\"\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      1136,
+      5152
+    ],
+    "id": "be0b4cda-5ee4-4a9e-87ec-cd9d410713db",
+    "name": "MSG NORMAL1",
+    "alwaysOutputData": false,
+    "retryOnFail": true,
+    "onError": "continueRegularOutput"
+  },
+  {
+    "parameters": {
+      "toolDescription": "ative essa ferramenta de acordo com as instrucoes",
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/message/sendText/{{ $('ORGANIZAR - INFOS').item.json.evolu.instance }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $('ORGANIZAR - INFOS').item.json.evolu.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "number",
+            "value": "={{ $('ORGANIZAR - INFOS AGENTE').item.json.agente.notificarHumano.itens[0].whatsapp }}"
+          },
+          {
+            "name": "text",
+            "value": "={{ $fromAI('mensagem', `mensagem para enviar pro usuario`, 'string') }}"
+          }
+        ]
+      },
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequestTool",
+    "typeVersion": 4.3,
+    "position": [
+      7232,
+      6128
+    ],
+    "id": "ea9016a0-7563-446f-ada1-b858458630af",
+    "name": "NOTIFICAR_HUMANO"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "=https://evo.chatconversa.app.br/chat/findMessages/{{ $json.body.instanceName }}",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "={{ $json.body.apikey }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"where\": {\n        \"key\": {\n            \"remoteJid\": \"{{\n  (() => {\n    const tel = String($json.body?.telefone || '').trim();\n    if (!tel) return null;\n\n    // já tem @lid\n    if (tel.includes('@lid')) return tel;\n\n    // já tem @s.whatsapp.net\n    if (tel.includes('@s.whatsapp.net')) return tel;\n\n    // adiciona sufixo padrão\n    return `${tel}@s.whatsapp.net`;\n  })()\n}}\"\n        }\n    },\n    \"page\": 1,\n    \"offset\": 300\n}",
+      "options": {
+        "redirect": {
+          "redirect": {}
+        }
+      }
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      224,
+      5792
+    ],
+    "id": "e86fc435-23b1-4b04-8d20-e573355595af",
+    "name": "PUXAR MENSAGENS"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://qlennkosykcblbhpbmqt.supabase.co/auth/v1/admin/users",
+      "sendQuery": true,
+      "queryParameters": {
+        "parameters": [
+          {
+            "name": "redirect_to",
+            "value": "https://seudominio.com/configuracoes.html"
+          }
+        ]
+      },
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "apikey",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          },
+          {
+            "name": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n     \"email\": \"{{ $json.body.email }}\",\n     \"password\": \"{{ $json.body.password }}\",\n     \"email_confirm\": true,\n     \"user_metadata\": {\n       \"contaId\": \"{{ $json.body.contaId }}\",\n       \"funcao\": \"{{ $json.body.funcao }}\",\n       \"invite\": \"true\"\n     }\n   }",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.3,
+    "position": [
+      240,
+      992
+    ],
+    "id": "62ebcb34-f61c-4977-87fe-e328b540181b",
+    "name": "ADICIONAR USUÁRIO",
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://qlennkosykcblbhpbmqt.supabase.co/auth/v1/admin/users",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          },
+          {
+            "name": "apikey",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzk2NjcyNCwiZXhwIjoyMDgzNTQyNzI0fQ.d8mmI189ITr9cBjpI6jjDfF3QgsbpFPwWoo60hSHoKQ"
+          }
+        ]
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n    \"email\": \"{{ $('SUBSTITUIR VARIAVEIS1').item.json.vars.email }}\",\n    \"password\": \"Padrao123456\",\n    \"email_confirm\": true,\n    \"user_metadata\": {\n      \"nome\": \"{{ $('SUBSTITUIR VARIAVEIS1').item.json.vars.nome }}\",\n      \"telefone\": \"{{ $('SUBSTITUIR VARIAVEIS1').item.json.vars.telefone }}\"\n    }}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.3,
+    "position": [
+      1488,
+      6752
+    ],
+    "id": "8f9d07a7-ed52-4e37-9f1f-c895b6c84d32",
+    "name": "CRIAR USUARIO2",
+    "onError": "continueErrorOutput"
+  },
+  {
+    "parameters": {
+      "method": "PATCH",
+      "url": "https://api.supabase.com/v1/projects/qlennkosykcblbhpbmqt/config/auth",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "Authorization",
+            "value": "=Bearer {{ $json.body.supabase_pat }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "external_email_enabled",
+            "value": "={{ $json.body.payload.external_email_enabled }}"
+          },
+          {
+            "name": "smtp_admin_email",
+            "value": "={{ $json.body.payload.smtp_admin_email }}"
+          },
+          {
+            "name": "smtp_sender_name",
+            "value": "={{ $json.body.payload.smtp_sender_name }}"
+          },
+          {
+            "name": "smtp_host",
+            "value": "={{ $json.body.payload.smtp_host }}"
+          },
+          {
+            "name": "smtp_port",
+            "value": "={{ $json.body.payload.smtp_port }}"
+          },
+          {
+            "name": "smtp_user",
+            "value": "={{ $json.body.payload.smtp_user }}"
+          },
+          {
+            "name": "smtp_pass",
+            "value": "={{ $json.body.payload.smtp_pass }}"
+          },
+          {
+            "name": "site_url",
+            "value": "={{ $json.body.payload.site_url }}"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.3,
+    "position": [
+      3696,
+      4000
+    ],
+    "id": "6bdf5a2b-5c8a-4c53-aafb-8bfb4c625c59",
+    "name": "SMTP SUPABASE"
+  },
+  {
+    "parameters": {
+      "method": "PATCH",
+      "url": "https://api.supabase.com/v1/projects/qlennkosykcblbhpbmqt/config/auth",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": [
+          {
+            "name": "Authorization",
+            "value": "=Bearer {{ $json.body.supabase_pat }}"
+          }
+        ]
+      },
+      "sendBody": true,
+      "bodyParameters": {
+        "parameters": [
+          {
+            "name": "mailer_subjects_recovery",
+            "value": "={{ $json.body.payload.mailer_subjects_recovery }}"
+          },
+          {
+            "name": "mailer_templates_recovery_content",
+            "value": "={{ $json.body.payload.mailer_templates_recovery_content.replace(/\\[([^\\]]+)\\]/g, '{' + '{' + '$1' + '}' + '}') }}"
+          },
+          {
+            "name": "=external_email_enabled",
+            "value": "={{ $json.body.payload.external_email_enabled }}"
+          },
+          {
+            "name": "smtp_admin_email",
+            "value": "={{ $json.body.smtp_email }}"
+          },
+          {
+            "name": "smtp_sender_name",
+            "value": "={{ $json.body.smtp_name }}"
+          },
+          {
+            "name": "smtp_host",
+            "value": "={{ $json.body.smtp_host }}"
+          },
+          {
+            "name": "smtp_port",
+            "value": "={{ $json.body.smtp_port }}"
+          },
+          {
+            "name": "smtp_user",
+            "value": "={{ $json.body.smtp_user }}"
+          },
+          {
+            "name": "smtp_pass",
+            "value": "={{ $json.body.smtp_apikey }}"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.3,
+    "position": [
+      3728,
+      4208
+    ],
+    "id": "3d1d8c4a-289c-4551-b104-7a65befc56fc",
+    "name": "EMAIL SUPABASE"
+  },
+  {
+    "parameters": {
+      "method": "PATCH",
+      "url": "=https://back.chatconversa.app.br/api/v1/credentials/{{ $json.smtp }}",
+      "authentication": "predefinedCredentialType",
+      "nodeCredentialType": "n8nApi",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": []
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n  \"name\": \"SMTP [HUBLABEL]\",\n  \"type\": \"smtp\",\n  \"data\": {\n    \"user\": \"{{ $('ALTERAR CREDENCIAL').item.json.body.smtp_user }}\",\n    \"password\": \"{{ $('ALTERAR CREDENCIAL').item.json.body.smtp_apikey }}\",\n    \"host\": \"{{ $('ALTERAR CREDENCIAL').item.json.body.smtp_host }}\",\n    \"port\": {{ $('ALTERAR CREDENCIAL').item.json.body.smtp_port }},\n    \"secure\": false,\n    \"disableStartTls\": false,\n    \"hostName\": \"seudominio.com\"\n  }\n}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.4,
+    "position": [
+      3008,
+      4688
+    ],
+    "id": "2f528fa1-4725-4bcc-a4e8-c01d6948cb4b",
+    "name": "ATUALIZAR CREDENCIAL"
+  },
+  {
+    "parameters": {
+      "method": "PATCH",
+      "url": "=https://back.chatconversa.app.br/api/v1/credentials/{{ $json.openai }}",
+      "authentication": "predefinedCredentialType",
+      "nodeCredentialType": "n8nApi",
+      "sendHeaders": true,
+      "headerParameters": {
+        "parameters": []
+      },
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={\n  \"name\": \"OPENAI [HUBLABEL]\",\n  \"type\": \"openAiApi\",\n  \"data\": {\n    \"apiKey\": \"{{ $('ALTERAR OPEN AI').item.json.body.OpenAiApikey }}\",\n    \"organizationId\": \"\",\n    \"url\": \"https://api.openai.com/v1\",\n    \"header\": false\n  }\n}",
+      "options": {}
+    },
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.4,
+    "position": [
+      3008,
+      4864
+    ],
+    "id": "342976a2-1a46-4a40-a417-92d40fc1a21e",
+    "name": "ATUALIZAR CREDENCIAL1"
+  }
+]

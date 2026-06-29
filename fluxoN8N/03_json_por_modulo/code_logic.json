@@ -1,0 +1,132 @@
+[
+  {
+    "parameters": {
+      "jsCode": "// Recebe itens, classifica e devolve um array de itens\nreturn items.map(item => {\n  const bin = item.binary || {};\n  const firstKey = Object.keys(bin)[0];\n  const b = firstKey ? bin[firstKey] : {};\n  const mt = (b.mimeType || '').toLowerCase();\n  const main = mt.split('/')[0];\n\n  let mediaType;\n\n  if (['image', 'video', 'audio'].includes(main)) {\n    mediaType = main;\n  } else {\n    const subtype = (mt.split('/')[1] || '');\n    const docApps = [\n      'pdf','msword','rtf','json','xml','csv',\n      'vnd.openxmlformats-officedocument.wordprocessingml.document',\n      'vnd.openxmlformats-officedocument.spreadsheetml.sheet',\n      'vnd.openxmlformats-officedocument.presentationml.presentation',\n      'vnd.ms-excel','vnd.ms-powerpoint','zip','x-7z-compressed',\n      'x-rar-compressed','x-tar'\n    ];\n\n    if (main === 'text') mediaType = 'document';\n    else if (main === 'application' && docApps.some(s => subtype.includes(s))) mediaType = 'document';\n    else {\n      // Fallback por extensão\n      const name = decodeURIComponent(b.fileName || item.json?.fileName || '');\n      const ext = (name.split('.').pop() || '').toLowerCase();\n\n      if (['jpg','jpeg','png','gif','webp','bmp','tiff','svg','heic','heif','avif'].includes(ext)) mediaType = 'image';\n      else if (['mp4','mov','m4v','mkv','avi','webm','flv','wmv'].includes(ext)) mediaType = 'video';\n      else if (['mp3','wav','m4a','aac','ogg','oga','flac','amr','opus','wma'].includes(ext)) mediaType = 'audio';\n      else mediaType = 'document';\n    }\n  }\n\n  // Anexa a classificação no JSON do item\n  item.json = { ...(item.json || {}), mediaType };\n  return item;\n});\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      3984,
+      1360
+    ],
+    "id": "319d4786-f6b3-4e35-89a1-4a291328cc13",
+    "name": "Code in JavaScript"
+  },
+  {
+    "parameters": {
+      "jsCode": "// Recebe itens, classifica e devolve um array de itens\nreturn items.map(item => {\n  const bin = item.binary || {};\n  const firstKey = Object.keys(bin)[0];\n  const b = firstKey ? bin[firstKey] : {};\n  const mt = (b.mimeType || '').toLowerCase();\n  const main = mt.split('/')[0];\n\n  let mediaType;\n\n  if (['image', 'video', 'audio'].includes(main)) {\n    mediaType = main;\n  } else {\n    const subtype = (mt.split('/')[1] || '');\n    const docApps = [\n      'pdf','msword','rtf','json','xml','csv',\n      'vnd.openxmlformats-officedocument.wordprocessingml.document',\n      'vnd.openxmlformats-officedocument.spreadsheetml.sheet',\n      'vnd.openxmlformats-officedocument.presentationml.presentation',\n      'vnd.ms-excel','vnd.ms-powerpoint','zip','x-7z-compressed',\n      'x-rar-compressed','x-tar'\n    ];\n\n    if (main === 'text') mediaType = 'document';\n    else if (main === 'application' && docApps.some(s => subtype.includes(s))) mediaType = 'document';\n    else {\n      // Fallback por extensão\n      const name = decodeURIComponent(b.fileName || item.json?.fileName || '');\n      const ext = (name.split('.').pop() || '').toLowerCase();\n\n      if (['jpg','jpeg','png','gif','webp','bmp','tiff','svg','heic','heif','avif'].includes(ext)) mediaType = 'image';\n      else if (['mp4','mov','m4v','mkv','avi','webm','flv','wmv'].includes(ext)) mediaType = 'video';\n      else if (['mp3','wav','m4a','aac','ogg','oga','flac','amr','opus','wma'].includes(ext)) mediaType = 'audio';\n      else mediaType = 'document';\n    }\n  }\n\n  // Anexa a classificação no JSON do item\n  item.json = { ...(item.json || {}), mediaType };\n  return item;\n});\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      3360,
+      2960
+    ],
+    "id": "2270c320-d6f6-465c-940b-fb6f2d194b6d",
+    "name": "Code in JavaScript1"
+  },
+  {
+    "parameters": {
+      "jsCode": "const a1 = $items('MEMORIA1')\n  .flatMap(i => i.json?.mensagem1 ?? [])\n  .filter(v => v !== null && v !== undefined && v !== '');\n\nconst a2 = $items('MEMORIA2')\n  .flatMap(i => i.json?.mensagem2 ?? [])\n  .filter(v => v !== null && v !== undefined && v !== '');\n\nconst LIMIT = 300;\nconst combinacaoTexto1 = a1.slice(-LIMIT).join(' ');\nconst combinacaoTexto2 = a2.slice(-LIMIT).join(' ');\n\nreturn [{ json: { combinacaoTexto1, combinacaoTexto2 } }];\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      6608,
+      5632
+    ],
+    "id": "17b746b0-9fb8-46d9-bd73-1fefc08284e7",
+    "name": "COMBINAÇÃO DE TEXTO"
+  },
+  {
+    "parameters": {
+      "jsCode": "// 1) Tente pegar do INPUT do Code node\nconst inputItem = $input.first();\nlet aiOutputRaw = inputItem?.json?.output;\n\n// 2) Se não veio no input, tente do node \"AI Agentcopia\"\nif (aiOutputRaw == null) {\n  try {\n    const prev = $items('AI Agente', 0, 0); // [execução, outputIndex]\n    aiOutputRaw = prev?.[0]?.json?.output ?? null;\n  } catch (e) {\n    // Ignora: significa que o node não executou neste ramo\n  }\n}\n\n// 3) Validação/conversão\nif (aiOutputRaw == null) {\n  throw new Error(\"Não encontrei 'output' no input nem no node 'AI Agentcopia'. Garanta a conexão/ordem de execução.\");\n}\n\nlet aiOutputStr;\nif (typeof aiOutputRaw === 'string') {\n  aiOutputStr = aiOutputRaw;\n} else {\n  aiOutputStr = String(aiOutputRaw);\n}\n\n// 4) Split por parágrafos (1+ linhas em branco)\nconst splittedArray = aiOutputStr.split(/\\r?\\n\\s*\\r?\\n+/);\n\n// 5) Formato n8n\nreturn splittedArray.map(text => ({ json: { text } }));\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      8240,
+      5632
+    ],
+    "id": "f8ca31ee-1169-4a0f-be67-46675ce5f8dc",
+    "name": "SEPARA MSG"
+  },
+  {
+    "parameters": {
+      "jsCode": "// Retorna SOMENTE os campos do mapeamento com os valores extraídos\n\nfunction normalizePath(p) {\n  if (typeof p !== 'string') return null;\n  let s = p.trim();\n  if (s.startsWith('$.')) s = s.slice(2);\n  if (s.startsWith('$')) s = s.slice(1);\n  if (s.startsWith('.')) s = s.slice(1);\n  return s.length ? s : null;\n}\n\nfunction tokenize(path) {\n  const tokens = [];\n  const re = /[^.[\\]\"']+|\\[(\\d+)\\]|\\[\"([^\"]+)\"\\]|\\['([^']+)'\\]/g;\n  let m;\n  while ((m = re.exec(path)) !== null) {\n    if (m[0][0] !== '[') tokens.push(m[0]);\n    else if (m[1] !== undefined) tokens.push(Number(m[1]));\n    else if (m[2] !== undefined) tokens.push(m[2]);\n    else if (m[3] !== undefined) tokens.push(m[3]);\n  }\n  return tokens;\n}\n\nfunction getByPath(obj, rawPath) {\n  const p = normalizePath(rawPath);\n  if (!p) return undefined;\n  const tokens = tokenize(p);\n\n  let cur = obj;\n  for (const t of tokens) {\n    if (cur == null) return undefined;\n    cur = cur[t];\n  }\n  return cur;\n}\n\nfunction extract(payload, mappingValue) {\n  if (Array.isArray(mappingValue)) {\n    for (const p of mappingValue) {\n      const v = getByPath(payload, p);\n      if (v !== undefined && v !== null && v !== '') return v;\n    }\n    return undefined;\n  }\n  return getByPath(payload, mappingValue);\n}\n\nconst payload = $('RECEBER WEBHOOK').first().json.body ?? {};\nconst mapeamento = $('PUXAR WEBHOOK').first().json.mapeamento ?? {};\n\nconst result = {};\nfor (const [campoDestino, pathOuLista] of Object.entries(mapeamento)) {\n  result[campoDestino] = extract(payload, pathOuLista);\n}\n\nreturn [result];\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      896,
+      6288
+    ],
+    "id": "80910d6d-46d8-4806-adc0-c4a46a34ab0d",
+    "name": "CAMPOS MAPEADOS"
+  },
+  {
+    "parameters": {
+      "jsCode": "// n8n - Code node (JavaScript)\n\n// Template vindo do node PUXAR WEBHOOK\nconst template = $('PUXAR WEBHOOK').first().json.mensagemPadrao || '';\n\n// Dados vindos do node anterior (pode vir como array \"cru\" ou como item normal)\nconst raw = $input.first().json;\n\n// Se vier como array (tipo: [ {nome...} ]), pega o primeiro objeto\nconst data = Array.isArray(raw) ? (raw[0] || {}) : raw;\n\n// Helper para ler paths tipo [user.nome] (opcional)\nfunction getByPath(obj, path) {\n  return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj);\n}\n\n// Substitui [variavel] por valor do objeto\nconst mensagem = String(template).replace(/\\[\\s*([^\\]]+?)\\s*\\]/g, (_, key) => {\n  const value = getByPath(data, key.trim());\n  return value === undefined || value === null ? '' : String(value);\n});\n\nreturn [\n  {\n    json: {\n      mensagemPadrao: template,\n      mensagemFinal: mensagem,\n      vars: data,\n    },\n  },\n];"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      1088,
+      6288
+    ],
+    "id": "a778479a-0db6-4ea0-ab81-ad4e72480072",
+    "name": "SUBSTITUIR VARIAVEIS"
+  },
+  {
+    "parameters": {
+      "jsCode": "// Retorna SOMENTE os campos do mapeamento com os valores extraídos\n\nfunction normalizePath(p) {\n  if (typeof p !== 'string') return null;\n  let s = p.trim();\n  if (s.startsWith('$.')) s = s.slice(2);\n  if (s.startsWith('$')) s = s.slice(1);\n  if (s.startsWith('.')) s = s.slice(1);\n  return s.length ? s : null;\n}\n\nfunction tokenize(path) {\n  const tokens = [];\n  const re = /[^.[\\]\"']+|\\[(\\d+)\\]|\\[\"([^\"]+)\"\\]|\\['([^']+)'\\]/g;\n  let m;\n  while ((m = re.exec(path)) !== null) {\n    if (m[0][0] !== '[') tokens.push(m[0]);\n    else if (m[1] !== undefined) tokens.push(Number(m[1]));\n    else if (m[2] !== undefined) tokens.push(m[2]);\n    else if (m[3] !== undefined) tokens.push(m[3]);\n  }\n  return tokens;\n}\n\nfunction getByPath(obj, rawPath) {\n  const p = normalizePath(rawPath);\n  if (!p) return undefined;\n  const tokens = tokenize(p);\n\n  let cur = obj;\n  for (const t of tokens) {\n    if (cur == null) return undefined;\n    cur = cur[t];\n  }\n  return cur;\n}\n\nfunction extract(payload, mappingValue) {\n  if (Array.isArray(mappingValue)) {\n    for (const p of mappingValue) {\n      const v = getByPath(payload, p);\n      if (v !== undefined && v !== null && v !== '') return v;\n    }\n    return undefined;\n  }\n  return getByPath(payload, mappingValue);\n}\n\nconst payload = $('INTEGRACAO PAGAMENTO').first().json.body ?? {};\nconst mapeamento = $('PUXAR WEBHOOK1').first().json.mapeamento ?? {};\n\nconst result = {};\nfor (const [campoDestino, pathOuLista] of Object.entries(mapeamento)) {\n  result[campoDestino] = extract(payload, pathOuLista);\n}\n\nreturn [result];\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      896,
+      6752
+    ],
+    "id": "fd76ee1b-1b4f-4acb-9d34-53d2fe7b1517",
+    "name": "CAMPOS MAPEADOS1"
+  },
+  {
+    "parameters": {
+      "jsCode": "// n8n - Code node (JavaScript)\n\n// Template vindo do node PUXAR WEBHOOK\nconst template = $('PUXAR WEBHOOK1').first().json.mensagemPadrao || '';\n\n// Dados vindos do node anterior (pode vir como array \"cru\" ou como item normal)\nconst raw = $input.first().json;\n\n// Se vier como array (tipo: [ {nome...} ]), pega o primeiro objeto\nconst data = Array.isArray(raw) ? (raw[0] || {}) : raw;\n\n// Helper para ler paths tipo [user.nome] (opcional)\nfunction getByPath(obj, path) {\n  return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj);\n}\n\n// Substitui [variavel] por valor do objeto\nconst mensagem = String(template).replace(/\\[\\s*([^\\]]+?)\\s*\\]/g, (_, key) => {\n  const value = getByPath(data, key.trim());\n  return value === undefined || value === null ? '' : String(value);\n});\n\nreturn [\n  {\n    json: {\n      mensagemPadrao: template,\n      mensagemFinal: mensagem,\n      vars: data,\n    },\n  },\n];"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      1088,
+      6752
+    ],
+    "id": "6b035a39-f8d4-4a86-b373-597df3258547",
+    "name": "SUBSTITUIR VARIAVEIS1"
+  },
+  {
+    "parameters": {
+      "jsCode": "// JSON que será personalizado\nconst origem = $input.first().json;\n\n// Config de personalização\nconst cfg = $('PERSONALIZAR SAAS').first().json.body || {};\n\n// Lista de substituições\nconst replaces = [];\n\n// Escapa regex\nfunction escapeRegExp(str) {\n  return String(str).replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n}\n\n// Campos fixos\nconst camposFixos = [\n  ['corAtual', 'corNova'],\n  ['rgbAtual', 'rgbNovo'],\n  ['nomeAtual', 'nomeNova'],\n  ['logoAtual', 'logoNova'],\n  ['faviconeAtual', 'faviconeNova'],\n  ['telefoneSuporteAtual', 'telefoneSuporteNova'],\n];\n\n// Adiciona substituições dos campos fixos\nfor (const [atualKey, novaKey] of camposFixos) {\n  const atual = cfg[atualKey];\n  const nova = cfg[novaKey];\n\n  if (atual != null && nova != null && String(atual) !== '') {\n    replaces.push({\n      buscar: String(atual),\n      trocar: String(nova),\n      caseInsensitive: atualKey === 'corAtual', // só cor hex fica case-insensitive\n    });\n\n    // Se a cor vier sem #, adiciona também versão com #\n    if (atualKey === 'corAtual') {\n      const atualStr = String(atual);\n      const novaStr = String(nova);\n\n      if (!atualStr.startsWith('#')) {\n        replaces.push({\n          buscar: `#${atualStr}`,\n          trocar: `#${novaStr}`,\n          caseInsensitive: true,\n        });\n      }\n    }\n  }\n}\n\n// Adiciona substituições dinâmicas dos vídeos\nif (Array.isArray(cfg.videos)) {\n  for (const video of cfg.videos) {\n    if (\n      video &&\n      video.urlAtual != null &&\n      video.urlNova != null &&\n      String(video.urlAtual) !== ''\n    ) {\n      replaces.push({\n        buscar: String(video.urlAtual),\n        trocar: String(video.urlNova),\n        caseInsensitive: false,\n      });\n    }\n  }\n}\n\n// Remove duplicados\nconst seen = new Set();\nconst replacesUnicos = replaces.filter((item) => {\n  const key = `${item.buscar}|||${item.trocar}|||${item.caseInsensitive}`;\n  if (seen.has(key)) return false;\n  seen.add(key);\n  return true;\n});\n\n// Ordena do maior para o menor para evitar conflito parcial\nreplacesUnicos.sort((a, b) => b.buscar.length - a.buscar.length);\n\n// Aplica replace em string\nfunction applyReplacements(text, rules) {\n  let out = text;\n\n  for (const rule of rules) {\n    if (rule.caseInsensitive) {\n      out = out.replace(\n        new RegExp(escapeRegExp(rule.buscar), 'gi'),\n        rule.trocar\n      );\n    } else {\n      out = out.replaceAll(rule.buscar, rule.trocar);\n    }\n  }\n\n  return out;\n}\n\n// Replace recursivo em todo o JSON\nfunction deepReplace(value, rules) {\n  if (typeof value === 'string') {\n    return applyReplacements(value, rules);\n  }\n\n  if (Array.isArray(value)) {\n    return value.map(item => deepReplace(item, rules));\n  }\n\n  if (value && typeof value === 'object') {\n    const obj = {};\n    for (const [k, v] of Object.entries(value)) {\n      obj[k] = deepReplace(v, rules);\n    }\n    return obj;\n  }\n\n  return value;\n}\n\nconst resultado = deepReplace(origem, replacesUnicos);\n\nreturn [\n  {\n    json: resultado\n  }\n];"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      2768,
+      5040
+    ],
+    "id": "5ebe6994-f346-4947-9dbe-5cdc9e330acf",
+    "name": "SUBSTITUIR"
+  },
+  {
+    "parameters": {
+      "jsCode": "const workflowRaw =\n  $json.workflow ??\n  $json.json ??\n  $json;\n\nconst data = JSON.parse(JSON.stringify(workflowRaw));\n\ndelete data.id;\ndelete data.versionId;\ndelete data.meta;\ndelete data.active;\ndelete data.tags;\ndelete data.pinData;\ndelete data.createdAt;\ndelete data.updatedAt;\ndelete data.isArchived;\ndelete data.shared;\ndelete data.activeVersion;\ndelete data.activeVersionId;\ndelete data.versionCounter;\ndelete data.triggerCount;\ndelete data.workflowId;\ndelete data.workflowPublishHistory;\ndelete data.homeProject;\ndelete data.staticData;\ndata.settings = {};\n\nreturn [\n  {\n    json: data\n  }\n];"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      2976,
+      5040
+    ],
+    "id": "e0e8c32a-5faf-4efd-84d9-be0a40a01163",
+    "name": "FORMATAR"
+  }
+]

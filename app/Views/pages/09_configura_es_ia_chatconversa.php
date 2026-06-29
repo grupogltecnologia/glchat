@@ -1,0 +1,4774 @@
+<?php
+// Tela extraída do n8n. Próximo passo: separar CSS/JS e substituir chamadas por APIs PHP.
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - IA Chatconversa</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="shortcut icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="apple-touch-icon" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: 'rgba(108, 99, 255, 0.1)',
+                            100: 'rgba(108, 99, 255, 0.18)',
+                            500: '#6C63FF',
+                            600: '#6C63FF',
+                            700: '#178a45',
+                        },
+                        success: {
+                            50: '#f0fdf4',
+                            200: '#bbf7d0',
+                            500: '#6C63FF',
+                            700: '#6C63FF',
+                        },
+                        surface: '#fbfcfd'
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 32px rgba(0, 0, 0, 0.03)',
+                        'floating': '0 20px 40px -10px rgba(0,0,0,0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .main-content,
+        .admin-main-content,
+        .main-content-wrapper {
+            max-width: none !important;
+            width: 100% !important;
+        }
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            --bg-body: #f4f4f5;
+            --bg-surface: #fbfcfd;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --bg-input-disabled: #f1f5f9;
+            --border-card: #f1f5f9;
+            --border-input: #e2e8f0;
+            --text-primary: #18181b;
+            --text-heading: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --text-input: #334155;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.03);
+            --sidebar-bg: #1A202C;
+            --sidebar-active: #2D3748;
+            --sidebar-hover: rgba(255, 255, 255, 0.08);
+            --sidebar-text: rgba(255, 255, 255, 0.7);
+            --sidebar-text-active: #ffffff;
+            --sidebar-divider: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode {
+            --bg-body: #0a0a0a;
+            --bg-surface: transparent;
+            --bg-card: #1e293b;
+            --bg-input: #1e293b;
+            --bg-input-disabled: #334155;
+            --border-card: #334155;
+            --border-input: #475569;
+            --text-primary: #e2e8f0;
+            --text-heading: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-input: #e2e8f0;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --sidebar-bg: #1A202C;
+            --sidebar-active: #2D3748;
+            --sidebar-hover: rgba(255, 255, 255, 0.08);
+            --sidebar-text: rgba(255, 255, 255, 0.7);
+            --sidebar-text-active: #ffffff;
+            --sidebar-divider: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e2e8f0;
+        }
+
+        body { background-color: var(--bg-body); color: var(--text-primary); }
+
+        /* ===== SIDEBAR STYLES (from dashboard.html) ===== */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 72px;
+            overflow: hidden;
+            background: var(--sidebar-bg);
+            border-right: none;
+            transition: width 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .sidebar:hover {
+            width: 250px;
+            overflow: visible;
+        }
+
+        .sidebar.sidebar-expanded {
+            width: 250px;
+            overflow: visible;
+            transition-duration: 0s;
+        }
+
+        .sidebar-header {
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-height: 96px;
+        }
+
+        .sidebar-logo-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 40px;
+            min-width: 32px;
+            flex-shrink: 0;
+            transition: width 0.3s ease, min-width 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-logo-link,
+        .sidebar.sidebar-expanded .sidebar-logo-link,
+        .sidebar.mobile-open .sidebar-logo-link {
+            width: 100%;
+            min-width: 180px;
+            justify-content: center;
+            padding: 0 16px;
+        }
+
+        .sidebar-logo-img {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            object-fit: contain;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-logo-img,
+        .sidebar.sidebar-expanded .sidebar-logo-img,
+        .sidebar.mobile-open .sidebar-logo-img {
+            width: auto;
+            max-width: 100%;
+            height: 45px;
+            min-width: 0;
+        }
+
+        .sidebar-menu {
+            padding: 4px 0;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .sidebar-nav-divider {
+            height: 1px;
+            background: var(--sidebar-divider);
+            margin: 4px 16px;
+            flex-shrink: 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            margin: 2px 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            white-space: nowrap;
+            border-radius: 16px;
+            text-align: left;
+        }
+
+        .sidebar:hover .menu-item,
+        .sidebar.sidebar-expanded .menu-item,
+        .sidebar.mobile-open .menu-item {
+            justify-content: flex-start;
+            padding: 10px 12px;
+        }
+
+        .menu-item:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-active);
+        }
+
+        .menu-item.active {
+            background: var(--sidebar-active);
+            color: var(--sidebar-text-active);
+            border-right: none;
+        }
+        .menu-item-admin { font-weight: 700 !important; }
+        .menu-badge-admin {
+            display: none;
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #6C63FF;
+            color: #fff;
+        }
+        .sidebar:hover .menu-badge-admin,
+        .sidebar.sidebar-expanded .menu-badge-admin,
+        .sidebar.mobile-open .menu-badge-admin { display: inline-block; }
+
+        .menu-icon {
+            width: 25px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-icon svg {
+            width: 16px;
+            height: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon svg {
+            transform: scale(1.1);
+        }
+
+
+        .menu-icon .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded', sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: normal;
+            font-style: normal;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-item:hover .menu-icon .material-symbols-rounded {
+            transform: scale(1.1);
+        }
+
+        .menu-text {
+            margin-left: 0;
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            flex: 0;
+            transition: opacity 0.3s ease, margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        .sidebar:hover .menu-text,
+        .sidebar.sidebar-expanded .menu-text,
+        .sidebar.mobile-open .menu-text {
+            margin-left: 16px;
+            opacity: 1;
+            width: auto;
+            flex: 1;
+        }
+
+        .menu-badge-novidade {
+            display: none;
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        .sidebar:hover .menu-badge-novidade,
+        .sidebar.sidebar-expanded .menu-badge-novidade,
+        .sidebar.mobile-open .menu-badge-novidade {
+            display: inline-block;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--sidebar-divider);
+            padding: 10px 0;
+            flex-shrink: 0;
+        }
+
+        .version-text {
+            color: #666;
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 8px 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .sidebar:hover .version-text,
+        .sidebar.sidebar-expanded .version-text {
+            opacity: 1;
+        }
+
+        .logout-item {
+            color: #ff6b6b !important;
+        }
+
+        .logout-item:hover {
+            background: rgba(255, 107, 107, 0.1) !important;
+            color: #ff6b6b !important;
+        }
+
+        @media (max-height: 800px) {
+            .sidebar-header { padding: 12px 20px; }
+            .sidebar-logo-img { width: 40px; height: 40px; min-width: 40px; }
+            .sidebar-menu { padding: 12px 0; }
+            .menu-item { padding: 10px 20px; }
+            .menu-icon { width: 26px; }
+            .menu-icon svg { width: 18px; height: 18px; }
+            .menu-icon .material-symbols-rounded { font-size: 18px; }
+            .version-text { padding: 6px 20px; font-size: 0.55rem; }
+            .sidebar-footer { padding: 8px 0; }
+        }
+        @media (max-height: 700px) {
+            .sidebar-header { padding: 8px 20px; }
+            .sidebar-logo-img { width: 36px; height: 36px; min-width: 36px; }
+            .sidebar-menu { padding: 8px 0; }
+            .menu-item { padding: 8px 20px; }
+            .menu-icon { width: 22px; }
+            .menu-icon svg { width: 16px; height: 16px; }
+            .menu-icon .material-symbols-rounded { font-size: 16px; }
+            .menu-text { font-size: 0.85rem; }
+            .version-text { padding: 4px 20px; font-size: 0.5rem; }
+            .sidebar-footer { padding: 6px 0; }
+            .theme-switch { width: 38px; height: 20px; }
+        }
+        @media (max-height: 600px) {
+            .sidebar-header { padding: 6px 20px; }
+            .sidebar-logo-img { width: 32px; height: 32px; min-width: 32px; }
+            .sidebar-menu { padding: 4px 0; }
+            .menu-item { padding: 6px 20px; }
+            .menu-icon { width: 20px; }
+            .menu-icon svg { width: 14px; height: 14px; }
+            .menu-icon .material-symbols-rounded { font-size: 14px; }
+            .menu-text { font-size: 0.8rem; margin-left: 10px; }
+            .version-text { padding: 2px 20px; font-size: 0.45rem; }
+            .sidebar-footer { padding: 4px 0; }
+            .theme-switch { width: 34px; height: 18px; }
+        }
+
+        .theme-toggle-item {
+            cursor: default;
+        }
+
+        .theme-toggle-item:hover {
+            background: transparent !important;
+            color: inherit !important;
+        }
+
+        .theme-switch {
+            display: none;
+            position: relative;
+            width: 44px;
+            height: 24px;
+            margin-left: auto;
+        }
+
+        .sidebar:hover .theme-switch,
+        .sidebar.sidebar-expanded .theme-switch,
+        .sidebar.mobile-open .theme-switch {
+            display: inline-block;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .theme-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #444;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .theme-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .theme-switch input:checked + .slider {
+            background-color: #6C63FF;
+        }
+
+        .theme-switch input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Light Mode Styles (copiado do dashboard para sidebar) */
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .menu-item {
+            color: #666;
+        }
+
+        body.light-mode .menu-item:hover {
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+        }
+
+        body.light-mode .menu-item.active {
+            background: rgba(108, 99, 255, 0.15);
+            color: #6C63FF;
+        }
+
+        body.light-mode .version-text {
+            color: #999;
+        }
+
+        body.light-mode .menu-badge-admin {
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        body.light-mode .menu-badge-novidade {
+            background: #6C63FF;
+            color: #fff;
+        }
+
+        body.light-mode .sidebar-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .sidebar-nav-divider {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        body.light-mode .theme-switch .slider {
+            background-color: #d1d5db;
+            border: 1px solid #cbd5e1;
+        }
+
+        body.light-mode .theme-switch .slider:before {
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        body.light-mode .theme-switch input:checked + .slider {
+            background-color: #6C63FF;
+            border-color: #6C63FF;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .mobile-close-btn {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            z-index: 10;
+            padding: 4px;
+        }
+
+        .main-content {
+            margin-left: 72px;
+            flex: 1;
+            width: calc(100vw - 72px);
+            max-width: calc(100vw - 72px);
+            min-height: 100vh;
+            overflow-y: auto;
+            background: var(--bg-surface);
+            position: relative;
+        }
+
+        body.dark-mode .main-content {
+            background: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+                transform: translateX(-100%);
+                z-index: 1001;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .mobile-close-btn {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100vw;
+                max-width: 100vw;
+            }
+        }
+        /* ===== DARK MODE OVERRIDES ===== */
+        body.dark-mode .bg-white { background-color: var(--bg-card) !important; }
+        body.dark-mode .bg-slate-50 { background-color: #1e293b !important; }
+        body.dark-mode .bg-slate-100 { background-color: #334155 !important; }
+        body.dark-mode .border-slate-100 { border-color: var(--border-card) !important; }
+        body.dark-mode .border-slate-200 { border-color: var(--border-input) !important; }
+        body.dark-mode .text-slate-900 { color: var(--text-heading) !important; }
+        body.dark-mode .text-slate-700 { color: var(--text-input) !important; }
+        body.dark-mode .text-slate-500 { color: var(--text-secondary) !important; }
+        body.dark-mode .text-slate-400 { color: var(--text-muted) !important; }
+        body.dark-mode .texto-info-senha-novo-membro { color: #ffffff !important; }
+        body.dark-mode .shadow-soft { box-shadow: var(--shadow-soft) !important; }
+        body.dark-mode .form-input-tw {
+            background-color: var(--bg-input) !important;
+            border-color: var(--border-input) !important;
+            color: var(--text-input) !important;
+        }
+        body.dark-mode .form-input-tw:disabled,
+        body.dark-mode .form-input-tw[disabled] {
+            background-color: var(--bg-input-disabled) !important;
+            color: var(--text-muted) !important;
+        }
+        body.dark-mode .config-tab { color: var(--text-secondary); }
+        body.dark-mode .config-tab:hover { background: #1e293b; color: var(--text-primary); }
+        body.dark-mode .config-tab.active { background: rgba(108, 99, 255, 0.1); color: #6C63FF; }
+        body.dark-mode .border-t { border-color: var(--border-card) !important; }
+        body.dark-mode .divide-slate-100 > * + * { border-color: var(--border-card) !important; }
+        body.dark-mode .hover\:bg-slate-50:hover { background-color: #1e293b !important; }
+        body.dark-mode .bg-brand-50 { background-color: rgba(108, 99, 255, 0.1) !important; }
+        body.dark-mode .border-brand-100 { border-color: rgba(108, 99, 255, 0.2) !important; }
+        body.dark-mode .badge-funcao-membro {
+            background-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode #textoInfoPermissao,
+        body.dark-mode #textoInfoPermissao strong {
+            color: #ffffff !important;
+        }
+        body.dark-mode #usageContent .usage-item-label { color: #e2e8f0 !important; }
+        body.dark-mode #usageContent .usage-item-value { color: #6C63FF !important; }
+        body.dark-mode .usage-bar { background: rgba(255,255,255,0.08) !important; }
+        body.dark-mode .strength-bar { background: rgba(255,255,255,0.08) !important; }
+        body.dark-mode .border-red-200 { border-color: rgba(239, 68, 68, 0.3) !important; }
+        body.dark-mode select { background-color: var(--bg-input) !important; color: var(--text-input) !important; }
+        /* Tipo do campo personalizado: contraste no dark (fundo mais escuro + texto claro; options legíveis onde o browser permite) */
+        body.dark-mode select#modalCampoPersonalizadoTipo,
+        body.dark-mode select.campo-personalizado-tipo-select {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #64748b !important;
+        }
+        body.dark-mode select#modalCampoPersonalizadoTipo option,
+        body.dark-mode select.campo-personalizado-tipo-select option {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+        body.dark-mode .modal-overlay .bg-white { background-color: var(--bg-card) !important; }
+        body.dark-mode .modal-webhook-payload { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.08) !important; color: var(--text-secondary) !important; }
+        /* ===== END SIDEBAR STYLES ===== */
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        [x-cloak] { display: none !important; }
+
+        /* Modal overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10002;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+
+        .usuario-acoes-menu {
+            display: none;
+            position: fixed;
+            z-index: 10020;
+            min-width: 170px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+            padding: 6px;
+        }
+        .usuario-acoes-menu.show { display: block; }
+        .usuario-acoes-menu-item {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            padding: 9px 10px;
+            border-radius: 10px;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .usuario-acoes-menu-item:hover { background: #f8fafc; }
+        .usuario-acoes-menu-item.danger { color: #dc2626; }
+        .usuario-acoes-menu-item.danger:hover { background: #fef2f2; }
+        body.dark-mode .usuario-acoes-menu {
+            background: #0f172a;
+            border-color: #334155;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+        }
+        body.dark-mode .usuario-acoes-menu-item { color: #e2e8f0; }
+        body.dark-mode .usuario-acoes-menu-item:hover { background: #1e293b; }
+        body.dark-mode .usuario-acoes-menu-item.danger { color: #f87171; }
+        body.dark-mode .usuario-acoes-menu-item.danger:hover { background: rgba(220, 38, 38, 0.2); }
+
+        /* Tags de tipo — campos personalizados (alinhado às demais tabelas / webhooks) */
+        body.dark-mode .campo-pers-tipo--texto { background: rgba(148, 163, 184, 0.22) !important; color: #e2e8f0 !important; }
+        body.dark-mode .campo-pers-tipo--numero { background: rgba(59, 130, 246, 0.22) !important; color: #93c5fd !important; }
+        body.dark-mode .campo-pers-tipo--data { background: rgba(139, 92, 246, 0.22) !important; color: #c4b5fd !important; }
+        body.dark-mode .campo-pers-tipo--boolean { background: rgba(16, 185, 129, 0.22) !important; color: #6C63FF !important; }
+        body.dark-mode .campos-personalizados-row:hover { background: #1e293b !important; }
+
+        /* Etiquetas (config) — mesma base visual que campos personalizados */
+        .config-etiquetas-row .config-etiqueta-cor-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            flex-shrink: 0;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+        }
+        body.dark-mode .config-etiquetas-row:hover { background: #1e293b !important; }
+        body.dark-mode .config-etiquetas-row .config-etiqueta-cor-dot {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        /* Color input: borda arredondada visível (o próprio <input type="color"> é quadrado no Chrome/Safari) */
+        .config-color-picker-shell {
+            flex-shrink: 0;
+            height: 2.75rem;
+            width: 3.5rem;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .config-color-picker-input {
+            -webkit-appearance: none;
+            appearance: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: 2.75rem;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .config-color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 3px;
+            border-radius: 0.65rem;
+        }
+        .config-color-picker-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 0.5rem;
+        }
+        .config-color-picker-input::-moz-color-swatch {
+            border: none;
+            border-radius: 0.5rem;
+        }
+        body.dark-mode .config-color-picker-shell {
+            border-color: var(--border-input) !important;
+            background: var(--bg-input) !important;
+        }
+
+        /* Confirm overlay */
+        .confirm-webhook-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10003;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-webhook-overlay.show { display: flex; }
+
+        /* Toast animations */
+        .toast-notification {
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: auto;
+        }
+        .toast-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        /* Spinner animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-spinner-btn {
+            width: 14px; height: 14px; flex-shrink: 0;
+            border: 2px solid rgba(0, 0, 0, 0.15);
+            border-top-color: #6C63FF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Loading dots */
+        @keyframes loading-dots-pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .loading-dots .dot {
+            display: inline-block; width: 5px; height: 5px; margin: 0 2px;
+            border-radius: 50%; background: currentColor;
+            animation: loading-dots-pulse 1.2s ease-in-out infinite;
+        }
+        .loading-dots .dot:nth-child(2) { animation-delay: 0.15s; }
+        .loading-dots .dot:nth-child(3) { animation-delay: 0.3s; }
+
+        /* RR upload spinner */
+        @keyframes rr-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .rr-upload-spinner {
+            width: 20px; height: 20px;
+            border: 2px solid #d1fae5;
+            border-top: 2px solid #6C63FF;
+            border-radius: 50%;
+            animation: rr-spin 1s linear infinite;
+        }
+
+        /* Payload draggable */
+        .payload-draggable {
+            cursor: grab; padding: 2px 6px; margin: 0 1px;
+            border-radius: 4px;
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px dashed rgba(108, 99, 255, 0.4);
+            font-size: 0.8rem; font-family: monospace;
+            user-select: none; -webkit-user-drag: element;
+            display: inline;
+        }
+        .payload-draggable:hover { background: rgba(108, 99, 255, 0.2); }
+        .payload-draggable:active { cursor: grabbing; }
+
+        /* Drag over state for form inputs */
+        .form-input-tw.drag-over {
+            border-color: rgba(108, 99, 255, 0.6) !important;
+            background: rgba(108, 99, 255, 0.05) !important;
+        }
+
+        /* Mensagem padrao chips */
+        .mensagem-padrao-chip {
+            cursor: grab; padding: 4px 10px; border-radius: 6px;
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px dashed rgba(108, 99, 255, 0.4);
+            font-size: 0.8rem; font-family: monospace;
+            user-select: none;
+        }
+        .mensagem-padrao-chip:hover { background: rgba(108, 99, 255, 0.2); }
+        .mensagem-padrao-chip:active { cursor: grabbing; }
+
+        #modalWebhookMensagemPadrao.drag-over {
+            border-color: rgba(108, 99, 255, 0.6) !important;
+            background: rgba(108, 99, 255, 0.05) !important;
+        }
+
+        /* Collapsible sections */
+        .config-section-content {
+            overflow: hidden;
+            max-height: 2500px;
+            transition: max-height 0.35s ease;
+            padding-top: 20px;
+        }
+        .config-section.collapsed .config-section-content {
+            max-height: 0 !important;
+            padding-top: 0 !important;
+            overflow: hidden;
+        }
+        .config-section.collapsed .config-section-chevron {
+            transform: rotate(-90deg);
+        }
+
+        /* Password strength bar */
+        .strength-bar {
+            width: 100%; height: 6px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px; margin-top: 8px; overflow: hidden;
+        }
+        .strength-fill {
+            height: 100%; border-radius: 4px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+            width: 0%;
+        }
+
+        /* Usage bar */
+        .usage-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.05); border-radius: 4px; overflow: hidden; }
+        .usage-fill { height: 100%; background: #6C63FF; border-radius: 4px; transition: width 0.3s ease; }
+        .usage-fill.warning { background: linear-gradient(90deg, #ffa726 0%, #ff9800 100%); }
+        .usage-fill.danger { background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%); }
+        .usage-fill.unlimited { background: linear-gradient(90deg, #6C63FF 0%, #6C63FF 100%); }
+
+        /* Plan features list */
+        .plan-features { list-style: none; margin: 10px 0; padding: 0; }
+        .plan-features li { color: #cbd5e1; margin-bottom: 5px; padding-left: 20px; position: relative; }
+        .plan-features li::before { content: '\2713'; position: absolute; left: 0; color: #6C63FF; font-weight: bold; }
+
+        .modal-shell-nc.modal-nc-overlay {
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-shell-nc .modal-content.modal-nc {
+            background: #ffffff;
+            color: #1a1c1e;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            max-width: 560px;
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            backdrop-filter: none;
+        }
+        .modal-shell-nc .modal-nc-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            border: none;
+            background: #f3f4f6;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            line-height: 1;
+            transition: background 0.2s, color 0.2s;
+            z-index: 2;
+        }
+        .modal-shell-nc .modal-nc-close:hover { background: #e5e7eb; color: #374151; }
+        .modal-shell-nc .modal-nc-header { padding: 28px 56px 0 28px; }
+        .modal-shell-nc .modal-nc-title {
+            font-size: 1.375rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.25;
+        }
+        .modal-shell-nc .modal-nc-kicker {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            color: #9ca3af;
+            margin: 10px 0 0;
+            text-transform: uppercase;
+        }
+        .modal-shell-nc .modal-nc-divider { height: 1px; background: #e5e7eb; margin-top: 24px; }
+        .modal-shell-nc .modal-nc-body { padding: 24px 28px; margin: 0; }
+        .modal-shell-nc .modal-nc-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        .modal-shell-nc .modal-nc-label .modal-nc-req { color: #ef4444; font-weight: 700; }
+        .modal-shell-nc .modal-nc-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0 14px;
+            min-height: 48px;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .modal-shell-nc .modal-nc-input-wrap:focus-within {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+        }
+        .modal-shell-nc .modal-nc-input-wrap > .modal-nc-ico {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            width: 1.1rem;
+            text-align: center;
+        }
+        .modal-shell-nc .modal-nc-input,
+        .modal-shell-nc .modal-nc-select {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            font-size: 0.9375rem;
+            color: #0f172a;
+            outline: none;
+            font-family: inherit;
+        }
+        .modal-shell-nc .modal-nc-select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 4px; }
+        .modal-shell-nc .modal-nc-input::placeholder { color: #9ca3af; }
+        .modal-shell-nc .modal-nc-chevron {
+            color: #9ca3af;
+            font-size: 0.65rem;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+        .modal-shell-nc .modal-nc-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 28px 28px;
+        }
+        .modal-shell-nc .modal-nc-footer.modal-nc-footer--webhook {
+            justify-content: space-between;
+        }
+        .modal-shell-nc .modal-nc-footer.modal-nc-footer--webhook #btnExcluirWebhook {
+            margin-right: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ef4444;
+            border-color: rgba(239,68,68,0.35);
+        }
+        .modal-shell-nc .modal-nc-footer.modal-nc-footer--webhook .modal-nc-footer-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .modal-shell-nc .modal-nc-btn-ghost {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            padding: 12px 16px;
+            font-family: inherit;
+        }
+        .modal-shell-nc .modal-nc-btn-ghost:hover { color: #374151; }
+        .modal-shell-nc .modal-nc-btn-primary {
+            background: #6C63FF;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 22px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 10px 24px rgba(108, 99, 255, 0.28);
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .modal-shell-nc .modal-nc-btn-primary:hover:not(:disabled) { background: #6C63FF; transform: translateY(-1px); }
+        .modal-shell-nc .modal-nc-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+        .modal-shell-nc .modal-nc-input-wrap--readonly { background: #f3f4f6; border-color: #e5e7eb; }
+        .modal-shell-nc .modal-nc-input-wrap--readonly:focus-within { border-color: #e5e7eb; box-shadow: none; }
+        .modal-shell-nc .modal-nc-input-wrap--readonly .modal-nc-input { color: #64748b; cursor: default; }
+        .modal-shell-nc--wide .modal-content.modal-nc {
+            max-width: 960px;
+            max-height: min(92vh, 900px);
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-shell-nc--wide .modal-nc-body--webhook {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+        }
+        .modal-webhook-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 320px;
+        }
+        .modal-webhook-col {
+            padding: 20px 24px;
+            overflow-y: auto;
+            border-right: 1px solid #e5e7eb;
+        }
+        .modal-webhook-col:last-child { border-right: none; }
+        .integ-pag-kicker {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        .integ-pag-url-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+            margin-bottom: 12px;
+        }
+        .integ-pag-url-row .modal-nc-input-wrap { flex: 1; margin: 0; }
+        .integ-pag-payload {
+            min-height: 140px;
+            max-height: 240px;
+            overflow: auto;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            font-size: 0.75rem;
+            font-family: ui-monospace, monospace;
+        }
+        .integ-pag-payload:empty::before { content: 'Payload do teste aparecera aqui apos enviar...'; color: rgba(0, 0, 0, 0.3); }
+        .integ-pag-payload.aguardando-dados {
+            color: #64748b;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .integ-pag-payload .payload-json-pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 0.85rem;
+            line-height: 1.35;
+        }
+        .integ-pag-payload .payload-draggable {
+            cursor: grab;
+            background: rgba(108, 99, 255, 0.12);
+            border-radius: 4px;
+            padding: 0 2px;
+        }
+        .modal-webhook-col .modal-nc-input.drag-over {
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+        .integ-pag-teste-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .integ-pag-teste-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .integ-pag-teste-dot.vermelho { background: #ef4444; }
+        .integ-pag-teste-dot.verde { background: #22c55e; }
+        .integ-pag-btn-teste,
+        .integ-pag-btn-atualizar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .integ-pag-btn-teste:hover,
+        .integ-pag-btn-atualizar:hover { background: #f1f5f9; }
+        .integ-pag-map-input.tagged-value {
+            background: rgba(108, 99, 255, 0.14);
+            border-radius: 999px;
+            color: #6C63FF;
+            font-weight: 700;
+            padding-left: 0.9rem;
+            padding-right: 0.9rem;
+        }
+        .integ-pag-field-path {
+            margin-top: 0.35rem;
+            font-size: 0.72rem;
+            color: #64748b;
+            line-height: 1.25;
+            min-height: 1em;
+        }
+        .modal-webhook-btn-copy.copied { color: #22c55e; box-shadow: 0 0 12px rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08); border-color: rgba(34, 197, 94, 0.4); }
+        .modal-webhook-btn-copy.copied .icon-copy { display: none; }
+        .modal-webhook-btn-copy.copied .icon-check { display: block !important; }
+        .modal-webhook-btn-atualizar.loading .icon-refresh { display: none; }
+        .modal-webhook-btn-atualizar.loading .loading-spinner-btn { display: inline-block !important; }
+        @media (max-width: 900px) {
+            .modal-webhook-grid { grid-template-columns: 1fr; }
+            .modal-webhook-col { border-right: none; border-bottom: 1px solid #e5e7eb; }
+            .modal-webhook-col:last-child { border-bottom: none; }
+        }
+        @media (max-width: 540px) {
+            .modal-shell-nc .modal-nc-header { padding-right: 48px; }
+        }
+
+        body.dark-mode .modal-shell-nc.modal-nc-overlay {
+            background: rgba(2, 6, 23, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body.dark-mode .modal-shell-nc .modal-content.modal-nc {
+            background: rgba(30, 41, 59, 0.98);
+            color: #e2e8f0;
+            border-color: rgba(71, 85, 105, 0.6);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+        }
+        body.dark-mode .modal-webhook-col { border-right-color: rgba(71, 85, 105, 0.6); border-bottom-color: rgba(71, 85, 105, 0.6); }
+        body.dark-mode .integ-pag-payload { background: rgba(15, 23, 42, 0.6); border-color: rgba(71, 85, 105, 0.6); color: #94a3b8; }
+        body.dark-mode #modalWebhookPayload,
+        body.dark-mode #modalWebhookPayload .payload-json-pre {
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode #modalWebhookPayload:empty::before,
+        body.dark-mode #modalWebhookPayload.aguardando-dados {
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .integ-pag-map-input.tagged-value { background: rgba(108, 99, 255, 0.2); color: #6C63FF; }
+        body.dark-mode .integ-pag-field-path { color: #94a3b8; }
+        body.dark-mode .integ-pag-kicker { color: #94a3b8; }
+        body.dark-mode .integ-pag-btn-teste,
+        body.dark-mode .integ-pag-btn-atualizar {
+            background: rgba(51, 65, 85, 0.45);
+            border-color: rgba(71, 85, 105, 0.6);
+            color: #e2e8f0;
+        }
+        body.dark-mode .modal-shell-nc .modal-nc-close { background: rgba(51, 65, 85, 0.65); color: #cbd5e1; }
+        body.dark-mode .modal-shell-nc .modal-nc-close:hover { background: rgba(71, 85, 105, 0.8); color: #f8fafc; }
+        body.dark-mode .modal-shell-nc .modal-nc-title { color: #f8fafc; }
+        body.dark-mode .modal-shell-nc .modal-nc-kicker { color: #94a3b8; }
+        body.dark-mode .modal-shell-nc .modal-nc-divider { background: rgba(71, 85, 105, 0.45); }
+        body.dark-mode .modal-shell-nc .modal-nc-label { color: #cbd5e1; }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap { background: rgba(15, 23, 42, 0.65); border-color: rgba(71, 85, 105, 0.55); }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap:focus-within { border-color: #6C63FF; box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2); }
+        body.dark-mode .modal-shell-nc .modal-nc-chevron { color: #94a3b8; }
+        body.dark-mode .modal-shell-nc .modal-nc-input,
+        body.dark-mode .modal-shell-nc .modal-nc-select { color: #f8fafc; }
+        body.dark-mode .modal-shell-nc .modal-nc-input::placeholder { color: #64748b; }
+        body.dark-mode .modal-shell-nc .modal-nc-select option { background: #0f172a; color: #e2e8f0; }
+        body.dark-mode .modal-shell-nc .modal-nc-btn-ghost { color: #cbd5e1; }
+        body.dark-mode .modal-shell-nc .modal-nc-btn-ghost:hover { color: #f1f5f9; }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap--readonly { background: rgba(15, 23, 42, 0.88); border-color: rgba(71, 85, 105, 0.45); }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap--readonly:focus-within { border-color: rgba(71, 85, 105, 0.45); box-shadow: none; }
+        body.dark-mode .modal-shell-nc .modal-nc-input-wrap--readonly .modal-nc-input { color: #cbd5e1; }
+
+        /* Menu ocultar classes */
+        body.menu-oculta-chat [data-menu-id="chat"] { display: none !important; }
+        body.menu-oculta-agentes-ia [data-menu-id="agentes-ia"] { display: none !important; }
+        body.menu-oculta-crm [data-menu-id="crm"] { display: none !important; }
+        body.menu-oculta-conexoes [data-menu-id="conexoes"] { display: none !important; }
+        body.menu-oculta-disparos [data-menu-id="disparos"] { display: none !important; }
+        body.menu-oculta-contatos [data-menu-id="contatos"] { display: none !important; }
+        body.menu-oculta-listas [data-menu-id="listas"] { display: none !important; }
+        body.menu-oculta-ajuda [data-menu-id="ajuda"] { display: none !important; }
+        body.menu-oculta-configuracoes [data-menu-id="configuracoes"] { display: none !important; }
+
+        /* Mobile (old sidebar-mobile rules removed, now handled by .sidebar styles) */
+
+        /* RR media btn */
+        .rr-media-btn { position: relative; }
+        .rr-media-btn input[type="file"] {
+            position: absolute; opacity: 0; width: 100%; height: 100%;
+            cursor: pointer; z-index: 10; top: 0; left: 0;
+        }
+        .rr-media-btn.active {
+            background: rgba(108, 99, 255, 0.1) !important;
+            border-color: #6C63FF !important;
+            color: #6C63FF !important;
+        }
+
+        /* ===== CONFIG TAB STYLES ===== */
+        .config-tab {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+
+        .config-tab:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .config-tab.active {
+            background: rgba(108, 99, 255, 0.06);
+            color: #6C63FF;
+            font-weight: 700;
+            border-left-color: #6C63FF;
+        }
+
+        .config-tab i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* Mobile config layout */
+        @media (max-width: 768px) {
+            #configLayout {
+                flex-direction: column !important;
+            }
+            #configLayout > .w-\[280px\] {
+                width: 100% !important;
+            }
+            #configNav {
+                flex-direction: row !important;
+                overflow-x: auto;
+                gap: 4px !important;
+                padding-bottom: 8px;
+            }
+            #configNav .border-t {
+                display: none;
+            }
+            .config-tab {
+                white-space: nowrap;
+                flex-shrink: 0;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+            .config-tab.active {
+                border-left-color: transparent;
+                border-bottom-color: #6C63FF;
+            }
+            .config-tab span {
+                display: inline;
+            }
+        }
+
+        /* === Dropdowns <select>: fundo branco e texto preto (light e dark) === */
+        body.light-mode select,
+        body.dark-mode select,
+        body:not(.light-mode) select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select option,
+        body.dark-mode select option,
+        body:not(.light-mode) select option,
+        body.light-mode select optgroup,
+        body.dark-mode select optgroup,
+        body:not(.light-mode) select optgroup {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.light-mode select[class],
+        body.dark-mode select[class],
+        body:not(.light-mode) select[class] {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select[class] option,
+        body.dark-mode select[class] option,
+        body:not(.light-mode) select[class] option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+    </style>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
+        const SUPABASE_URL = 'https://qlennkosykcblbhpbmqt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZW5ua29zeWtjYmxiaHBibXF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5NjY3MjQsImV4cCI6MjA4MzU0MjcyNH0.r_A91BCKivKMPqraRBvFn30ln-G1us1_Q7m6kDCeeN0';
+        window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+        });
+        console.log('Supabase inicializado globalmente');
+    </script>
+    <style>
+        .toast-container{position:fixed!important;top:max(20px,env(safe-area-inset-top,0px))!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;z-index:200100!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;width:min(380px,calc(100vw - 28px))!important;pointer-events:none!important;box-sizing:border-box!important}
+        .toast-notification{pointer-events:auto!important;margin:0!important;padding:10px 14px 10px 0!important;border-radius:12px!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif!important;font-size:13px!important;line-height:1.35!important;letter-spacing:-.01em!important;font-weight:400!important;display:flex!important;align-items:center!important;gap:0!important;opacity:0!important;transform:translateY(-8px) scale(.98)!important;transition:opacity .22s ease,transform .22s ease!important;color:rgba(0,0,0,.88)!important;background:rgba(255,255,255,.76)!important;backdrop-filter:saturate(180%) blur(22px)!important;-webkit-backdrop-filter:saturate(180%) blur(22px)!important;border:1px solid rgba(0,0,0,.09)!important;box-shadow:0 4px 16px rgba(0,0,0,.1),0 0 0 .5px rgba(0,0,0,.04) inset!important;max-width:none!important}
+        .toast-notification.show{opacity:1!important;transform:translateY(0) scale(1)!important}
+        .toast-notification::before{content:''!important;align-self:stretch!important;width:4px!important;min-height:2.5em!important;margin:6px 12px 6px 8px!important;border-radius:3px!important;flex-shrink:0!important;background:rgba(0,122,255,.95)!important}
+        .toast-notification.info::before{background:rgba(0,122,255,.95)!important}.toast-notification.success::before{background:rgba(52,199,89,.95)!important}.toast-notification.error::before{background:rgba(255,59,48,.95)!important}
+        .toast-notification .toast-message{flex:1!important;min-width:0!important;word-break:break-word!important;padding-right:4px!important}
+        body.dark-mode .toast-notification{color:rgba(255,255,255,.92)!important;background:rgba(44,44,46,.78)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 0 .5px rgba(255,255,255,.06) inset!important}
+        body.dark-mode .toast-notification.info::before{background:rgba(10,132,255,.95)!important}body.dark-mode .toast-notification.success::before{background:rgba(48,209,88,.95)!important}body.dark-mode .toast-notification.error::before{background:rgba(255,69,58,.95)!important}
+    </style>
+    <link rel="stylesheet" href="dropdowns-global.css">
+    <!-- Depois de dropdowns-global + select[class]: tipo de campo personalizado no dark -->
+    <style>
+        body.dark-mode #modalCampoPersonalizadoTipo,
+        body.dark-mode select.campo-personalizado-tipo-select {
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-color: var(--bg-input) !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 12px center !important;
+            border: 1px solid var(--border-input) !important;
+            border-radius: 0.75rem !important;
+            color: var(--text-input) !important;
+            -webkit-text-fill-color: var(--text-input) !important;
+            padding: 0.75rem 2.25rem 0.75rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            line-height: 1.25rem !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            box-shadow: none !important;
+        }
+
+        body.dark-mode #modalCampoPersonalizadoTipo:hover,
+        body.dark-mode select.campo-personalizado-tipo-select:hover {
+            border-color: #64748b !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+        }
+
+        body.dark-mode #modalCampoPersonalizadoTipo:focus,
+        body.dark-mode select.campo-personalizado-tipo-select:focus {
+            outline: none !important;
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2) !important;
+        }
+
+        body.dark-mode #modalCampoPersonalizadoTipo option,
+        body.dark-mode select.campo-personalizado-tipo-select option {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Modal webhook: evita fundo branco nos selects no dark mode */
+        body.dark-mode #modalWebhookConexao,
+        body.dark-mode #modalWebhookAgente {
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-color: transparent !important;
+            background-image: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #f8fafc !important;
+            -webkit-text-fill-color: #f8fafc !important;
+        }
+
+        body.dark-mode #modalWebhookConexao option,
+        body.dark-mode #modalWebhookAgente option {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Modal webhook (dark): evita borda dupla/azulada dos form-input-tw */
+        body.dark-mode #modalWebhookOverlay .modal-nc-input.form-input-tw,
+        body.dark-mode #modalWebhookOverlay .modal-nc-select.form-input-tw {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        body.dark-mode #modalWebhookOverlay .modal-nc-input.form-input-tw:focus,
+        body.dark-mode #modalWebhookOverlay .modal-nc-select.form-input-tw:focus {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+    <script src="/hublabel/public/assets/js/supabase-compat.js"></script>
+</head>
+<body class="antialiased min-h-screen flex selection:bg-brand-500 selection:text-white">
+    <!-- Tema antes da primeira pintura: evita flash claro (cookie darkMode, mesma lógica que getCookie) -->
+    <script>
+    (function () {
+        var dark = false;
+        try {
+            var s = '; ' + document.cookie;
+            var parts = s.split('; darkMode=');
+            if (parts.length === 2) dark = parts.pop().split(';').shift() === 'true';
+        } catch (e) {}
+        document.body.classList.remove('dark-mode', 'light-mode');
+        document.body.classList.add(dark ? 'dark-mode' : 'light-mode');
+    })();
+    </script>
+
+    <!-- Toast Container -->
+    <div class="fixed top-5 right-5 z-[10010] pointer-events-none" id="toastContainer"></div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileMenu()"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebarEl">
+            <!-- Botão de fechar para mobile -->
+            <button class="mobile-close-btn" id="mobileCloseBtn" onclick="closeMobileMenu()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo-link" onclick="return false;">
+                    <img class="sidebar-logo-img" src="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/logo" alt="IA Chatconversa" onerror="this.src='https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon'">
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item" title="Dashboard" onclick="navigateToPage('/hublabel/public/hublabel/public/dashboard')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">analytics</span>
+                    </span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="chat" onclick="navigateToPage('/hublabel/public/hublabel/public/chat')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+                    </span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="agentes-ia" onclick="navigateToPage('/hublabel/public/hublabel/public/agentes-ia')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">network_intel_node</span>
+                    </span>
+                    <span class="menu-text">Agentes IA</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="crm" onclick="navigateToPage('/hublabel/public/hublabel/public/crm')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">view_kanban</span>
+                    </span>
+                    <span class="menu-text">CRM</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="conexoes" onclick="navigateToPage('/hublabel/public/hublabel/public/conexoes')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">qr_code</span>
+                    </span>
+                    <span class="menu-text">Conexões</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="disparos" onclick="navigateToPage('/hublabel/public/hublabel/public/disparos')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+                    </span>
+                    <span class="menu-text">Disparos</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="contatos" onclick="navigateToPage('/hublabel/public/hublabel/public/contatos')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">contacts</span>
+                    </span>
+                    <span class="menu-text">Contatos</span>
+                </a>
+                <div class="sidebar-nav-divider"></div>
+                <a href="#" class="menu-item" data-menu-id="ajuda" onclick="navigateToPage('/hublabel/public/ajuda')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">help</span>
+                    </span>
+                    <span class="menu-text">Ajuda</span>
+                </a>
+                <a href="#" class="menu-item active" data-menu-id="configuracoes">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Configurações</span>
+                </a>
+                <a href="#" id="menu-item-admin" class="menu-item menu-item-admin" style="display: none;" onclick="if(typeof navigateToPage==='function'){navigateToPage('/hublabel/public/hublabel/public/adminpannel');return false;}">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">admin_panel_settings</span>
+                    </span>
+                    <span class="menu-text">Administração</span>
+                    <span class="menu-badge-admin">Admin</span>
+                </a>
+            </nav>
+            <div class="version-text" id="versaoAtualTexto">Versão atual: -</div>
+            <div class="sidebar-footer">
+                <!-- Dark Mode Toggle -->
+                <div class="menu-item theme-toggle-item" onclick="event.stopPropagation();">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text" id="themeToggleText">Modo Escuro</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#" class="menu-item logout-item" onclick="logout()">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Sair</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- MAIN CONTENT                                             -->
+        <!-- ======================================================= -->
+        <div class="main-content">
+            <div class="p-8 md:p-10 w-full max-w-none flex-1 flex flex-col">
+
+                <!-- Header -->
+                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+                    <div>
+                        <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Configurações da Conta</h1>
+                        <p class="text-slate-500 font-medium text-sm">Faça a gestão das suas informações, equipa e integrações do sistema.</p>
+                    </div>
+                    <!-- User badge top-right -->
+                    <div class="flex items-center gap-3 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-soft">
+                        <div class="w-9 h-9 rounded-full bg-brand-500 flex items-center justify-center text-white text-sm font-bold" id="headerUserInitials">VE</div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900" id="headerUserName">Carregando...</div>
+                            <div class="text-xs text-slate-400" id="headerUserRole">Administrador</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-column layout: Settings Nav + Content -->
+                <div class="flex gap-8 flex-1" id="configLayout">
+
+                    <!-- Left: Settings Navigation Tabs -->
+                    <div class="w-[280px] flex-shrink-0">
+                        <nav class="flex flex-col gap-1" id="configNav">
+                            <button class="config-tab active" data-tab="perfil" onclick="switchConfigTab('perfil')">
+                                <i class="fa-regular fa-user"></i>
+                                <span>Perfil Pessoal</span>
+                            </button>
+                            <button class="config-tab" data-tab="plano" onclick="switchConfigTab('plano')">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                                <span>Plano e Uso</span>
+                            </button>
+                            <button class="config-tab" data-tab="usuarios" onclick="switchConfigTab('usuarios')">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Membros da Equipe</span>
+                            </button>
+                            <button class="config-tab" data-tab="chat" onclick="switchConfigTab('chat')">
+                                <i class="fa-solid fa-comments"></i>
+                                <span>Chat</span>
+                            </button>
+                            <button class="config-tab" data-tab="campos-personalizados" onclick="switchConfigTab('campos-personalizados')">
+                                <i class="fa-solid fa-sliders"></i>
+                                <span>Campos Personalizados</span>
+                            </button>
+                            <button class="config-tab" data-tab="etiquetas" onclick="switchConfigTab('etiquetas')">
+                                <i class="fa-solid fa-tags"></i>
+                                <span>Etiquetas</span>
+                            </button>
+                            <button class="config-tab" data-tab="integracoes" onclick="switchConfigTab('integracoes')">
+                                <i class="fa-solid fa-puzzle-piece"></i>
+                                <span>Integrações</span>
+                            </button>
+                            <div class="border-t border-slate-100 my-3"></div>
+                            <button class="config-tab" data-tab="avancadas" onclick="switchConfigTab('avancadas')">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Opções Avançadas</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Right: Tab Content Panels -->
+                    <div class="flex-1 min-w-0">
+
+                        <!-- ========== TAB: Perfil Pessoal ========== -->
+                        <div class="config-panel" id="panel-perfil">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <!-- Avatar + Upload -->
+                                <div class="flex items-center gap-5 mb-8">
+                                    <div class="w-16 h-16 rounded-full bg-brand-500 flex items-center justify-center text-white text-2xl font-bold" id="avatarInitials">VE</div>
+                                    <div>
+                                        <button class="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold hover:bg-slate-50 transition-all" onclick="document.getElementById('avatarUpload').click()">Alterar Foto</button>
+                                        <input type="file" id="avatarUpload" accept="image/*" class="hidden" onchange="uploadAvatar(this)">
+                                        <p class="text-xs text-slate-400 mt-1.5">JPG, GIF ou PNG. Máximo 1MB.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Nome + Telefone -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                    <div>
+                                        <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nome Completo</label>
+                                        <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="userName" placeholder="Digite seu nome completo">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Telefone</label>
+                                        <input type="tel" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="userPhone" placeholder="+351 912 345 678">
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-6">
+                                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Email (Login)</label>
+                                    <input type="email" class="form-input-tw w-full bg-slate-100 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-400 cursor-not-allowed" id="userEmail" disabled>
+                                </div>
+
+                                <button class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2 transform hover:-translate-y-0.5" onclick="salvarInformacoesPessoais()">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    Salvar Alterações
+                                </button>
+
+                                <!-- Segurança -->
+                                <div class="border-t border-slate-100 mt-8 pt-8">
+                                    <h3 class="text-xl font-extrabold text-slate-900 mb-6">Segurança</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div>
+                                            <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nova Senha</label>
+                                            <div class="relative">
+                                                <input type="password" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pr-12 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="newPassword" placeholder="••••••••">
+                                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" id="toggleNewPassword">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="text-xs font-medium mt-2" id="newPasswordStrength"></div>
+                                            <div class="strength-bar">
+                                                <div class="strength-fill" id="newStrengthFill"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Confirmar Senha</label>
+                                            <div class="relative">
+                                                <input type="password" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pr-12 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all" id="confirmNewPassword" placeholder="••••••••">
+                                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" id="toggleConfirmNewPassword">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2 transform hover:-translate-y-0.5" onclick="redefinirSenha()">
+                                        <i class="fa-solid fa-key"></i>
+                                        Redefinir Senha
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Plano e Uso ========== -->
+                        <div class="config-panel" id="panel-plano" style="display: none;">
+                            <!-- O Seu Plano card -->
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8 mb-6">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 italic mb-1">Plano atual</h3>
+                                        <p class="text-sm text-slate-500">Gerencie seu plano e uso. Caso queira mudar de plano fale com o suporte</p>
+                                    </div>
+                                    <a href="https://wa.me/5591982448542" target="_blank" class="bg-brand-50 text-brand-600 border border-brand-100 px-5 py-2.5 rounded-2xl text-sm font-bold hover:bg-brand-100 transition-all flex-shrink-0">Falar com Suporte</a>
+                                </div>
+
+                                <!-- Plan Card Dark -->
+                                <div class="bg-slate-900 rounded-3xl p-7 text-white mb-8">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <div class="flex items-center gap-3 mb-3">
+                                                <div class="w-10 h-10 rounded-xl bg-brand-500/20 flex items-center justify-center">
+                                                    <i class="fa-solid fa-crown text-brand-500"></i>
+                                                </div>
+                                            </div>
+                                            <h4 class="text-3xl font-extrabold mb-2" id="currentPlan">Plano Gold</h4>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-white/10 mt-6 pt-5">
+                                        <ul class="plan-features grid grid-cols-1 md:grid-cols-2 gap-2 text-sm" id="planFeaturesList">
+                                            <li>Disparos: carregando...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Utilização do Ciclo Atual -->
+                                <div>
+                                    <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-5">Utilização do Ciclo Atual</h4>
+                                    <div class="space-y-4" id="usageContent">
+                                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-3">
+                                                    <i class="fa-solid fa-table-columns text-slate-400"></i>
+                                                    <span class="text-sm font-bold text-slate-700">Quadros CRM</span>
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-900"><span id="usageCrm">4</span>/<span id="usageCrmMax">5</span></span>
+                                            </div>
+                                            <div class="usage-bar"><div class="usage-fill warning" id="usageCrmBar" style="width: 80%"></div></div>
+                                        </div>
+                                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-3">
+                                                    <i class="fa-solid fa-robot text-slate-400"></i>
+                                                    <span class="text-sm font-bold text-slate-700">Agentes IA</span>
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-900"><span id="usageAgentes">1</span>/<span id="usageAgentesMax">5</span></span>
+                                            </div>
+                                            <div class="usage-bar"><div class="usage-fill" id="usageAgentesBar" style="width: 20%"></div></div>
+                                        </div>
+                                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <div class="flex items-center gap-3">
+                                                    <i class="fa-solid fa-bolt text-slate-400"></i>
+                                                    <span class="text-sm font-bold text-slate-700">Créditos de IA (Tokens)</span>
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-900"><span id="usageTokens">58</span>/<span id="usageTokensMax">1.000</span></span>
+                                            </div>
+                                            <div class="usage-bar"><div class="usage-fill" id="usageTokensBar" style="width: 5.8%"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Usuários da Conta ========== -->
+                        <div class="config-panel" id="panel-usuarios" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Membros da Equipe</h3>
+                                        <p class="text-sm text-slate-500">Adicione ou remova membros que podem ter acesso à sua conta</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" id="btnAdicionarUsuario" onclick="abrirModalAdicionarUsuario()">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Convidar Membro
+                                    </button>
+                                </div>
+                                <!-- Users table -->
+                                <div class="border border-slate-100 rounded-2xl overflow-hidden">
+                                    <div class="grid grid-cols-[1fr_auto] gap-4 px-5 py-3 bg-slate-50 border-b border-slate-100">
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Usuário</span>
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Nível de Acesso</span>
+                                    </div>
+                                    <div id="usuariosListContainer">
+                                        <div class="text-center text-slate-400 text-sm py-8" id="usuariosListEmpty">Carregando usuarios...</div>
+                                        <div class="divide-y divide-slate-100" id="usuariosList" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Integrações ========== -->
+                        <div class="config-panel" id="panel-integracoes" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8 mb-6">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Integrações e Webhooks</h3>
+                                        <p class="text-sm text-slate-500">Conecte o seu SaaS a plataformas externas (Hotmart, Kiwify, ActiveCampaign).</p>
+                                    </div>
+                                    <button type="button" class="bg-[#6C63FF] hover:bg-[#1fb954] text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" onclick="abrirModalWebhook()">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Novo Webhook
+                                    </button>
+                                </div>
+                                <div id="webhookListContainer">
+                                    <div class="text-center text-slate-400 text-sm py-8 border border-slate-100 rounded-2xl" id="webhookListEmpty">Nenhum webhook cadastrado</div>
+                                    <div id="webhookList" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Chat ========== -->
+                        <div class="config-panel" id="panel-chat" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Respostas Rápidas</h3>
+                                        <p class="text-sm text-slate-500">Mensagens pré-configuradas para uso rápido no chat.</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" onclick="abrirModalRespostaRapida()">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Criar resposta rápida
+                                    </button>
+                                </div>
+                                <div id="respostaRapidaListContainer">
+                                    <div class="text-center text-slate-400 text-sm py-8 border border-slate-100 rounded-2xl" id="respostaRapidaListEmpty">Nenhuma resposta rápida cadastrada</div>
+                                    <div class="divide-y divide-slate-100" id="respostaRapidaList" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Campos Personalizados ========== -->
+                        <div class="config-panel" id="panel-campos-personalizados" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Campos personalizados</h3>
+                                        <p class="text-sm text-slate-500">Defina campos reutilizáveis para contatos e variáveis em disparos (ex.: &lt;cidade&gt;).</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" onclick="abrirModalNovoCampoPersonalizado()">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Novo campo
+                                    </button>
+                                </div>
+                                <div class="mb-4 max-w-md">
+                                    <label class="sr-only" for="camposPersonalizadosBusca">Buscar campo por nome</label>
+                                    <div class="relative">
+                                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" aria-hidden="true"></i>
+                                        <input type="search" id="camposPersonalizadosBusca" class="form-input-tw w-full pl-10 pr-3 py-2.5 rounded-xl text-sm font-medium border border-slate-200 bg-slate-50 text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Buscar por nome do campo..." autocomplete="off" oninput="renderCamposPersonalizadosListaFiltrada()">
+                                    </div>
+                                </div>
+                                <div class="border border-slate-100 rounded-2xl overflow-hidden">
+                                    <div class="flex items-center pl-5 pr-3 py-3 bg-slate-50 border-b border-slate-100">
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest shrink-0">Nome</span>
+                                        <div class="flex-1 min-w-4 min-h-[1px]" aria-hidden="true"></div>
+                                        <div class="campos-pers-col-tipo shrink-0 -ml-[30px] w-32 flex flex-col items-center justify-center px-1">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Tipo</span>
+                                        </div>
+                                        <div class="w-3 shrink-0" aria-hidden="true"></div>
+                                        <div class="w-14 shrink-0 flex justify-center items-center">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Ações</span>
+                                        </div>
+                                    </div>
+                                    <div id="camposPersonalizadosListContainer">
+                                        <div class="text-center text-slate-400 text-sm py-8" id="camposPersonalizadosListEmpty">Carregando...</div>
+                                        <div class="divide-y divide-slate-100" id="camposPersonalizadosList" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Etiquetas ========== -->
+                        <div class="config-panel" id="panel-etiquetas" style="display: none;">
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-extrabold text-slate-900 mb-1">Etiquetas</h3>
+                                        <p class="text-sm text-slate-500">Organize contatos com etiquetas coloridas. As alterações refletem no chat e na lista de contatos.</p>
+                                    </div>
+                                    <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" onclick="abrirModalNovaEtiquetaConfig()">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Nova etiqueta
+                                    </button>
+                                </div>
+                                <div class="mb-4 max-w-md">
+                                    <label class="sr-only" for="etiquetasConfigBusca">Buscar etiqueta por nome</label>
+                                    <div class="relative">
+                                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" aria-hidden="true"></i>
+                                        <input type="search" id="etiquetasConfigBusca" class="form-input-tw w-full pl-10 pr-3 py-2.5 rounded-xl text-sm font-medium border border-slate-200 bg-slate-50 text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Buscar por nome da etiqueta..." autocomplete="off" oninput="renderEtiquetasConfigListaFiltrada()">
+                                    </div>
+                                </div>
+                                <div class="border border-slate-100 rounded-2xl overflow-hidden">
+                                    <div class="flex items-center pl-5 pr-3 py-3 bg-slate-50 border-b border-slate-100">
+                                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest shrink-0">Etiqueta</span>
+                                        <div class="flex-1 min-w-4 min-h-[1px]" aria-hidden="true"></div>
+                                        <div class="config-etiquetas-col-cor shrink-0 w-36 flex flex-col items-center justify-center px-1">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Cor</span>
+                                        </div>
+                                        <div class="w-3 shrink-0" aria-hidden="true"></div>
+                                        <div class="w-14 shrink-0 flex justify-center items-center">
+                                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap text-center">Ações</span>
+                                        </div>
+                                    </div>
+                                    <div id="etiquetasConfigListContainer">
+                                        <div class="text-center text-slate-400 text-sm py-8" id="etiquetasConfigListEmpty">Carregando...</div>
+                                        <div class="divide-y divide-slate-100" id="etiquetasConfigList" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== TAB: Opções Avançadas ========== -->
+                        <div class="config-panel" id="panel-avancadas" style="display: none;">
+                            <div id="resetarDadosWrapper">
+                                <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                                    <h3 class="text-xl font-extrabold text-slate-900 mb-2">Resetar Dados</h3>
+                                    <p class="text-sm text-slate-500 mb-6">As ações abaixo são irreversíveis. Use com cautela.</p>
+                                    <div class="flex flex-wrap gap-3">
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" onclick="abrirModalResetarDados('conversas')">
+                                            <i class="fa-solid fa-comment"></i> Limpar todas conversas
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" onclick="abrirModalResetarDados('conexoes')">
+                                            <i class="fa-solid fa-link"></i> Limpar todas conexões
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" onclick="abrirModalResetarDados('contatos')">
+                                            <i class="fa-solid fa-address-book"></i> Limpar todos contatos
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" onclick="abrirModalResetarDados('disparos')">
+                                            <i class="fa-solid fa-paper-plane"></i> Limpar histórico de disparos
+                                        </button>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" onclick="abrirModalResetarDados('conta')">
+                                            <i class="fa-solid fa-trash"></i> Resetar toda conta
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /flex-1 tab content -->
+                </div><!-- /flex gap-8 -->
+            </div><!-- /p-8 -->
+        </div><!-- main-content -->
+    </div><!-- app-layout -->
+
+    <!-- ======================================================= -->
+    <!-- MODALS                                                   -->
+    <!-- ======================================================= -->
+
+    <!-- Modal Novo Campo Personalizado -->
+    <div class="modal-overlay" id="modalCampoPersonalizadoOverlay" onclick="if(event.target === this) fecharModalNovoCampoPersonalizado()" style="z-index: 10050;">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[440px] w-[90%]" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalCampoPersonalizadoTitulo">Novo campo personalizado</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-600 text-xl leading-none" onclick="fecharModalNovoCampoPersonalizado()" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nome</label>
+                    <input type="text" id="modalCampoPersonalizadoNome" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Ex.: Cidade" maxlength="120">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Descrição <span class="font-normal normal-case text-slate-400">(opcional)</span></label>
+                    <textarea id="modalCampoPersonalizadoDescricao" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all resize-y min-h-[72px]" placeholder="Ex.: Cidade onde o contato reside" maxlength="2000" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Tipo</label>
+                    <select id="modalCampoPersonalizadoTipo" class="campo-personalizado-tipo-select form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all">
+                        <option value="texto">Texto</option>
+                        <option value="numero">Número</option>
+                        <option value="data">Data</option>
+                        <option value="boolean">Sim / Não</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all" onclick="fecharModalNovoCampoPersonalizado()">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all" id="btnSalvarCampoPersonalizado" onclick="salvarNovoCampoPersonalizado()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Etiqueta (criar / editar) -->
+    <div class="modal-overlay" id="modalEtiquetaConfigOverlay" onclick="if(event.target === this) fecharModalEtiquetaConfig()" style="z-index: 10050;">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[440px] w-[90%]" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalEtiquetaConfigTitulo">Nova etiqueta</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-600 text-xl leading-none" onclick="fecharModalEtiquetaConfig()" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Nome</label>
+                    <input type="text" id="modalEtiquetaConfigNome" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="Ex.: Cliente VIP" maxlength="120">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Descrição <span class="font-normal normal-case text-slate-400">(opcional)</span></label>
+                    <textarea id="modalEtiquetaConfigDescricao" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all resize-y min-h-[72px]" placeholder="Notas internas sobre o uso desta etiqueta" maxlength="2000" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-2">Cor</label>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <div class="config-color-picker-shell" title="Seletor de cor">
+                            <input type="color" id="modalEtiquetaConfigCorPicker" class="config-color-picker-input" value="#6C63FF" aria-label="Seletor de cor">
+                        </div>
+                        <input type="text" id="modalEtiquetaConfigCorHex" class="form-input-tw flex-1 min-w-[140px] bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-mono font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" placeholder="#6C63FF" maxlength="7" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all" onclick="fecharModalEtiquetaConfig()">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all" id="btnSalvarEtiquetaConfig" onclick="salvarEtiquetaConfig()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Resetar Dados -->
+    <div class="modal-overlay" id="modalResetarDadosOverlay" onclick="if(event.target === this) fecharModalResetarDados()">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[480px] w-[90%]" onclick="event.stopPropagation()">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-500"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalResetarDadosTitulo">Confirmar exclusao</h3>
+            </div>
+            <div id="modalResetarDadosBody">
+                <p class="text-sm text-slate-600" id="modalResetarDadosMensagem">Esta acao e irreversivel. Tem certeza que deseja continuar?</p>
+                <div id="modalResetarDadosInputWrap" style="display: none; margin-top: 20px;">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Digite <strong>Confirmar</strong> para prosseguir:</label>
+                    <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalResetarDadosInput" placeholder="Confirmar" oninput="validarInputConfirmarResetar()">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all" onclick="fecharModalResetarDados()">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all" id="btnResetarDadosEtapa1" onclick="proximaEtapaResetarDados()">Confirmar</button>
+                <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" id="btnResetarDadosEtapa2" onclick="executarResetarDados()" style="display: none;" disabled>
+                    <i class="fa-solid fa-trash"></i> Confirmar exclusao
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Criar Webhook -->
+    <div id="modalWebhookOverlay" class="modal-overlay modal-nc-overlay modal-shell-nc modal-shell-nc--wide">
+        <div class="modal-content modal-nc">
+            <button type="button" class="modal-nc-close" aria-label="Fechar" onclick="fecharModalWebhook()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+            <div class="modal-nc-header">
+                <h3 class="modal-nc-title" id="modalWebhookTitle">Criar webhook</h3>
+                <p class="modal-nc-kicker">Webhook e mapeamento</p>
+            </div>
+            <div class="modal-nc-divider" aria-hidden="true"></div>
+            <div class="modal-nc-body modal-nc-body--webhook">
+                <div class="modal-nc-body" style="padding: 16px 24px 0;">
+                    <label class="modal-nc-label" for="modalWebhookNome">Nome do webhook <span class="modal-nc-req" aria-hidden="true">*</span></label>
+                    <div class="modal-nc-input-wrap">
+                        <i class="fa-solid fa-tag modal-nc-ico" aria-hidden="true"></i>
+                        <input type="text" id="modalWebhookNome" class="modal-nc-input form-input-tw" placeholder="Nome do webhook">
+                    </div>
+                </div>
+                <div class="modal-webhook-grid">
+                    <div class="modal-webhook-col">
+                        <div class="integ-pag-kicker">URL do webhook</div>
+                        <div class="integ-pag-url-row">
+                            <div class="modal-nc-input-wrap modal-nc-input-wrap--readonly">
+                                <input type="text" id="modalWebhookUrl" class="modal-nc-input form-input-tw" readonly placeholder="URL gerada ao abrir">
+                            </div>
+                            <button type="button" class="modal-nc-btn-ghost modal-webhook-btn-copy" id="btnCopyWebhook" onclick="copiarUrlWebhookModal()" title="Copiar URL">
+                                <svg class="icon-copy" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="icon-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><polyline points="20,6 9,17 4,12"></polyline></svg>
+                            </button>
+                        </div>
+                        <div class="integ-pag-teste-row">
+                            <span class="integ-pag-kicker" style="margin: 0;">Payload (teste)</span>
+                            <button type="button" class="integ-pag-btn-teste" id="btnAtivarTeste" onclick="ativarTesteWebhook()">
+                                <span class="integ-pag-teste-dot vermelho teste-dot"></span>
+                                <span class="btn-test-text">Desativado</span>
+                            </button>
+                            <button type="button" class="integ-pag-btn-atualizar modal-webhook-btn-atualizar" id="btnAtualizarTeste" onclick="atualizarTesteWebhook()">
+                                <svg class="icon-refresh" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,4 23,10 17,10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                <span class="loading-spinner-btn" style="display: none;"></span>
+                                <span>Atualizar</span>
+                            </button>
+                        </div>
+                        <div class="integ-pag-payload modal-webhook-payload" id="modalWebhookPayload"></div>
+                    </div>
+                    <div class="modal-webhook-col">
+                        <div class="integ-pag-kicker">Mapeamento (arraste do payload)</div>
+                        <div id="modalWebhookFieldList">
+                            <div class="modal-webhook-field-item modal-nc-field--full" style="margin-bottom: 14px;">
+                                <label class="modal-nc-label">Nome <span class="modal-nc-req">*</span></label>
+                                <div class="modal-nc-input-wrap">
+                                    <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="nome" placeholder="Campo do payload (ex: nome)">
+                                </div>
+                                <div class="integ-pag-field-path" data-field-path-hint="nome"></div>
+                            </div>
+                            <div class="modal-webhook-field-item modal-nc-field--full" style="margin-bottom: 14px;">
+                                <label class="modal-nc-label">Telefone <span class="modal-nc-req">*</span></label>
+                                <div class="modal-nc-input-wrap">
+                                    <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="telefone" placeholder="Campo do payload (ex: phone)">
+                                </div>
+                                <div class="integ-pag-field-path" data-field-path-hint="telefone"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="modal-nc-btn-ghost" style="padding-left:0;" onclick="adicionarCampoWebhook()">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i> Adicionar campo
+                        </button>
+                        <div class="modal-nc-field--full" style="margin: 14px 0;">
+                            <label class="modal-nc-label" for="modalWebhookConexao">Conexao <span class="modal-nc-req">*</span></label>
+                            <div class="modal-nc-input-wrap">
+                                <select class="modal-nc-select form-input-tw" id="modalWebhookConexao" required>
+                                    <option value="">Selecione uma conexao</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down modal-nc-chevron" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="modal-nc-field--full" style="margin-bottom: 14px;">
+                            <label class="modal-nc-label" for="modalWebhookAgente">Agente (opcional)</label>
+                            <div class="modal-nc-input-wrap">
+                                <select class="modal-nc-select form-input-tw" id="modalWebhookAgente">
+                                    <option value="">Agente padrao da conexao</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down modal-nc-chevron" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="modal-nc-field--full" style="margin-bottom: 14px;">
+                            <label class="modal-nc-label" for="modalWebhookMensagemPadrao">Mensagem Inicial</label>
+                            <div id="mensagemPadraoChipsWrap" style="margin-bottom: 8px;">
+                                <span class="integ-pag-kicker" style="margin-bottom: 6px; display: block;">Campos mapeados - arraste para a mensagem</span>
+                                <div class="flex flex-wrap gap-2" id="mensagemPadraoChips"></div>
+                            </div>
+                            <div class="modal-nc-input-wrap" style="padding: 10px 14px;">
+                                <textarea class="modal-nc-input form-input-tw resize-y" id="modalWebhookMensagemPadrao" rows="4" style="min-height:88px;" placeholder="Mensagem inicial enviada ao contato. Arraste os campos acima ou digite [nome], [telefone]..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-nc-divider" aria-hidden="true"></div>
+            <div class="modal-nc-footer modal-nc-footer--webhook">
+                <button type="button" class="modal-nc-btn-ghost" id="btnExcluirWebhook" onclick="excluirWebhook()" style="display: none;">
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i> Excluir webhook
+                </button>
+                <div class="modal-nc-footer-actions">
+                    <button type="button" class="modal-nc-btn-ghost" onclick="fecharModalWebhook()">Cancelar</button>
+                    <button type="button" class="modal-nc-btn-primary" onclick="criarWebhook()">
+                        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Salvar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Ativar Webhook -->
+    <div class="confirm-webhook-overlay" id="modalConfirmarAtivarWebhook" onclick="if(event.target === this) fecharModalConfirmarAtivarWebhook()">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating p-7 max-w-[420px] w-[90%]" onclick="event.stopPropagation()">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-500"><i class="fa-solid fa-circle-check"></i></div>
+                <h3 class="text-lg font-extrabold text-slate-900">Ativar webhook</h3>
+            </div>
+            <p class="text-sm text-slate-600 mb-6">Deseja ativar o webhook? Ao ativar, o modo teste sera desativado e o webhook passara a processar as mensagens em producao.</p>
+            <div class="flex justify-end gap-3">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all" onclick="fecharModalConfirmarAtivarWebhook(false)">Nao, manter em teste</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2" id="btnConfirmarAtivarWebhookSim" onclick="fecharModalConfirmarAtivarWebhook(true)">
+                    <i class="fa-solid fa-check"></i> Sim, ativar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Resposta Rapida -->
+    <div class="modal-overlay" id="modalRespostaRapidaOverlay">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating w-full max-w-[960px] max-h-[92vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b border-slate-100 flex-shrink-0">
+                <h3 class="text-lg font-extrabold text-slate-900">Criar resposta rapida</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-700 hover:bg-slate-50 p-2 rounded-xl transition-all" onclick="fecharModalRespostaRapida()">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Nome *</label>
+                    <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalRRNome" placeholder="Ex: Saudacao inicial">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Atalho</label>
+                    <input type="text" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalRRAtalho" placeholder="Ex: oi" oninput="this.value = this.value.split('/').join('')">
+                </div>
+                <div class="mb-5" id="modalRRTextoWrap">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Texto</label>
+                    <textarea class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all resize-y" id="modalRRTexto" rows="4" placeholder="Digite aqui o seu texto completo."></textarea>
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Midia</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="imagem" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onchange="handleMediaUploadRR(this, 'image', 'imagem')">
+                            <i class="fa-solid fa-image"></i> Imagem
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="video" accept="video/*" onchange="handleMediaUploadRR(this, 'video', 'video')">
+                            <i class="fa-solid fa-video"></i> Video
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="audio" accept="audio/*" onchange="handleMediaUploadRR(this, 'audio', 'audio')">
+                            <i class="fa-solid fa-music"></i> Audio
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                        <div class="rr-media-btn bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-600 cursor-pointer text-center text-sm transition-all hover:border-brand-500 hover:bg-brand-50 flex flex-col items-center gap-1">
+                            <input type="file" data-slot="documento" accept=".pdf,.doc,.docx,.txt" onchange="handleMediaUploadRR(this, 'document', 'documento')">
+                            <i class="fa-solid fa-file"></i> Documento
+                            <span class="text-[10px] text-slate-400">Max: 16MB</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 space-y-2" id="modalRRPreviewSection"></div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-slate-100 flex justify-end">
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" onclick="salvarRespostaRapida()">
+                    <i class="fa-solid fa-floppy-disk"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Adicionar Usuario -->
+    <div class="modal-overlay" id="modalAdicionarUsuarioOverlay">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating w-full max-w-[440px] max-h-[92vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b border-slate-100 flex-shrink-0">
+                <h3 class="text-lg font-extrabold text-slate-900" id="modalAdicionarUsuarioTitulo">Adicionar usuario</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-700 hover:bg-slate-50 p-2 rounded-xl transition-all" onclick="fecharModalAdicionarUsuario()">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Email *</label>
+                    <input type="email" class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all" id="modalUsuarioEmail" placeholder="email@exemplo.com">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Funcao</label>
+                    <select class="form-input-tw w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all cursor-pointer" id="modalUsuarioFuncao" onchange="atualizarInfoFuncaoUsuario()">
+                        <option value="membro">Membro</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="mb-4 p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-600" id="blocoInfoPermissoesPerfil">
+                    <p id="textoInfoPermissao"></p>
+                </div>
+                <p class="text-xs text-slate-400 texto-info-senha-novo-membro">A senha sera exibida apos a criacao para que voce possa compartilhar com o novo membro.</p>
+            </div>
+            <div class="p-6 border-t border-slate-100 flex justify-end gap-3">
+                <button type="button" class="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-2xl text-sm font-bold border border-slate-200 transition-all" onclick="fecharModalAdicionarUsuario()">Cancelar</button>
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-soft transition-all flex items-center gap-2" id="btnEnviarConvite" onclick="enviarConviteUsuario()">
+                    <i class="fa-solid fa-user-plus"></i> Adicionar membro
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="usuario-acoes-menu" id="usuarioAcoesMenu">
+        <button type="button" class="usuario-acoes-menu-item" onclick="editarUsuarioDaAcao()">
+            <i class="fa-solid fa-pen"></i> Editar
+        </button>
+        <button type="button" class="usuario-acoes-menu-item danger" onclick="excluirUsuarioDaAcao()">
+            <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+    </div>
+
+    <div class="usuario-acoes-menu" id="campoPersonalizadoAcoesMenu">
+        <button type="button" class="usuario-acoes-menu-item" onclick="editarCampoPersonalizadoDaAcao()">
+            <i class="fa-solid fa-pen"></i> Editar
+        </button>
+        <button type="button" class="usuario-acoes-menu-item danger" onclick="excluirCampoPersonalizadoDaAcao()">
+            <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+    </div>
+
+    <div class="usuario-acoes-menu" id="etiquetaConfigAcoesMenu">
+        <button type="button" class="usuario-acoes-menu-item" onclick="editarEtiquetaConfigDaAcao()">
+            <i class="fa-solid fa-pen"></i> Editar
+        </button>
+        <button type="button" class="usuario-acoes-menu-item danger" onclick="excluirEtiquetaConfigDaAcao()">
+            <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+    </div>
+
+    <!-- Modal Usuario criado -->
+    <div class="modal-overlay" id="modalUsuarioCriadoOverlay">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-floating w-full max-w-[440px] max-h-[92vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b border-slate-100 flex-shrink-0">
+                <h3 class="text-lg font-extrabold text-slate-900">Usuario criado com sucesso</h3>
+                <button type="button" class="text-slate-400 hover:text-slate-700 hover:bg-slate-50 p-2 rounded-xl transition-all" onclick="fecharModalUsuarioCriado()">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <p class="text-sm font-bold text-slate-700 mb-3">Dados de acesso:</p>
+                <div class="relative bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-sm text-slate-700" id="modalUsuarioCriadoDados">
+                    <button type="button" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-brand-500 hover:bg-brand-50 rounded-lg transition-all" id="btnCopiarDadosAcesso" onclick="copiarDadosAcesso()" title="Copiar">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                    <div><strong>email:</strong> <span id="modalUsuarioCriadoEmail"></span></div>
+                    <div><strong>senha:</strong> <span id="modalUsuarioCriadoSenha"></span></div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-slate-100 flex justify-end">
+                <button type="button" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold transition-all" onclick="fecharModalUsuarioCriado()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- JAVASCRIPT (ALL LOGIC PRESERVED)                        -->
+    <!-- ======================================================= -->
+    <script>
+        // Variaveis globais
+        let secureUserId = null;
+        let statusBloqueado = false;
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
+        }
+
+        async function obterUserIdComStatus() {
+            let contaId = null;
+            if (window.supabase) {
+                try {
+                    const { data: { user }, error: userError } = await window.supabase.auth.getUser();
+                    if (!userError && user && user.id) {
+                        const { data: usuarioData, error: usuarioError } = await window.supabase
+                            .from('SAAS_Usuarios')
+                            .select('contaId, SAAS_Contas(status)')
+                            .eq('auth_user_id', user.id)
+                            .single();
+                        if (!usuarioError && usuarioData && usuarioData.contaId) {
+                            const status = usuarioData?.SAAS_Contas?.status;
+                            if (status === false) {
+                                logoutAndRedirectAcessoBloqueado();
+                                throw new Error('STATUS_BLOQUEADO');
+                            }
+                            contaId = usuarioData.contaId;
+                            setCookie('userId', contaId, 7);
+                        }
+                    }
+                } catch (error) {
+                    if (error.message === 'STATUS_BLOQUEADO') throw error;
+                    console.error('Erro ao obter usuario do Supabase:', error);
+                }
+            }
+            if (!contaId) {
+                const cookieUserId = getCookie('userId');
+                if (cookieUserId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cookieUserId)) {
+                    contaId = cookieUserId;
+                }
+            }
+            return contaId;
+        }
+
+        function getSecureUserId() {
+            const contaId = getCookie('userId');
+            if (contaId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(contaId)) return contaId;
+            return null;
+        }
+
+        function logoutAndRedirectAcessoBloqueado() {
+            statusBloqueado = true;
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idLista=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idConexao=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idDisparo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.replace('/hublabel/public/acesso-bloqueado');
+            if (window.supabase) { window.supabase.auth.signOut().catch(() => {}); }
+        }
+
+        async function carregarVersao() {
+            const el = document.getElementById('versaoAtualTexto');
+            if (!el || !window.supabase) return;
+            try {
+                const { data, error } = await window.supabase
+                    .from('SAAS_Versao')
+                    .select('versaoAtual')
+                    .order('ultimaAtualizacao', { ascending: false })
+                    .limit(1);
+                if (!error && data && data[0] && data[0].versaoAtual) {
+                    el.textContent = 'Versao atual: ' + data[0].versaoAtual;
+                }
+            } catch (e) { console.warn('Nao foi possivel carregar a versao:', e); }
+        }
+
+        async function checkAuth() {
+            if (!window.supabase) { window.location.href = '/hublabel/public/hublabel/public/hublabel/public/hublabel/public/login'; return null; }
+            const { data: { session }, error: sessionError } = await window.supabase.auth.getSession();
+            if (sessionError || !session || !session.user) { window.location.href = '/hublabel/public/hublabel/public/hublabel/public/hublabel/public/login'; return null; }
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (error) { if (error.message === 'STATUS_BLOQUEADO') return null; throw error; }
+            if (!contaId) { window.location.href = '/hublabel/public/hublabel/public/hublabel/public/hublabel/public/login'; return null; }
+            return contaId;
+        }
+
+        function navigateToPage(url) { window.location.href = url; }
+
+        function toggleConfigSection(headerEl) {
+            const section = headerEl.closest('.config-section');
+            if (section) section.classList.toggle('collapsed');
+        }
+
+        function switchConfigTab(tabId) {
+            // Update active tab button
+            document.querySelectorAll('.config-tab').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+            });
+            // Show/hide panels
+            document.querySelectorAll('.config-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+            const activePanel = document.getElementById('panel-' + tabId);
+            if (activePanel) activePanel.style.display = 'block';
+            if (tabId === 'campos-personalizados') {
+                (async () => {
+                    try {
+                        const cid = await obterUserIdComStatus();
+                        if (cid) await carregarCamposPersonalizadosConfig(cid);
+                    } catch (e) {
+                        if (e && e.message !== 'STATUS_BLOQUEADO') console.warn('Campos personalizados:', e);
+                    }
+                })();
+            }
+            if (tabId === 'etiquetas') {
+                (async () => {
+                    try {
+                        const cid = await obterUserIdComStatus();
+                        if (cid) await carregarEtiquetasConfig(cid);
+                    } catch (e) {
+                        if (e && e.message !== 'STATUS_BLOQUEADO') console.warn('Etiquetas:', e);
+                    }
+                })();
+            }
+        }
+
+        let campoPersonalizadoEditandoId = null;
+        let campoPersonalizadoAcaoId = null;
+        let campoPersonalizadoAcoesBotaoAtual = null;
+
+        function labelTipoCampoPersonalizado(tipo) {
+            const m = { texto: 'Texto', numero: 'Número', data: 'Data', boolean: 'Sim / Não' };
+            return m[tipo] || tipo || '—';
+        }
+
+        function classeTagTipoCampoPersonalizado(tipo) {
+            const t = String(tipo || 'texto');
+            const base = 'text-xs font-bold px-3 py-0.5 rounded-full inline-flex items-center justify-center campo-pers-tipo-tag';
+            const map = {
+                texto: 'bg-slate-100 text-slate-600 campo-pers-tipo--texto',
+                numero: 'bg-blue-50 text-blue-700 campo-pers-tipo--numero',
+                data: 'bg-violet-50 text-violet-700 campo-pers-tipo--data',
+                boolean: 'bg-emerald-50 text-emerald-700 campo-pers-tipo--boolean'
+            };
+            return base + ' ' + (map[t] || map.texto);
+        }
+
+        function normalizarBuscaNomeCampoPersonalizado(str) {
+            return (str || '')
+                .normalize('NFD')
+                .replace(/\p{M}/gu, '')
+                .toLowerCase()
+                .trim();
+        }
+
+        function htmlLinhaCampoPersonalizadoConfig(r) {
+            const rid = Number(r.id);
+            const desc = (r.descricao != null && String(r.descricao).trim()) ? String(r.descricao).trim() : '';
+            const descBlock = desc
+                ? `<p class="text-xs text-slate-500 mt-0.5 line-clamp-2">${escapeHtmlConfig(desc)}</p>`
+                : '';
+            const tagCls = classeTagTipoCampoPersonalizado(r.tipo);
+            const tipoLabel = escapeHtmlConfig(labelTipoCampoPersonalizado(r.tipo));
+            return `
+                        <div class="campos-personalizados-row flex items-start pl-5 pr-3 py-4 transition-colors hover:bg-slate-50">
+                            <div class="min-w-0 shrink-0 max-w-md lg:max-w-lg">
+                                <span class="text-sm font-semibold text-slate-900">${escapeHtmlConfig(String(r.nome || ''))}</span>
+                                ${descBlock}
+                            </div>
+                            <div class="flex-1 min-w-6 min-h-[1px]" aria-hidden="true"></div>
+                            <div class="campos-pers-col-tipo shrink-0 -ml-[30px] w-32 flex flex-col items-center justify-center self-center px-1">
+                                <span class="${tagCls}">${tipoLabel}</span>
+                            </div>
+                            <div class="w-3 shrink-0" aria-hidden="true"></div>
+                            <div class="w-14 shrink-0 flex justify-center items-start pt-0.5">
+                                <button type="button" class="btn-acoes-campo-personalizado w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 rounded-xl transition-colors" data-campo-id="${rid}" onclick="toggleMenuCampoPersonalizado(event, this)" title="Ações" aria-label="Abrir ações">
+                                    <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                                </button>
+                            </div>
+                        </div>`;
+        }
+
+        function renderCamposPersonalizadosListaFiltrada() {
+            const emptyEl = document.getElementById('camposPersonalizadosListEmpty');
+            const listEl = document.getElementById('camposPersonalizadosList');
+            const searchEl = document.getElementById('camposPersonalizadosBusca');
+            if (!emptyEl || !listEl) return;
+            const all = window._camposPersonalizadosListaCache || [];
+            if (all.length === 0) {
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = 'Nenhum campo cadastrado.';
+                listEl.style.display = 'none';
+                listEl.innerHTML = '';
+                return;
+            }
+            const term = normalizarBuscaNomeCampoPersonalizado(searchEl ? searchEl.value : '');
+            const rows = term === ''
+                ? all
+                : all.filter(r => normalizarBuscaNomeCampoPersonalizado(String(r.nome || '')).includes(term));
+            if (rows.length === 0) {
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = 'Nenhum campo encontrado para esta busca.';
+                listEl.style.display = 'none';
+                listEl.innerHTML = '';
+                return;
+            }
+            emptyEl.style.display = 'none';
+            listEl.style.display = 'block';
+            listEl.innerHTML = rows.map(r => htmlLinhaCampoPersonalizadoConfig(r)).join('');
+        }
+
+        async function carregarCamposPersonalizadosConfig(contaId) {
+            const emptyEl = document.getElementById('camposPersonalizadosListEmpty');
+            const listEl = document.getElementById('camposPersonalizadosList');
+            if (!window.supabase || !contaId) {
+                if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'Sessão indisponível.'; }
+                if (listEl) listEl.style.display = 'none';
+                return;
+            }
+            if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'Carregando...'; }
+            if (listEl) listEl.style.display = 'none';
+            try {
+                const { data, error } = await window.supabase
+                    .from('SAAS_Campos_Personalizados')
+                    .select('id, nome, descricao, tipo, created_at')
+                    .eq('contaId', contaId)
+                    .order('nome', { ascending: true });
+                if (error) throw error;
+                window._camposPersonalizadosListaCache = data || [];
+                renderCamposPersonalizadosListaFiltrada();
+            } catch (e) {
+                console.error(e);
+                if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'Não foi possível carregar os campos.'; }
+                if (listEl) listEl.style.display = 'none';
+            }
+        }
+
+        function escapeHtmlConfig(s) {
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        function abrirModalNovoCampoPersonalizado() {
+            campoPersonalizadoEditandoId = null;
+            const titulo = document.getElementById('modalCampoPersonalizadoTitulo');
+            if (titulo) titulo.textContent = 'Novo campo personalizado';
+            const nome = document.getElementById('modalCampoPersonalizadoNome');
+            const desc = document.getElementById('modalCampoPersonalizadoDescricao');
+            const tipo = document.getElementById('modalCampoPersonalizadoTipo');
+            if (nome) nome.value = '';
+            if (desc) desc.value = '';
+            if (tipo) { tipo.value = 'texto'; tipo.disabled = false; }
+            document.getElementById('modalCampoPersonalizadoOverlay')?.classList.add('show');
+        }
+
+        function abrirModalEditarCampoPersonalizado(id) {
+            const rows = window._camposPersonalizadosListaCache || [];
+            const row = rows.find(r => Number(r.id) === Number(id));
+            if (!row) { showError('Campo não encontrado.'); return; }
+            campoPersonalizadoEditandoId = Number(row.id);
+            const titulo = document.getElementById('modalCampoPersonalizadoTitulo');
+            if (titulo) titulo.textContent = 'Editar campo personalizado';
+            const nome = document.getElementById('modalCampoPersonalizadoNome');
+            const desc = document.getElementById('modalCampoPersonalizadoDescricao');
+            const tipo = document.getElementById('modalCampoPersonalizadoTipo');
+            if (nome) nome.value = row.nome || '';
+            if (desc) desc.value = row.descricao != null ? String(row.descricao) : '';
+            if (tipo) {
+                tipo.value = row.tipo || 'texto';
+                tipo.disabled = true;
+            }
+            document.getElementById('modalCampoPersonalizadoOverlay')?.classList.add('show');
+        }
+
+        function fecharModalNovoCampoPersonalizado() {
+            campoPersonalizadoEditandoId = null;
+            const tipo = document.getElementById('modalCampoPersonalizadoTipo');
+            const desc = document.getElementById('modalCampoPersonalizadoDescricao');
+            if (tipo) tipo.disabled = false;
+            if (desc) desc.value = '';
+            document.getElementById('modalCampoPersonalizadoOverlay')?.classList.remove('show');
+        }
+
+        function fecharMenuCampoPersonalizado() {
+            const menu = document.getElementById('campoPersonalizadoAcoesMenu');
+            if (menu) menu.classList.remove('show');
+            campoPersonalizadoAcoesBotaoAtual = null;
+            campoPersonalizadoAcaoId = null;
+        }
+
+        function toggleMenuCampoPersonalizado(event, btn) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('campoPersonalizadoAcoesMenu');
+            if (!menu || !btn) return;
+            fecharMenuAcoesUsuario();
+            fecharMenuEtiquetaConfig();
+            const idAttr = btn.getAttribute('data-campo-id');
+            const idNum = idAttr != null ? parseInt(idAttr, 10) : NaN;
+            campoPersonalizadoAcaoId = Number.isFinite(idNum) ? idNum : null;
+            if (campoPersonalizadoAcaoId == null) return;
+            if (campoPersonalizadoAcoesBotaoAtual === btn && menu.classList.contains('show')) {
+                fecharMenuCampoPersonalizado();
+                return;
+            }
+            campoPersonalizadoAcoesBotaoAtual = btn;
+            const rect = btn.getBoundingClientRect();
+            const menuWidth = 170;
+            const menuHeight = 96;
+            const margin = 8;
+            let left = rect.right - menuWidth;
+            if (left < margin) left = margin;
+            if (left + menuWidth > window.innerWidth - margin) left = window.innerWidth - menuWidth - margin;
+            let top = rect.bottom + 6;
+            if (top + menuHeight > window.innerHeight - margin) top = rect.top - menuHeight - 6;
+            if (top < margin) top = margin;
+            menu.style.left = left + 'px';
+            menu.style.top = top + 'px';
+            menu.classList.add('show');
+        }
+
+        function editarCampoPersonalizadoDaAcao() {
+            const id = campoPersonalizadoAcaoId;
+            fecharMenuCampoPersonalizado();
+            if (id != null) abrirModalEditarCampoPersonalizado(id);
+        }
+
+        function excluirCampoPersonalizadoDaAcao() {
+            const id = campoPersonalizadoAcaoId;
+            fecharMenuCampoPersonalizado();
+            if (id != null) void excluirCampoPersonalizadoConfig(id);
+        }
+
+        async function excluirCampoPersonalizadoConfig(id) {
+            if (!id || !window.supabase) return;
+            if (!await showConfirmDialog('Excluir este campo? Todos os valores salvos nos contatos e grupos para este campo serão removidos.')) return;
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e && e.message === 'STATUS_BLOQUEADO') return; showError('Sessão inválida.'); return; }
+            if (!contaId) return;
+            try {
+                const { error } = await window.supabase.from('SAAS_Campos_Personalizados').delete().eq('id', id).eq('contaId', contaId);
+                if (error) throw error;
+                showSuccess('Campo excluído.');
+                await carregarCamposPersonalizadosConfig(contaId);
+            } catch (e) {
+                console.error(e);
+                showError('Não foi possível excluir o campo.');
+            }
+        }
+
+        async function salvarNovoCampoPersonalizado() {
+            const nomeEl = document.getElementById('modalCampoPersonalizadoNome');
+            const descEl = document.getElementById('modalCampoPersonalizadoDescricao');
+            const tipoEl = document.getElementById('modalCampoPersonalizadoTipo');
+            const nome = (nomeEl?.value || '').trim();
+            const descricaoRaw = (descEl?.value || '').trim();
+            const descricao = descricaoRaw === '' ? null : descricaoRaw;
+            const tipo = (tipoEl?.value || 'texto').trim();
+            if (!nome) { showError('Informe o nome do campo.'); return; }
+            const permitidos = ['texto', 'numero', 'data', 'boolean'];
+            if (!permitidos.includes(tipo)) { showError('Tipo inválido.'); return; }
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e && e.message === 'STATUS_BLOQUEADO') return; showError('Sessão inválida.'); return; }
+            if (!contaId || !window.supabase) { showError('Sessão inválida.'); return; }
+            const btn = document.getElementById('btnSalvarCampoPersonalizado');
+            if (btn) { btn.disabled = true; }
+            try {
+                if (campoPersonalizadoEditandoId != null) {
+                    const { error } = await window.supabase.from('SAAS_Campos_Personalizados').update({ nome, descricao }).eq('id', campoPersonalizadoEditandoId).eq('contaId', contaId);
+                    if (error) throw error;
+                    showSuccess('Campo atualizado.');
+                } else {
+                    const { error } = await window.supabase.from('SAAS_Campos_Personalizados').insert({ nome, descricao, tipo, contaId });
+                    if (error) throw error;
+                    showSuccess('Campo criado com sucesso.');
+                }
+                fecharModalNovoCampoPersonalizado();
+                await carregarCamposPersonalizadosConfig(contaId);
+            } catch (e) {
+                console.error(e);
+                showError(campoPersonalizadoEditandoId != null ? 'Não foi possível atualizar o campo.' : 'Não foi possível criar o campo.');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        // ===== ETIQUETAS (CONFIG) =====
+        let etiquetaConfigModalEditandoId = null;
+        let etiquetaConfigAcaoId = null;
+        let etiquetaConfigAcoesBotaoAtual = null;
+
+        function corSeguraEtiquetaConfig(hex) {
+            const h = String(hex || '').trim();
+            if (/^#[0-9a-fA-F]{6}$/.test(h)) return h;
+            return '#64748b';
+        }
+
+        function normalizarBuscaEtiquetaConfig(str) {
+            return (str || '')
+                .normalize('NFD')
+                .replace(/\p{M}/gu, '')
+                .toLowerCase()
+                .trim();
+        }
+
+        function htmlLinhaEtiquetaConfig(r) {
+            const eid = String(r.id);
+            const nome = String(r.nome || '').trim() || 'Sem nome';
+            const desc = (r.descricao != null && String(r.descricao).trim()) ? String(r.descricao).trim() : '';
+            const descBlock = desc
+                ? `<p class="text-xs text-slate-500 mt-0.5 line-clamp-2">${escapeHtmlConfig(desc)}</p>`
+                : '';
+            const corHex = corSeguraEtiquetaConfig(r.cor);
+            const corHexEsc = escapeHtmlConfig(corHex);
+            return `
+                        <div class="config-etiquetas-row flex items-start pl-5 pr-3 py-4 transition-colors hover:bg-slate-50">
+                            <div class="min-w-0 shrink-0 max-w-md lg:max-w-lg">
+                                <span class="text-sm font-semibold text-slate-900">${escapeHtmlConfig(nome)}</span>
+                                ${descBlock}
+                            </div>
+                            <div class="flex-1 min-w-6 min-h-[1px]" aria-hidden="true"></div>
+                            <div class="config-etiquetas-col-cor shrink-0 w-36 flex flex-row items-center justify-center gap-2 self-center px-1">
+                                <span class="config-etiqueta-cor-dot" style="background-color: ${corHex}"></span>
+                                <span class="text-xs font-mono text-slate-500">${corHexEsc}</span>
+                            </div>
+                            <div class="w-3 shrink-0" aria-hidden="true"></div>
+                            <div class="w-14 shrink-0 flex justify-center items-start pt-0.5">
+                                <button type="button" class="btn-acoes-etiqueta-config w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 rounded-xl transition-colors" data-etiqueta-id="${escapeHtmlConfig(eid)}" onclick="toggleMenuEtiquetaConfig(event, this)" title="Ações" aria-label="Abrir ações">
+                                    <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                                </button>
+                            </div>
+                        </div>`;
+        }
+
+        function renderEtiquetasConfigListaFiltrada() {
+            const emptyEl = document.getElementById('etiquetasConfigListEmpty');
+            const listEl = document.getElementById('etiquetasConfigList');
+            const searchEl = document.getElementById('etiquetasConfigBusca');
+            if (!emptyEl || !listEl) return;
+            const all = window._etiquetasConfigListaCache || [];
+            if (all.length === 0) {
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = 'Nenhuma etiqueta cadastrada.';
+                listEl.style.display = 'none';
+                listEl.innerHTML = '';
+                return;
+            }
+            const term = normalizarBuscaEtiquetaConfig(searchEl ? searchEl.value : '');
+            const rows = term === ''
+                ? all
+                : all.filter(r => normalizarBuscaEtiquetaConfig(String(r.nome || '')).includes(term));
+            if (rows.length === 0) {
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = 'Nenhuma etiqueta encontrada para esta busca.';
+                listEl.style.display = 'none';
+                listEl.innerHTML = '';
+                return;
+            }
+            emptyEl.style.display = 'none';
+            listEl.style.display = 'block';
+            listEl.innerHTML = rows.map(r => htmlLinhaEtiquetaConfig(r)).join('');
+        }
+
+        async function carregarEtiquetasConfig(contaId) {
+            const emptyEl = document.getElementById('etiquetasConfigListEmpty');
+            const listEl = document.getElementById('etiquetasConfigList');
+            if (!window.supabase || !contaId) {
+                if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'Sessão indisponível.'; }
+                if (listEl) listEl.style.display = 'none';
+                return;
+            }
+            if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'Carregando...'; }
+            if (listEl) listEl.style.display = 'none';
+            try {
+                const { data, error } = await window.supabase
+                    .from('SAAS_Etiquetas')
+                    .select('id, nome, descricao, cor')
+                    .eq('contaId', contaId)
+                    .order('nome', { ascending: true });
+                if (error) throw error;
+                window._etiquetasConfigListaCache = data || [];
+                renderEtiquetasConfigListaFiltrada();
+            } catch (e) {
+                console.error(e);
+                if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'Não foi possível carregar as etiquetas.'; }
+                if (listEl) listEl.style.display = 'none';
+            }
+        }
+
+        function abrirModalNovaEtiquetaConfig() {
+            etiquetaConfigModalEditandoId = null;
+            const titulo = document.getElementById('modalEtiquetaConfigTitulo');
+            if (titulo) titulo.textContent = 'Nova etiqueta';
+            const nome = document.getElementById('modalEtiquetaConfigNome');
+            const desc = document.getElementById('modalEtiquetaConfigDescricao');
+            const picker = document.getElementById('modalEtiquetaConfigCorPicker');
+            const hex = document.getElementById('modalEtiquetaConfigCorHex');
+            if (nome) nome.value = '';
+            if (desc) desc.value = '';
+            if (picker) picker.value = '#6C63FF';
+            if (hex) hex.value = '#6C63FF';
+            document.getElementById('modalEtiquetaConfigOverlay')?.classList.add('show');
+        }
+
+        function abrirModalEditarEtiquetaConfig(id) {
+            const rows = window._etiquetasConfigListaCache || [];
+            const row = rows.find(r => String(r.id) === String(id));
+            if (!row) { showError('Etiqueta não encontrada.'); return; }
+            etiquetaConfigModalEditandoId = row.id;
+            const titulo = document.getElementById('modalEtiquetaConfigTitulo');
+            if (titulo) titulo.textContent = 'Editar etiqueta';
+            const nome = document.getElementById('modalEtiquetaConfigNome');
+            const desc = document.getElementById('modalEtiquetaConfigDescricao');
+            const picker = document.getElementById('modalEtiquetaConfigCorPicker');
+            const hex = document.getElementById('modalEtiquetaConfigCorHex');
+            const cor = corSeguraEtiquetaConfig(row.cor);
+            if (nome) nome.value = row.nome || '';
+            if (desc) desc.value = row.descricao != null ? String(row.descricao) : '';
+            if (picker) picker.value = cor;
+            if (hex) hex.value = cor;
+            document.getElementById('modalEtiquetaConfigOverlay')?.classList.add('show');
+        }
+
+        function fecharModalEtiquetaConfig() {
+            etiquetaConfigModalEditandoId = null;
+            document.getElementById('modalEtiquetaConfigOverlay')?.classList.remove('show');
+        }
+
+        function fecharMenuEtiquetaConfig() {
+            const menu = document.getElementById('etiquetaConfigAcoesMenu');
+            if (menu) menu.classList.remove('show');
+            etiquetaConfigAcoesBotaoAtual = null;
+            etiquetaConfigAcaoId = null;
+        }
+
+        function toggleMenuEtiquetaConfig(event, btn) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('etiquetaConfigAcoesMenu');
+            if (!menu || !btn) return;
+            fecharMenuAcoesUsuario();
+            fecharMenuCampoPersonalizado();
+            const idAttr = btn.getAttribute('data-etiqueta-id');
+            etiquetaConfigAcaoId = idAttr != null && idAttr !== '' ? idAttr : null;
+            if (etiquetaConfigAcaoId == null) return;
+            if (etiquetaConfigAcoesBotaoAtual === btn && menu.classList.contains('show')) {
+                fecharMenuEtiquetaConfig();
+                return;
+            }
+            etiquetaConfigAcoesBotaoAtual = btn;
+            const rect = btn.getBoundingClientRect();
+            const menuWidth = 170;
+            const menuHeight = 96;
+            const margin = 8;
+            let left = rect.right - menuWidth;
+            if (left < margin) left = margin;
+            if (left + menuWidth > window.innerWidth - margin) left = window.innerWidth - menuWidth - margin;
+            let top = rect.bottom + 6;
+            if (top + menuHeight > window.innerHeight - margin) top = rect.top - menuHeight - 6;
+            if (top < margin) top = margin;
+            menu.style.left = left + 'px';
+            menu.style.top = top + 'px';
+            menu.classList.add('show');
+        }
+
+        function editarEtiquetaConfigDaAcao() {
+            const id = etiquetaConfigAcaoId;
+            fecharMenuEtiquetaConfig();
+            if (id != null) abrirModalEditarEtiquetaConfig(id);
+        }
+
+        function excluirEtiquetaConfigDaAcao() {
+            const id = etiquetaConfigAcaoId;
+            fecharMenuEtiquetaConfig();
+            if (id != null) void excluirEtiquetaConfig(id);
+        }
+
+        async function excluirEtiquetaConfig(id) {
+            if (!id || !window.supabase) return;
+            if (!await showConfirmDialog('Excluir esta etiqueta? Ela será removida de todos os contatos onde estiver aplicada.')) return;
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e && e.message === 'STATUS_BLOQUEADO') return; showError('Sessão inválida.'); return; }
+            if (!contaId) return;
+            try {
+                const { error } = await window.supabase.from('SAAS_Etiquetas').delete().eq('id', id).eq('contaId', contaId);
+                if (error) throw error;
+                showSuccess('Etiqueta excluída.');
+                await carregarEtiquetasConfig(contaId);
+            } catch (e) {
+                console.error(e);
+                showError((e && e.message) ? e.message : 'Não foi possível excluir a etiqueta.');
+            }
+        }
+
+        async function salvarEtiquetaConfig() {
+            const nomeEl = document.getElementById('modalEtiquetaConfigNome');
+            const descEl = document.getElementById('modalEtiquetaConfigDescricao');
+            const hexEl = document.getElementById('modalEtiquetaConfigCorHex');
+            const pickerEl = document.getElementById('modalEtiquetaConfigCorPicker');
+            const nome = (nomeEl?.value || '').trim();
+            const descricaoRaw = (descEl?.value || '').trim();
+            const descricao = descricaoRaw === '' ? null : descricaoRaw;
+            let cor = (hexEl?.value || '').trim();
+            if (!/^#[0-9a-fA-F]{6}$/.test(cor)) cor = (pickerEl?.value || '#6C63FF').trim();
+            if (!/^#[0-9a-fA-F]{6}$/.test(cor)) cor = '#6C63FF';
+            if (!nome) { showError('Informe o nome da etiqueta.'); return; }
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e && e.message === 'STATUS_BLOQUEADO') return; showError('Sessão inválida.'); return; }
+            if (!contaId || !window.supabase) { showError('Sessão inválida.'); return; }
+            const btn = document.getElementById('btnSalvarEtiquetaConfig');
+            if (btn) btn.disabled = true;
+            const wasEdit = etiquetaConfigModalEditandoId != null;
+            const editId = etiquetaConfigModalEditandoId;
+            const payload = { nome, descricao, cor, contaId };
+            try {
+                if (wasEdit) {
+                    const { error } = await window.supabase.from('SAAS_Etiquetas').update({ nome, descricao, cor }).eq('id', editId).eq('contaId', contaId);
+                    if (error) throw error;
+                    showSuccess('Etiqueta atualizada.');
+                } else {
+                    const { error } = await window.supabase.from('SAAS_Etiquetas').insert(payload);
+                    if (error) throw error;
+                    showSuccess('Etiqueta criada com sucesso.');
+                }
+                fecharModalEtiquetaConfig();
+                await carregarEtiquetasConfig(contaId);
+            } catch (e) {
+                console.error(e);
+                showError(wasEdit ? 'Não foi possível atualizar a etiqueta.' : 'Não foi possível criar a etiqueta.');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function initEtiquetaConfigColorInputs() {
+            const picker = document.getElementById('modalEtiquetaConfigCorPicker');
+            const hex = document.getElementById('modalEtiquetaConfigCorHex');
+            if (!picker || !hex || picker.dataset.bound === '1') return;
+            picker.dataset.bound = '1';
+            picker.addEventListener('input', function() { hex.value = this.value; });
+            hex.addEventListener('input', function() {
+                const v = this.value.trim();
+                if (/^#[0-9a-fA-F]{6}$/.test(v)) picker.value = v;
+            });
+        }
+
+        // ===== WEBHOOKS =====
+        const WEBHOOK_BASE_URL = '/hublabel/public/token';
+        let webhookEditandoId = null;
+        let webhookCriadoPorTeste = false;
+        let _resolveConfirmarAtivarWebhook = null;
+
+        function showConfirmarAtivarWebhook() {
+            return new Promise((resolve) => {
+                _resolveConfirmarAtivarWebhook = resolve;
+                const modal = document.getElementById('modalConfirmarAtivarWebhook');
+                if (modal) modal.classList.add('show');
+            });
+        }
+
+        function fecharModalConfirmarAtivarWebhook(desejaAtivar) {
+            const modal = document.getElementById('modalConfirmarAtivarWebhook');
+            if (modal) modal.classList.remove('show');
+            if (_resolveConfirmarAtivarWebhook) { _resolveConfirmarAtivarWebhook(desejaAtivar === true); _resolveConfirmarAtivarWebhook = null; }
+        }
+
+        function gerarUuid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        async function obterWebhooks(contaId) {
+            if (!window.supabase || !contaId) return [];
+            try {
+                const { data, error } = await window.supabase.from('SAAS_Webhook').select('id, nome, status, tokenWebhook, mapeamento, "idAgente", "conexaoId", "ultimoPayload", teste, "mensagemPadrao"').eq('contaId', contaId).order('created_at', { ascending: false });
+                if (error) { console.error('Erro ao carregar webhooks:', error); return []; }
+                return (data || []).map(w => ({ id: w.id, tokenWebhook: w.tokenWebhook, nome: w.nome, status: w.status === true ? 'ativo' : 'inativo', mapeamento: w.mapeamento, idAgente: w.idAgente, conexaoId: w.conexaoId, ultimoPayload: w.ultimoPayload, teste: w.teste === true, mensagemPadrao: w.mensagemPadrao }));
+            } catch (e) { console.error('Erro ao obter webhooks:', e); return []; }
+        }
+
+        function abrirModalWebhookPorIndice(indice) {
+            const w = window._webhooksLista && window._webhooksLista[indice];
+            if (w) abrirModalWebhook(w);
+        }
+
+        function abrirModalWebhook(webhookEditar) {
+            webhookEditandoId = webhookEditar ? webhookEditar.id : null;
+            webhookCriadoPorTeste = false;
+            const modal = document.getElementById('modalWebhookOverlay');
+            const urlInput = document.getElementById('modalWebhookUrl');
+            const nomeInput = document.getElementById('modalWebhookNome');
+            const payloadEl = document.getElementById('modalWebhookPayload');
+            const modalTitle = document.getElementById('modalWebhookTitle');
+            if (modal && urlInput) {
+                if (modalTitle) modalTitle.textContent = webhookEditar ? 'Editar webhook' : 'Criar webhook';
+                nomeInput.value = webhookEditar?.nome || '';
+                urlInput.value = webhookEditar?.tokenWebhook ? `${WEBHOOK_BASE_URL}?id=${webhookEditar.tokenWebhook}` : `${WEBHOOK_BASE_URL}?id=${gerarUuid()}`;
+                if (payloadEl) {
+                    if (webhookEditar?.ultimoPayload) { renderPayloadComDraggable(typeof webhookEditar.ultimoPayload === 'string' ? webhookEditar.ultimoPayload : webhookEditar.ultimoPayload); }
+                    else { payloadEl.classList.remove('aguardando-dados'); payloadEl.innerHTML = ''; }
+                }
+                const btnCopy = document.getElementById('btnCopyWebhook');
+                const btnTest = document.getElementById('btnAtivarTeste');
+                if (btnCopy) btnCopy.classList.remove('copied');
+                if (btnTest) {
+                    const textSpan = btnTest.querySelector('.btn-test-text');
+                    const dot = btnTest.querySelector('.teste-dot');
+                    if (webhookEditar?.teste) { if (textSpan) textSpan.textContent = 'Ativo'; if (dot) { dot.classList.remove('vermelho'); dot.classList.add('verde'); } }
+                    else { if (textSpan) textSpan.textContent = 'Desativado'; if (dot) { dot.classList.remove('verde'); dot.classList.add('vermelho'); } }
+                }
+                preencherCamposWebhook(webhookEditar?.mapeamento);
+                aplicarFormatoTagMapeamentoWebhook(webhookEditar?.mapeamento, webhookEditar?.ultimoPayload);
+                configurarDropZonesWebhook();
+                configurarAtualizarChipsAoMudarMapeamento();
+                configurarDropMensagemPadrao();
+                atualizarChipsMensagemPadrao();
+                const btnExcluir = document.getElementById('btnExcluirWebhook');
+                if (btnExcluir) btnExcluir.style.display = webhookEditar ? 'inline-flex' : 'none';
+                const msgPadraoEl = document.getElementById('modalWebhookMensagemPadrao');
+                if (msgPadraoEl) msgPadraoEl.value = webhookEditar?.mensagemPadrao || '';
+                modal.classList.add('show');
+                carregarConexoesWebhook(webhookEditar?.conexaoId);
+                carregarAgentesWebhook().then(() => {
+                    const sel = document.getElementById('modalWebhookAgente');
+                    if (sel && webhookEditar?.idAgente) { const opt = sel.querySelector(`option[value="${webhookEditar.idAgente}"]`); if (opt) opt.selected = true; else sel.value = String(webhookEditar.idAgente); }
+                });
+            }
+        }
+
+        function preencherCamposWebhook(mapeamento) {
+            const fieldList = document.getElementById('modalWebhookFieldList');
+            if (!fieldList) return;
+            const padrao = [
+                { key: 'nome', label: 'Nome *', placeholder: 'Campo do payload (ex: nome)' },
+                { key: 'telefone', label: 'Telefone *', placeholder: 'Campo do payload (ex: phone)' }
+            ];
+            const map = mapeamento || {};
+            const extras = Object.keys(map).filter(k => k !== 'nome' && k !== 'telefone');
+            let html = padrao.map(p => `
+                <div class="modal-webhook-field-item modal-nc-field--full" style="margin-bottom: 14px;">
+                    <label class="modal-nc-label">${p.label}</label>
+                    <div class="modal-nc-input-wrap">
+                        <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="${p.key}" placeholder="${p.placeholder}" value="${(map[p.key] || '').replace(/"/g, '&quot;')}">
+                    </div>
+                    <div class="integ-pag-field-path" data-field-path-hint="${p.key}"></div>
+                </div>
+            `).join('');
+            extras.forEach(k => {
+                const val = (map[k] || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                const kEsc = (k || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                html += `
+                <div class="modal-webhook-field-item modal-webhook-field-item-extra modal-nc-field--full" style="margin-bottom: 14px;">
+                    <label class="modal-nc-label">Campo extra</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="modal-nc-input-wrap" style="max-width: 180px;">
+                        <input type="text" class="modal-nc-input form-input-tw" data-role="field-name" placeholder="Nome do campo" value="${kEsc}">
+                    </div>
+                    <div class="modal-nc-input-wrap" style="flex:1;">
+                        <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="extra" data-role="field-path" placeholder="Path do payload" value="${val}">
+                    </div>
+                    <button type="button" class="text-slate-400 hover:text-red-500 p-1 transition-colors" onclick="this.closest('.modal-webhook-field-item').remove()" title="Remover"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="integ-pag-field-path" data-field-path-hint="extra"></div>
+                </div>`;
+            });
+            fieldList.innerHTML = html || `
+                <div class="modal-webhook-field-item modal-nc-field--full" style="margin-bottom: 14px;">
+                    <label class="modal-nc-label">Nome <span class="modal-nc-req">*</span></label>
+                    <div class="modal-nc-input-wrap">
+                        <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="nome" placeholder="Campo do payload (ex: nome)">
+                    </div>
+                    <div class="integ-pag-field-path" data-field-path-hint="nome"></div>
+                </div>
+                <div class="modal-webhook-field-item modal-nc-field--full" style="margin-bottom: 14px;">
+                    <label class="modal-nc-label">Telefone <span class="modal-nc-req">*</span></label>
+                    <div class="modal-nc-input-wrap">
+                        <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="telefone" placeholder="Campo do payload (ex: phone)">
+                    </div>
+                    <div class="integ-pag-field-path" data-field-path-hint="telefone"></div>
+                </div>
+            `;
+        }
+
+        function adicionarCampoWebhook() {
+            const fieldList = document.getElementById('modalWebhookFieldList');
+            if (!fieldList) return;
+            const div = document.createElement('div');
+            div.className = 'modal-webhook-field-item modal-webhook-field-item-extra modal-nc-field--full';
+            div.innerHTML = `
+                <label class="modal-nc-label">Campo extra</label>
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:14px;">
+                    <div class="modal-nc-input-wrap" style="max-width:180px;">
+                        <input type="text" class="modal-nc-input form-input-tw" data-role="field-name" placeholder="Nome do campo">
+                    </div>
+                    <div class="modal-nc-input-wrap" style="flex:1;">
+                        <input type="text" class="modal-nc-input form-input-tw integ-pag-map-input" data-field="extra" data-role="field-path" placeholder="Path do payload">
+                    </div>
+                    <button type="button" class="text-slate-400 hover:text-red-500 p-1 transition-colors" onclick="this.closest('.modal-webhook-field-item').remove()" title="Remover"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="integ-pag-field-path" data-field-path-hint="extra"></div>
+            `;
+            fieldList.appendChild(div);
+            configurarDropZonesWebhook();
+            atualizarChipsMensagemPadrao();
+        }
+
+        async function carregarConexoesWebhook(conexaoIdSelecionado) {
+            const select = document.getElementById('modalWebhookConexao');
+            if (!select) return;
+            select.innerHTML = '<option value="">Carregando...</option>';
+            try {
+                const contaId = await obterUserIdComStatus();
+                if (!contaId) { select.innerHTML = '<option value="">Selecione uma conexao</option>'; return; }
+                const { data, error } = await window.supabase.from('SAAS_Conexões').select('id, "NomeConexao", "instanceName"').eq('contaId', contaId).order('created_at', { ascending: false });
+                if (error) { select.innerHTML = '<option value="">Selecione uma conexao</option>'; return; }
+                const conexoes = data || [];
+                select.innerHTML = '<option value="">Selecione uma conexao</option>' + conexoes.map(c => {
+                    const nome = c.NomeConexao || c.instanceName || `Conexao #${c.id}`;
+                    const sel = conexaoIdSelecionado && c.id == conexaoIdSelecionado ? ' selected' : '';
+                    return `<option value="${c.id}"${sel}>${nome.replace(/</g, '&lt;')}</option>`;
+                }).join('');
+            } catch (e) { select.innerHTML = '<option value="">Selecione uma conexao</option>'; }
+        }
+
+        async function carregarAgentesWebhook() {
+            const select = document.getElementById('modalWebhookAgente');
+            if (!select) return;
+            select.innerHTML = '<option value="">Carregando...</option>';
+            try {
+                const contaId = await obterUserIdComStatus();
+                if (!contaId || !window.supabase) { select.innerHTML = '<option value="">Agente padrao da conexao</option>'; return; }
+                const { data: agentes, error } = await window.supabase.from('SAAS_AgentesIA').select('id, nome').eq('contaId', contaId).order('nome', { ascending: true });
+                if (error) { select.innerHTML = '<option value="">Agente padrao da conexao</option>'; return; }
+                select.innerHTML = '<option value="">Agente padrao da conexao</option>' + (agentes || []).map(a => `<option value="${a.id || ''}">${(a.nome || 'Agente').replace(/</g, '&lt;')}</option>`).join('');
+            } catch (e) { select.innerHTML = '<option value="">Agente padrao da conexao</option>'; }
+        }
+
+        async function excluirWebhook() {
+            if (!webhookEditandoId || !window.supabase) return;
+            if (!await showConfirmDialog('Tem certeza que deseja excluir este webhook?')) return;
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; throw e; }
+            if (!contaId) return;
+            try {
+                const { error } = await window.supabase.from('SAAS_Webhook').delete().eq('id', webhookEditandoId);
+                if (error) { showError('Erro ao excluir webhook: ' + (error.message || 'Tente novamente')); return; }
+                webhookCriadoPorTeste = false; webhookEditandoId = null;
+                const modal = document.getElementById('modalWebhookOverlay');
+                if (modal) modal.classList.remove('show');
+                await carregarWebhooks(contaId);
+                showSuccess('Webhook excluido com sucesso');
+            } catch (e) { showError('Erro ao excluir webhook. Tente novamente.'); }
+        }
+
+        function copiarUrlWebhookModal() {
+            const urlInput = document.getElementById('modalWebhookUrl');
+            const btnCopy = document.getElementById('btnCopyWebhook');
+            if (!urlInput || !urlInput.value || urlInput.value.length < 20) return;
+            navigator.clipboard.writeText(urlInput.value).then(() => {
+                if (btnCopy) { btnCopy.classList.add('copied'); clearTimeout(btnCopy._resetTimer); btnCopy._resetTimer = setTimeout(() => { btnCopy.classList.remove('copied'); }, 3000); }
+            }).catch(() => showError('Nao foi possivel copiar'));
+        }
+
+        async function fecharModalWebhook() {
+            if (webhookCriadoPorTeste && webhookEditandoId) {
+                try { if (window.supabase) await window.supabase.from('SAAS_Webhook').delete().eq('id', webhookEditandoId); } catch (e) {}
+            }
+            webhookEditandoId = null; webhookCriadoPorTeste = false;
+            const modal = document.getElementById('modalWebhookOverlay');
+            if (modal) modal.classList.remove('show');
+        }
+
+        async function ativarTesteWebhook() {
+            const urlInput = document.getElementById('modalWebhookUrl');
+            const payloadEl = document.getElementById('modalWebhookPayload');
+            const btnTest = document.getElementById('btnAtivarTeste');
+            if (!urlInput || !urlInput.value || urlInput.value.length < 20) return;
+            const dot = btnTest?.querySelector('.teste-dot');
+            const isAtivo = dot?.classList.contains('verde');
+            if (isAtivo) {
+                const salvo = await salvarWebhookParcial(false);
+                if (salvo) {
+                    const textSpan = btnTest?.querySelector('.btn-test-text');
+                    if (textSpan) textSpan.textContent = 'Desativado';
+                    if (dot) { dot.classList.remove('verde'); dot.classList.add('vermelho'); }
+                    if (payloadEl) { payloadEl.textContent = ''; payloadEl.classList.remove('aguardando-dados'); }
+                }
+            } else {
+                const salvo = await salvarWebhookParcial(true);
+                if (salvo && payloadEl) {
+                    payloadEl.innerHTML = 'Recebendo dados<span class="loading-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
+                    payloadEl.classList.add('aguardando-dados');
+                    const textSpan = btnTest?.querySelector('.btn-test-text');
+                    if (textSpan) textSpan.textContent = 'Ativo';
+                    if (dot) { dot.classList.remove('vermelho'); dot.classList.add('verde'); }
+                }
+            }
+        }
+
+        async function salvarWebhookParcial(paraTeste) {
+            const nomeInput = document.getElementById('modalWebhookNome');
+            const urlInput = document.getElementById('modalWebhookUrl');
+            const agenteSelect = document.getElementById('modalWebhookAgente');
+            const conexaoSelect = document.getElementById('modalWebhookConexao');
+            if (!nomeInput || !urlInput) return false;
+            const nome = nomeInput.value.trim();
+            const url = urlInput.value.trim();
+            if (!nome) { showError('Informe o nome do webhook'); return false; }
+            if (!url || url.length < 20) return false;
+            const conexaoIdVal = conexaoSelect?.value?.trim();
+            const conexaoId = conexaoIdVal ? parseInt(conexaoIdVal, 10) : null;
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return false; throw e; }
+            if (!contaId || !window.supabase) return false;
+            const tokenWebhook = (url.includes('?id=') ? url.split('?id=')[1]?.split('&')[0] : url.split('/').pop()) || gerarUuid();
+            const mapeamento = obterMapeamentoWebhook();
+            const idAgenteVal = agenteSelect?.value?.trim();
+            const idAgente = idAgenteVal ? parseInt(idAgenteVal, 10) : null;
+            try {
+                if (webhookEditandoId) {
+                    webhookCriadoPorTeste = false;
+                    const mensagemPadrao = (document.getElementById('modalWebhookMensagemPadrao')?.value || '').trim() || null;
+                    const { error } = await window.supabase.from('SAAS_Webhook').update({ nome, mapeamento, conexaoId, idAgente, teste: paraTeste || false, mensagemPadrao }).eq('id', webhookEditandoId);
+                    if (error) { showError('Erro ao salvar: ' + (error.message || 'Tente novamente')); return false; }
+                } else {
+                    webhookCriadoPorTeste = true;
+                    const mensagemPadrao = (document.getElementById('modalWebhookMensagemPadrao')?.value || '').trim() || null;
+                    const { data, error } = await window.supabase.from('SAAS_Webhook').insert({ contaId, tokenWebhook, nome, status: true, teste: paraTeste || false, mapeamento, conexaoId, idAgente, ultimoPayload: null, mensagemPadrao }).select('id').single();
+                    if (error) { webhookCriadoPorTeste = false; showError('Erro ao salvar: ' + (error.message || 'Tente novamente')); return false; }
+                    webhookEditandoId = data?.id;
+                    await carregarWebhooks(contaId);
+                }
+                return true;
+            } catch (e) { showError('Erro ao salvar. Tente novamente.'); return false; }
+        }
+
+        async function atualizarTesteWebhook() {
+            const payloadEl = document.getElementById('modalWebhookPayload');
+            const btnAtualizar = document.getElementById('btnAtualizarTeste');
+            if (!payloadEl || !btnAtualizar) return;
+            if (!webhookEditandoId || !window.supabase) return;
+            btnAtualizar.classList.add('loading'); btnAtualizar.disabled = true;
+            try {
+                const { data, error } = await window.supabase.from('SAAS_Webhook').select('ultimoPayload').eq('id', webhookEditandoId).single();
+                if (error) { showError('Erro ao buscar payload: ' + (error.message || 'Tente novamente')); return; }
+                const p = data?.ultimoPayload;
+                if (p != null) { renderPayloadComDraggable(typeof p === 'string' ? p : p); } else { payloadEl.classList.remove('aguardando-dados'); payloadEl.innerHTML = ''; }
+            } catch (e) { showError('Erro ao buscar payload. Tente novamente.'); }
+            finally { btnAtualizar.classList.remove('loading'); btnAtualizar.disabled = false; }
+        }
+
+        function extrairPathsJson(obj, prefix) {
+            const paths = [];
+            if (obj === null || typeof obj !== 'object') return paths;
+            const pre = prefix ? prefix + '.' : '';
+            for (const [k, v] of Object.entries(obj)) {
+                const path = pre + k;
+                if (v !== null && typeof v === 'object' && !Array.isArray(v)) { paths.push(...extrairPathsJson(v, path)); }
+                else if (Array.isArray(v)) { v.forEach((item, i) => { if (item !== null && typeof item === 'object') { paths.push(...extrairPathsJson(item, path + '[' + i + ']')); } else { paths.push({ path: path + '[' + i + ']', value: item }); } }); }
+                else { paths.push({ path, value: v }); }
+            }
+            return paths;
+        }
+
+        function renderPayloadComDraggable(payload) {
+            const el = document.getElementById('modalWebhookPayload');
+            if (!el) return;
+            el.classList.remove('aguardando-dados');
+            if (payload == null || payload === '') { el.innerHTML = ''; return; }
+            let obj;
+            if (typeof payload === 'string') { try { obj = JSON.parse(payload); } catch (e) { el.textContent = payload; return; } } else { obj = payload; }
+            const escapeHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            function formatValue(v) {
+                if (v === null) return 'null';
+                if (typeof v === 'string') return '"' + escapeHtml(v.length > 60 ? v.substring(0, 60) + '...' : v) + '"';
+                if (typeof v === 'boolean') return v ? 'true' : 'false';
+                return String(v);
+            }
+            function buildJsonHtml(o, indent, pathPrefix) {
+                const pad = '  '.repeat(indent); const pad2 = '  '.repeat(indent + 1);
+                if (o === null || typeof o !== 'object') return '';
+                if (Array.isArray(o)) {
+                    let html = '[\n';
+                    o.forEach((item, i) => { const p = pathPrefix + '[' + i + ']'; if (item !== null && typeof item === 'object') { html += pad2 + buildJsonHtml(item, indent + 1, p) + (i < o.length - 1 ? ',' : '') + '\n'; } else { const dropValue = item == null ? '' : String(item); html += pad2 + '<span class="payload-draggable" draggable="true" data-path="' + escapeHtml(p) + '" data-preview="' + escapeHtml(formatValue(item)) + '" data-drop-value="' + escapeHtml(dropValue) + '" title="Arrastar para mapear">' + formatValue(item) + '</span>' + (i < o.length - 1 ? ',' : '') + '\n'; } });
+                    html += pad + ']'; return html;
+                }
+                let html = '{\n'; const entries = Object.entries(o);
+                entries.forEach(([k, v], i) => {
+                    const path = pathPrefix ? pathPrefix + '.' + k : k; const comma = i < entries.length - 1 ? ',' : '';
+                    if (v !== null && typeof v === 'object' && !Array.isArray(v)) { html += pad2 + '"' + escapeHtml(k) + '": ' + buildJsonHtml(v, indent + 1, path) + comma + '\n'; }
+                    else if (Array.isArray(v)) { html += pad2 + '"' + escapeHtml(k) + '": ' + buildJsonHtml(v, indent + 1, path) + comma + '\n'; }
+                    else { const valStr = formatValue(v); const dropValue = v == null ? '' : String(v); html += pad2 + '<span class="payload-draggable" draggable="true" data-path="' + escapeHtml(path) + '" data-preview="' + escapeHtml(valStr) + '" data-drop-value="' + escapeHtml(dropValue) + '" title="Arrastar para mapear">"' + escapeHtml(k) + '": ' + valStr + '</span>' + comma + '\n'; }
+                });
+                html += pad + '}'; return html;
+            }
+            el.innerHTML = '<pre class="payload-json-pre">' + buildJsonHtml(obj, 0, '') + '</pre>';
+            el.querySelectorAll('.payload-draggable').forEach(span => { span.addEventListener('dragstart', onPayloadDragStart); });
+        }
+
+        function onPayloadDragStart(e) {
+            const path = e.target.dataset?.path;
+            const preview = e.target.dataset?.preview;
+            const dropValue = e.target.dataset?.dropValue;
+            if (path) {
+                e.dataTransfer.setData('text/plain', preview || path);
+                e.dataTransfer.setData('application/x-webhook-map', JSON.stringify({ path, value: dropValue || '' }));
+                e.dataTransfer.effectAllowed = 'copy';
+            }
+        }
+
+        function webhookGetMappedValue(inputEl) {
+            if (!inputEl) return '';
+            const path = inputEl.dataset?.mapPath?.trim();
+            if (path) return path;
+            return inputEl.value?.trim() || '';
+        }
+
+        function webhookSetFieldPathHint(inputEl, path) {
+            if (!inputEl) return;
+            const item = inputEl.closest('.modal-webhook-field-item');
+            const hintEl = item?.querySelector('.integ-pag-field-path');
+            if (!hintEl) return;
+            hintEl.textContent = path ? ('Caminho: ' + path) : '';
+        }
+
+        function webhookGetValueByPath(source, path) {
+            if (!source || !path) return '';
+            try {
+                const normalized = String(path).replace(/\[(\d+)\]/g, '.$1');
+                const parts = normalized.split('.').filter(Boolean);
+                let curr = source;
+                for (const part of parts) {
+                    if (curr == null) return '';
+                    curr = curr[part];
+                }
+                if (curr == null) return '';
+                return String(curr);
+            } catch (_) {
+                return '';
+            }
+        }
+
+        function aplicarFormatoTagMapeamentoWebhook(mapeamento, ultimoPayload) {
+            const map = mapeamento || {};
+            let payloadObj = null;
+            if (ultimoPayload && typeof ultimoPayload === 'object') payloadObj = ultimoPayload;
+            if (typeof ultimoPayload === 'string') {
+                try { payloadObj = JSON.parse(ultimoPayload); } catch (_) { payloadObj = null; }
+            }
+            const items = document.querySelectorAll('#modalWebhookFieldList .modal-webhook-field-item');
+            items.forEach((item) => {
+                const pathInput = item.querySelector('[data-role="field-path"]');
+                if (pathInput) {
+                    const keyInput = item.querySelector('[data-role="field-name"]');
+                    const key = keyInput?.value?.trim().replace(/\s/g, '_');
+                    const path = key ? (map[key] || '') : '';
+                    if (!path) return;
+                    pathInput.dataset.mapPath = String(path);
+                    const previewValue = webhookGetValueByPath(payloadObj, path);
+                    pathInput.value = previewValue || String(path);
+                    pathInput.classList.add('tagged-value');
+                    webhookSetFieldPathHint(pathInput, String(path));
+                    return;
+                }
+                const input = item.querySelector('.modal-nc-input[data-field], .form-input-tw[data-field]');
+                if (!input) return;
+                const key = input.dataset?.field;
+                const path = key ? (map[key] || '') : '';
+                if (!path) return;
+                input.dataset.mapPath = String(path);
+                const previewValue = webhookGetValueByPath(payloadObj, path);
+                input.value = previewValue || String(path);
+                input.classList.add('tagged-value');
+                webhookSetFieldPathHint(input, String(path));
+            });
+        }
+
+        function configurarAtualizarChipsAoMudarMapeamento() {
+            const list = document.getElementById('modalWebhookFieldList');
+            if (!list || list._chipsUpdateConfig) return;
+            list._chipsUpdateConfig = true;
+            list.addEventListener('input', () => { clearTimeout(list._chipsUpdateTimer); list._chipsUpdateTimer = setTimeout(atualizarChipsMensagemPadrao, 300); });
+        }
+
+        function configurarDropZonesWebhook() {
+            const list = document.getElementById('modalWebhookFieldList');
+            if (!list) return;
+            if (list._webhookDropConfig) return;
+            list._webhookDropConfig = true;
+            function getInputFromEvent(e) {
+                const item = e.target.closest('.modal-webhook-field-item');
+                return item?.querySelector('.modal-nc-input[data-field], .form-input-tw[data-field]') || null;
+            }
+            list.addEventListener('dragover', (e) => { const input = getInputFromEvent(e); if (input) { e.preventDefault(); e.stopPropagation(); e.dataTransfer.dropEffect = 'copy'; list.querySelectorAll('.modal-nc-input.drag-over, .form-input-tw.drag-over').forEach(i => i.classList.remove('drag-over')); input.classList.add('drag-over'); } });
+            list.addEventListener('dragleave', (e) => { if (!list.contains(e.relatedTarget)) { list.querySelectorAll('.modal-nc-input.drag-over, .form-input-tw.drag-over').forEach(i => i.classList.remove('drag-over')); } });
+            list.addEventListener('drop', (e) => {
+                const input = getInputFromEvent(e);
+                if (input) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    input.classList.remove('drag-over');
+                    const raw = e.dataTransfer.getData('application/x-webhook-map');
+                    let drop = null;
+                    if (raw) { try { drop = JSON.parse(raw); } catch (_) {} }
+                    if (drop?.path) {
+                        input.dataset.mapPath = String(drop.path);
+                        input.value = String(drop.value || '');
+                        input.classList.add('tagged-value');
+                        webhookSetFieldPathHint(input, String(drop.path));
+                    } else {
+                        const text = e.dataTransfer.getData('text/plain');
+                        if (text) {
+                            input.value = text;
+                            delete input.dataset.mapPath;
+                            input.classList.remove('tagged-value');
+                            webhookSetFieldPathHint(input, '');
+                        }
+                    }
+                }
+                list.querySelectorAll('.modal-nc-input.drag-over, .form-input-tw.drag-over').forEach(i => i.classList.remove('drag-over'));
+            });
+            list.addEventListener('input', (e) => {
+                const input = e.target?.closest('.modal-nc-input[data-field], .form-input-tw[data-field]');
+                if (!input) return;
+                delete input.dataset.mapPath;
+                input.classList.remove('tagged-value');
+                webhookSetFieldPathHint(input, '');
+            });
+        }
+
+        function atualizarChipsMensagemPadrao() {
+            const container = document.getElementById('mensagemPadraoChips');
+            if (!container) return;
+            const map = obterMapeamentoWebhook(); const keys = Object.keys(map);
+            if (keys.length === 0) { container.innerHTML = '<span class="text-xs text-slate-400">Preencha o mapeamento acima para ver os campos</span>'; return; }
+            const escapeHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            container.innerHTML = keys.map(k => `<span class="mensagem-padrao-chip" draggable="true" data-field="${escapeHtml(k)}" title="Arrastar para mensagem">[${escapeHtml(k)}]</span>`).join('');
+            container.querySelectorAll('.mensagem-padrao-chip').forEach(chip => { chip.addEventListener('dragstart', (e) => { const field = e.target.dataset?.field; if (field) { e.dataTransfer.setData('text/plain', '[' + field + ']'); e.dataTransfer.effectAllowed = 'copy'; } }); });
+        }
+
+        function configurarDropMensagemPadrao() {
+            const ta = document.getElementById('modalWebhookMensagemPadrao');
+            if (!ta || ta._mensagemPadraoDropConfig) return;
+            ta._mensagemPadraoDropConfig = true;
+            ta.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; ta.classList.add('drag-over'); });
+            ta.addEventListener('dragleave', (e) => { if (!ta.contains(e.relatedTarget)) ta.classList.remove('drag-over'); });
+            ta.addEventListener('drop', (e) => { e.preventDefault(); ta.classList.remove('drag-over'); const text = e.dataTransfer.getData('text/plain'); if (!text) return; const start = ta.selectionStart; const end = ta.selectionEnd; const val = ta.value; ta.value = val.substring(0, start) + text + val.substring(end); ta.selectionStart = ta.selectionEnd = start + text.length; ta.focus(); });
+        }
+
+        function obterMapeamentoWebhook() {
+            const items = document.querySelectorAll('#modalWebhookFieldList .modal-webhook-field-item');
+            const map = {};
+            items.forEach((item, idx) => {
+                const nameInput = item.querySelector('[data-role="field-name"]');
+                const pathInput = item.querySelector('[data-role="field-path"]');
+                if (nameInput && pathInput) {
+                    const key = nameInput.value.trim().replace(/\s/g, '_') || ('campo_extra_' + idx);
+                    const payloadField = webhookGetMappedValue(pathInput);
+                    if (key && payloadField) map[key] = payloadField;
+                    return;
+                }
+                const label = item.querySelector('.modal-nc-label, .text-sm.font-bold');
+                const input = item.querySelector('.modal-nc-input[data-field], .form-input-tw[data-field]');
+                if (!input) return;
+                const key = (input.dataset?.field || (label?.textContent || '').replace(/\s*\*$/, '').trim().toLowerCase() || 'campo' + idx).replace(/\s/g, '_');
+                const payloadField = webhookGetMappedValue(input);
+                if (payloadField) map[key] = payloadField;
+            });
+            return map;
+        }
+
+        async function criarWebhook() {
+            const nomeInput = document.getElementById('modalWebhookNome');
+            const urlInput = document.getElementById('modalWebhookUrl');
+            const agenteSelect = document.getElementById('modalWebhookAgente');
+            if (!nomeInput || !urlInput) return;
+            const nome = nomeInput.value.trim(); const url = urlInput.value.trim();
+            if (!nome) { showError('Informe o nome do webhook'); return; }
+            if (!url || url.length < 20) { showError('A URL do webhook nao foi gerada'); return; }
+            const nomeCampo = document.querySelector('[data-field="nome"]');
+            const telefoneCampo = document.querySelector('[data-field="telefone"]');
+            if (!nomeCampo?.value?.trim() || !telefoneCampo?.value?.trim()) { showError('Preencha os campos obrigatorios Nome e Telefone no mapeamento'); return; }
+            const conexaoSelect = document.getElementById('modalWebhookConexao');
+            const conexaoIdVal = conexaoSelect?.value?.trim();
+            if (!conexaoIdVal) { showError('Selecione uma conexao'); return; }
+            const conexaoId = parseInt(conexaoIdVal, 10);
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; throw e; }
+            if (!contaId) { showError('Sessao invalida'); return; }
+            const tokenWebhook = (url.includes('?id=') ? url.split('?id=')[1]?.split('&')[0] : url.split('/').pop()) || gerarUuid();
+            const mapeamento = obterMapeamentoWebhook();
+            const idAgenteVal = agenteSelect?.value?.trim();
+            const idAgente = idAgenteVal ? parseInt(idAgenteVal, 10) : null;
+            if (!window.supabase) { showError('Supabase nao inicializado'); return; }
+            const btnTest = document.getElementById('btnAtivarTeste');
+            const dot = btnTest?.querySelector('.teste-dot');
+            const testeAtivo = dot?.classList.contains('verde');
+            let valorTeste = false;
+            if (testeAtivo) { const desejaAtivar = await showConfirmarAtivarWebhook(); valorTeste = !desejaAtivar; }
+            try {
+                if (webhookEditandoId) {
+                    const mensagemPadrao = (document.getElementById('modalWebhookMensagemPadrao')?.value || '').trim() || null;
+                    const { error } = await window.supabase.from('SAAS_Webhook').update({ nome, mapeamento, conexaoId, idAgente, teste: valorTeste, mensagemPadrao }).eq('id', webhookEditandoId);
+                    if (error) { showError('Erro ao atualizar webhook: ' + (error.message || 'Tente novamente')); return; }
+                    webhookCriadoPorTeste = false; await fecharModalWebhook(); await carregarWebhooks(contaId); showSuccess('Webhook atualizado com sucesso');
+                } else {
+                    const mensagemPadrao = (document.getElementById('modalWebhookMensagemPadrao')?.value || '').trim() || null;
+                    const { data, error } = await window.supabase.from('SAAS_Webhook').insert({ contaId, tokenWebhook, nome, status: true, teste: valorTeste, mapeamento, conexaoId, idAgente, ultimoPayload: null, mensagemPadrao }).select('id').single();
+                    if (error) { showError('Erro ao criar webhook: ' + (error.message || 'Tente novamente')); return; }
+                    webhookCriadoPorTeste = false; await fecharModalWebhook(); await carregarWebhooks(contaId); showSuccess('Webhook criado com sucesso');
+                }
+            } catch (e) { showError('Erro ao salvar webhook. Tente novamente.'); }
+        }
+
+        async function carregarWebhooks(contaId) { if (!contaId) return; const webhooks = await obterWebhooks(contaId); renderWebhookList(webhooks); }
+
+        function renderWebhookList(webhooks) {
+            const emptyEl = document.getElementById('webhookListEmpty');
+            const listEl = document.getElementById('webhookList');
+            if (!emptyEl || !listEl) return;
+            if (!webhooks || webhooks.length === 0) { emptyEl.style.display = 'block'; listEl.style.display = 'none'; return; }
+            emptyEl.style.display = 'none'; listEl.style.display = 'block';
+            const getTagStatus = (w) => {
+                if (w.teste) return { text: 'Modo Teste', cls: 'bg-amber-50 text-amber-600' };
+                return (w.status === 'ativo' || w.status === true) ? { text: 'Ativo', cls: 'bg-brand-50 text-brand-600' } : { text: 'Inativo', cls: 'bg-slate-100 text-slate-500' };
+            };
+            window._webhooksLista = webhooks;
+            listEl.innerHTML = webhooks.map((w, i) => {
+                const tag = getTagStatus(w);
+                const webhookUrl = w.tokenWebhook ? 'https://webhook2.victoreder.com.br/api/w/' + w.tokenWebhook : '';
+                return `<div class="bg-white border border-slate-100 rounded-2xl p-5 mb-3 hover:shadow-soft cursor-pointer transition-all" onclick="abrirModalWebhookPorIndice(${i})" data-webhook-id="${w.id}" title="Clique para editar">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center flex-shrink-0">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-slate-900 text-sm">${(w.nome || 'Sem nome').replace(/</g, '&lt;')}</span>
+                                <span class="text-xs font-bold px-3 py-0.5 rounded-full ${tag.cls}">${tag.text}</span>
+                            </div>
+                            ${webhookUrl ? `<span class="text-xs text-slate-400 font-mono truncate block">${webhookUrl}</span>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'modalWebhookOverlay') fecharModalWebhook();
+            if (e.target.id === 'modalRespostaRapidaOverlay') fecharModalRespostaRapida();
+            if (e.target.id === 'modalAdicionarUsuarioOverlay') fecharModalAdicionarUsuario();
+            if (e.target.id === 'modalUsuarioCriadoOverlay') fecharModalUsuarioCriado();
+            if (e.target.id === 'modalResetarDadosOverlay') fecharModalResetarDados();
+            const menu = document.getElementById('usuarioAcoesMenu');
+            const clicouNoMenu = menu && menu.contains(e.target);
+            const clicouNoBotaoAcoes = e.target.closest && e.target.closest('button[title="Acoes"]');
+            if (!clicouNoMenu && !clicouNoBotaoAcoes) fecharMenuAcoesUsuario();
+            const menuCampo = document.getElementById('campoPersonalizadoAcoesMenu');
+            const clicouNoMenuCampo = menuCampo && menuCampo.contains(e.target);
+            const clicouNoBotaoCampo = e.target.closest && e.target.closest('.btn-acoes-campo-personalizado');
+            if (!clicouNoMenuCampo && !clicouNoBotaoCampo) fecharMenuCampoPersonalizado();
+            if (e.target.id === 'modalEtiquetaConfigOverlay') fecharModalEtiquetaConfig();
+            const menuEtiqueta = document.getElementById('etiquetaConfigAcoesMenu');
+            const clicouNoMenuEtiqueta = menuEtiqueta && menuEtiqueta.contains(e.target);
+            const clicouNoBotaoEtiqueta = e.target.closest && e.target.closest('.btn-acoes-etiqueta-config');
+            if (!clicouNoMenuEtiqueta && !clicouNoBotaoEtiqueta) fecharMenuEtiquetaConfig();
+        });
+
+        // ===== RESETAR DADOS =====
+        let _resetarDadosTipo = null;
+        const RESETAR_LABELS = { conversas: 'Limpar todas conversas', conexoes: 'Limpar todas conexoes', contatos: 'Limpar todos contatos', disparos: 'Limpar historico de disparos', conta: 'Resetar toda conta' };
+        const RESETAR_MENSAGENS = { conversas: 'Tem certeza que deseja limpar todas as conversas e mensagens? Esta acao e irreversivel.', conexoes: 'Tem certeza que deseja limpar todas as conexoes? As conversas vinculadas tambem serao removidas. Esta acao e irreversivel.', contatos: 'Tem certeza que deseja limpar todos os contatos e etiquetas? Esta acao e irreversivel.', disparos: 'Tem certeza que deseja limpar todo o historico de disparos? Todos os registros de campanhas e envios serao excluidos permanentemente. Esta acao e irreversivel.', conta: 'Tem certeza que deseja resetar toda a conta? Todas as conversas, conexoes, contatos, disparos, agentes e dados serao excluidos permanentemente. Esta acao e irreversivel.' };
+
+        function abrirModalResetarDados(tipo) {
+            _resetarDadosTipo = tipo;
+            const modal = document.getElementById('modalResetarDadosOverlay');
+            const titulo = document.getElementById('modalResetarDadosTitulo');
+            const msg = document.getElementById('modalResetarDadosMensagem');
+            const inputWrap = document.getElementById('modalResetarDadosInputWrap');
+            const input = document.getElementById('modalResetarDadosInput');
+            const btn1 = document.getElementById('btnResetarDadosEtapa1');
+            const btn2 = document.getElementById('btnResetarDadosEtapa2');
+            if (!modal || !titulo || !msg) return;
+            titulo.textContent = RESETAR_LABELS[tipo] || 'Confirmar exclusao';
+            msg.textContent = RESETAR_MENSAGENS[tipo] || 'Esta acao e irreversivel.';
+            inputWrap.style.display = 'none'; input.value = '';
+            btn1.style.display = 'inline-flex'; btn2.style.display = 'none'; btn2.disabled = true;
+            modal.classList.add('show');
+        }
+
+        function proximaEtapaResetarDados() {
+            const inputWrap = document.getElementById('modalResetarDadosInputWrap');
+            const input = document.getElementById('modalResetarDadosInput');
+            const btn1 = document.getElementById('btnResetarDadosEtapa1');
+            const btn2 = document.getElementById('btnResetarDadosEtapa2');
+            if (!inputWrap || !input || !btn1 || !btn2) return;
+            inputWrap.style.display = 'block'; btn1.style.display = 'none'; btn2.style.display = 'inline-flex'; input.focus();
+        }
+
+        function validarInputConfirmarResetar() {
+            const input = document.getElementById('modalResetarDadosInput');
+            const btn2 = document.getElementById('btnResetarDadosEtapa2');
+            if (!input || !btn2) return;
+            btn2.disabled = (input.value.trim().toLowerCase() !== 'confirmar');
+        }
+
+        function fecharModalResetarDados() { _resetarDadosTipo = null; const modal = document.getElementById('modalResetarDadosOverlay'); if (modal) modal.classList.remove('show'); }
+
+        async function executarResetarDados() {
+            if (!_resetarDadosTipo || !window.supabase) return;
+            const btn2 = document.getElementById('btnResetarDadosEtapa2');
+            if (btn2) { btn2.disabled = true; btn2.textContent = 'Excluindo...'; }
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; throw e; }
+            if (!contaId) { showError('Sessao invalida'); return; }
+            try {
+                const ok = await executarLimpeza(_resetarDadosTipo, contaId);
+                if (ok) { fecharModalResetarDados(); showSuccess('Dados resetados com sucesso'); } else { showError('Erro ao resetar. Verifique se voce e admin da conta.'); }
+            } catch (e) { showError('Erro ao resetar dados: ' + ((e && e.message) || 'Tente novamente')); }
+            finally { if (btn2) { btn2.disabled = false; btn2.innerHTML = '<i class="fa-solid fa-trash mr-1"></i> Confirmar exclusao'; } }
+        }
+
+        async function executarLimpeza(tipo, contaId) {
+            if (!window.supabase || !contaId) return false;
+            if (tipo === 'conversas') return await chamarRpcLimpeza('f_limpar_conversas', contaId);
+            if (tipo === 'conexoes') return await chamarRpcLimpeza('f_limpar_conexoes', contaId);
+            if (tipo === 'contatos') return await limparSomenteContatos(contaId);
+            if (tipo === 'disparos') return await chamarRpcLimpeza('f_limpar_historico_disparos', contaId);
+            if (tipo === 'conta') return await chamarRpcLimpeza('f_resetar_conta', contaId);
+            return false;
+        }
+
+        async function limparSomenteContatos(contaId) {
+            if (!window.supabase || !contaId) return false;
+            const id = typeof contaId === 'string' ? contaId : String(contaId);
+
+            // Remove primeiro os vínculos para evitar bloqueios por FK.
+            const { error: errVinculos } = await window.supabase
+                .from('SAAS_Contatos_Etiquetas')
+                .delete()
+                .eq('contaId', id);
+            if (errVinculos) {
+                console.error('Erro ao remover vínculos contato-etiqueta:', errVinculos.message);
+                return false;
+            }
+
+            const { error: errContatos } = await window.supabase
+                .from('SAAS_Contatos')
+                .delete()
+                .eq('contaId', id);
+            if (errContatos) {
+                console.error('Erro ao remover contatos:', errContatos.message);
+                return false;
+            }
+
+            return true;
+        }
+
+        async function chamarRpcLimpeza(nomeFuncao, contaId, silenciarErro = false) {
+            const id = typeof contaId === 'string' ? contaId : String(contaId);
+            const { data, error } = await window.supabase.rpc(nomeFuncao, { p_conta_id: id });
+            if (error) {
+                if (!silenciarErro) console.error('RPC', nomeFuncao, 'erro:', error.message);
+                return false;
+            }
+            return data === true;
+        }
+
+        // ===== USUARIOS DA CONTA =====
+        const INVITE_USER_BACKEND_URL = '/hublabel/public/adicionar-usuario';
+        let usuarioEmEdicao = null;
+        let usuarioAcaoSelecionado = null;
+        let usuarioAcoesBotaoAtual = null;
+        let limiteUsuariosContaInfo = { planoQntUsuarios: null, total_usuarios: 0 };
+
+        function limiteUsuariosAtingido(planoQntUsuarios, totalUsuarios) {
+            if (planoQntUsuarios == null || isNaN(planoQntUsuarios)) return false;
+            const limite = Number(planoQntUsuarios);
+            if (limite === 999999999999) return false;
+            return Number(totalUsuarios || 0) >= limite;
+        }
+
+        async function obterLimiteUsuariosConta(contaId) {
+            if (!contaId || !window.supabase) return { planoQntUsuarios: null, total_usuarios: 0 };
+            try {
+                const { data, error } = await window.supabase
+                    .from('vw_Contas_Com_Plano')
+                    .select('planoQntUsuarios, total_usuarios')
+                    .eq('id', contaId)
+                    .single();
+                if (!error && data) {
+                    return {
+                        planoQntUsuarios: data.planoQntUsuarios != null ? Number(data.planoQntUsuarios) : null,
+                        total_usuarios: data.total_usuarios != null ? Number(data.total_usuarios) : 0
+                    };
+                }
+            } catch (_) {}
+
+            let planoQntUsuarios = null;
+            let total_usuarios = 0;
+            const { data: contaData } = await window.supabase
+                .from('SAAS_Contas')
+                .select('plano')
+                .eq('id', contaId)
+                .single();
+            const planoId = contaData?.plano;
+            if (planoId != null) {
+                const { data: planoData } = await window.supabase
+                    .from('SAAS_Planos')
+                    .select('qntUsuarios')
+                    .eq('id', planoId)
+                    .single();
+                planoQntUsuarios = planoData?.qntUsuarios != null ? Number(planoData.qntUsuarios) : null;
+            }
+            const { count } = await window.supabase
+                .from('SAAS_Usuarios')
+                .select('id', { count: 'exact', head: true })
+                .eq('contaId', contaId);
+            total_usuarios = Number(count || 0);
+            return { planoQntUsuarios, total_usuarios };
+        }
+
+        async function carregarUsuarios(contaId) {
+            const emptyEl = document.getElementById('usuariosListEmpty');
+            const listEl = document.getElementById('usuariosList');
+            const btnAdd = document.getElementById('btnAdicionarUsuario');
+            if (!emptyEl || !listEl || !contaId || !window.supabase) return;
+            try {
+                const { data: { user: authUser } } = await window.supabase.auth.getUser();
+                if (!authUser) { emptyEl.textContent = 'Faca login para ver os usuarios'; if (btnAdd) { btnAdd.disabled = true; btnAdd.style.opacity = '0.5'; } return; }
+                const { data: meuUsuario } = await window.supabase.from('SAAS_Usuarios').select('funcao').eq('contaId', contaId).eq('auth_user_id', authUser.id).single();
+                const ehAdmin = meuUsuario && meuUsuario.funcao === 'admin';
+                const { data: usuarios, error } = await window.supabase.from('SAAS_Usuarios').select('id, nome, Email, funcao, auth_user_id').eq('contaId', contaId).order('created_at', { ascending: false });
+                if (error) { emptyEl.textContent = 'Erro ao carregar usuarios'; return; }
+                const limiteInfoView = await obterLimiteUsuariosConta(contaId);
+                const totalUsuariosAtual = Array.isArray(usuarios) ? usuarios.length : 0;
+                limiteUsuariosContaInfo = { ...limiteInfoView, total_usuarios: totalUsuariosAtual };
+                const limiteAtingido = limiteUsuariosAtingido(limiteUsuariosContaInfo.planoQntUsuarios, limiteUsuariosContaInfo.total_usuarios);
+                if (btnAdd) {
+                    const podeAdicionar = !!ehAdmin && !limiteAtingido;
+                    btnAdd.disabled = !podeAdicionar;
+                    btnAdd.style.opacity = podeAdicionar ? '1' : '0.5';
+                    btnAdd.style.cursor = podeAdicionar ? 'pointer' : 'not-allowed';
+                    btnAdd.title = !ehAdmin
+                        ? 'Apenas administradores podem adicionar membros'
+                        : (limiteAtingido ? 'Limite de usuarios do plano atingido' : '');
+                }
+                if (!usuarios || usuarios.length === 0) { emptyEl.textContent = 'Nenhum usuario nesta conta'; emptyEl.style.display = 'block'; listEl.style.display = 'none'; return; }
+                emptyEl.style.display = 'none'; listEl.style.display = 'block';
+                listEl.innerHTML = usuarios.map(u => {
+                    const funcaoLabel = u.funcao === 'admin' ? 'Administrador' : 'Membro';
+                    const funcaoClass = u.funcao === 'admin' ? 'bg-brand-50 text-brand-600' : 'bg-slate-100 text-slate-600 badge-funcao-membro';
+                    const nomeExibir = (u.nome || u.Email || 'Sem nome').replace(/</g, '&lt;');
+                    const emailExibir = (u.Email || '').replace(/</g, '&lt;');
+                    const ehEuMesmo = u.auth_user_id && authUser && u.auth_user_id === authUser.id;
+                    const mostrarAcoes = ehAdmin && !ehEuMesmo;
+                    const idEscapado = (u.id != null ? String(u.id) : '').replace(/"/g, '&quot;');
+                    const emailEscapado = emailExibir.replace(/"/g, '&quot;');
+                    const funcaoEscapada = (u.funcao || 'membro').replace(/"/g, '&quot;');
+                    const btnAcoes = mostrarAcoes ? `<button type="button" class="text-slate-400 hover:text-slate-700 p-1 transition-colors" data-conta-id="${contaId}" data-usuario-id="${idEscapado}" data-usuario-nome="${nomeExibir.replace(/"/g, '&quot;')}" data-usuario-email="${emailEscapado}" data-usuario-funcao="${funcaoEscapada}" onclick="toggleMenuAcoesUsuario(event, this)" title="Acoes"><i class="fa-solid fa-ellipsis-vertical text-sm"></i></button>` : '';
+                    const avatarBg = u.funcao === 'admin' ? 'bg-brand-500' : 'bg-slate-300';
+                    const initials = nomeExibir.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                    const voceTag = ehEuMesmo ? `<span class="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-0.5 rounded-full ml-2">Voce</span>` : '';
+                    return `<div class="grid grid-cols-[1fr_auto] gap-4 items-center px-5 py-4">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-full ${avatarBg} flex items-center justify-center text-white text-sm font-bold flex-shrink-0">${initials}</div>
+                            <div class="min-w-0">
+                                <div class="flex items-center">
+                                    <span class="font-bold text-slate-900 text-sm">${nomeExibir}</span>
+                                    ${voceTag}
+                                </div>
+                                <span class="text-slate-400 text-xs block truncate">${emailExibir}</span>
+                            </div>
+                        </div>
+                        <span class="flex items-center gap-2">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${funcaoClass}">${funcaoLabel}</span>
+                            ${btnAcoes}
+                        </span>
+                    </div>`;
+                }).join('');
+            } catch (e) { emptyEl.textContent = 'Erro ao carregar usuarios'; }
+        }
+
+        function configurarModalUsuarioModoCriacao() {
+            usuarioEmEdicao = null;
+            const titulo = document.getElementById('modalAdicionarUsuarioTitulo');
+            const emailInput = document.getElementById('modalUsuarioEmail');
+            const funcaoSelect = document.getElementById('modalUsuarioFuncao');
+            const btnEnviar = document.getElementById('btnEnviarConvite');
+            if (titulo) titulo.textContent = 'Adicionar usuario';
+            if (emailInput) {
+                emailInput.value = '';
+                emailInput.disabled = false;
+            }
+            if (funcaoSelect) funcaoSelect.value = 'membro';
+            if (btnEnviar) btnEnviar.innerHTML = '<i class="fa-solid fa-user-plus mr-1"></i> Adicionar membro';
+            atualizarInfoFuncaoUsuario();
+        }
+
+        async function abrirModalAdicionarUsuario() {
+            const btnAdd = document.getElementById('btnAdicionarUsuario');
+            if (btnAdd && btnAdd.disabled) return;
+            let contaId = null;
+            try { contaId = await obterUserIdComStatus(); } catch (_) {}
+            if (contaId) {
+                const limiteInfo = await obterLimiteUsuariosConta(contaId);
+                if (limiteUsuariosAtingido(limiteInfo.planoQntUsuarios, limiteInfo.total_usuarios)) {
+                    showError('Limite de usuarios do plano atingido.');
+                    return;
+                }
+            }
+            const modal = document.getElementById('modalAdicionarUsuarioOverlay');
+            if (!modal) return;
+            configurarModalUsuarioModoCriacao();
+            modal.classList.add('show');
+        }
+
+        function abrirModalEditarUsuario(usuario) {
+            if (!usuario || !usuario.usuarioId) return;
+            usuarioEmEdicao = usuario;
+            const modal = document.getElementById('modalAdicionarUsuarioOverlay');
+            const titulo = document.getElementById('modalAdicionarUsuarioTitulo');
+            const emailInput = document.getElementById('modalUsuarioEmail');
+            const funcaoSelect = document.getElementById('modalUsuarioFuncao');
+            const btnEnviar = document.getElementById('btnEnviarConvite');
+            if (!modal || !emailInput || !funcaoSelect || !btnEnviar) return;
+            if (titulo) titulo.textContent = 'Editar membro';
+            emailInput.value = usuario.email || '';
+            emailInput.disabled = true;
+            funcaoSelect.value = usuario.funcao || 'membro';
+            btnEnviar.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Salvar alteracoes';
+            atualizarInfoFuncaoUsuario();
+            modal.classList.add('show');
+        }
+
+        function fecharModalAdicionarUsuario() {
+            const modal = document.getElementById('modalAdicionarUsuarioOverlay');
+            if (modal) modal.classList.remove('show');
+            configurarModalUsuarioModoCriacao();
+        }
+
+        function fecharMenuAcoesUsuario() {
+            const menu = document.getElementById('usuarioAcoesMenu');
+            if (menu) menu.classList.remove('show');
+            usuarioAcoesBotaoAtual = null;
+        }
+
+        function toggleMenuAcoesUsuario(event, btn) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('usuarioAcoesMenu');
+            if (!menu || !btn) return;
+            fecharMenuCampoPersonalizado();
+            fecharMenuEtiquetaConfig();
+            usuarioAcaoSelecionado = {
+                contaId: btn.getAttribute('data-conta-id') || '',
+                usuarioId: btn.getAttribute('data-usuario-id') || '',
+                nome: btn.getAttribute('data-usuario-nome') || '',
+                email: btn.getAttribute('data-usuario-email') || '',
+                funcao: btn.getAttribute('data-usuario-funcao') || 'membro'
+            };
+            if (usuarioAcoesBotaoAtual === btn && menu.classList.contains('show')) {
+                fecharMenuAcoesUsuario();
+                return;
+            }
+            usuarioAcoesBotaoAtual = btn;
+            const rect = btn.getBoundingClientRect();
+            const menuWidth = 170;
+            const menuHeight = 96;
+            const margin = 8;
+            let left = rect.right - menuWidth;
+            if (left < margin) left = margin;
+            if (left + menuWidth > window.innerWidth - margin) left = window.innerWidth - menuWidth - margin;
+            let top = rect.bottom + 6;
+            if (top + menuHeight > window.innerHeight - margin) top = rect.top - menuHeight - 6;
+            if (top < margin) top = margin;
+            menu.style.left = left + 'px';
+            menu.style.top = top + 'px';
+            menu.classList.add('show');
+        }
+
+        function editarUsuarioDaAcao() {
+            if (!usuarioAcaoSelecionado) return;
+            const usuario = { ...usuarioAcaoSelecionado };
+            fecharMenuAcoesUsuario();
+            abrirModalEditarUsuario(usuario);
+        }
+
+        function excluirUsuarioDaAcao() {
+            if (!usuarioAcaoSelecionado) return;
+            const usuario = { ...usuarioAcaoSelecionado };
+            fecharMenuAcoesUsuario();
+            removerUsuarioPorDados(usuario.contaId, usuario.usuarioId, usuario.nome);
+        }
+
+        function atualizarInfoFuncaoUsuario() {
+            const funcaoSelect = document.getElementById('modalUsuarioFuncao');
+            const info = document.getElementById('blocoInfoPermissoesPerfil');
+            const texto = document.getElementById('textoInfoPermissao');
+            if (!funcaoSelect || !info || !texto) return;
+            if (funcaoSelect.value === 'admin') {
+                texto.innerHTML = '<strong>Admin:</strong> pode realizar qualquer tarefa dentro da conta inclusive adicionar e remover usuarios.';
+            } else {
+                texto.innerHTML = '<strong>Membro:</strong> Pode realizar as tarefas do dia a dia na conta, mas nao pode excluir conexoes, Agentes de IA ou CRM, nem adicionar ou remover usuarios.';
+            }
+        }
+
+        async function removerUsuarioPorDados(contaId, usuarioId, nomeExibir) {
+            if (!window.supabase || !contaId || !usuarioId || usuarioId === 'undefined' || usuarioId === 'null') return;
+            if (!await showConfirmDialog('Remover o usuario "' + nomeExibir + '" da conta?')) return;
+            try {
+                const { error } = await window.supabase.from('SAAS_Usuarios').delete().eq('id', usuarioId);
+                if (error) { showError('Erro ao remover usuario: ' + (error.message || 'Tente novamente')); return; }
+                showSuccess('Usuario removido da conta'); carregarUsuarios(contaId);
+            } catch (e) { showError('Erro ao remover usuario. Tente novamente.'); }
+        }
+
+        async function removerUsuario(btn) {
+            const contaId = btn?.getAttribute('data-conta-id');
+            const usuarioId = btn?.getAttribute('data-usuario-id');
+            const nomeExibir = btn?.getAttribute('data-usuario-nome') || '';
+            await removerUsuarioPorDados(contaId, usuarioId, nomeExibir);
+        }
+
+        function gerarSenhaAleatoria() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+            let senha = ''; for (let i = 0; i < 8; i++) { senha += chars.charAt(Math.floor(Math.random() * chars.length)); } return senha;
+        }
+
+        function abrirModalUsuarioCriado(email, senha) {
+            document.getElementById('modalUsuarioCriadoEmail').textContent = email || '';
+            document.getElementById('modalUsuarioCriadoSenha').textContent = senha || '';
+            const modal = document.getElementById('modalUsuarioCriadoOverlay');
+            if (modal) modal.classList.add('show');
+        }
+
+        function fecharModalUsuarioCriado() { const modal = document.getElementById('modalUsuarioCriadoOverlay'); if (modal) modal.classList.remove('show'); }
+
+        function copiarDadosAcesso() {
+            const email = document.getElementById('modalUsuarioCriadoEmail').textContent;
+            const senha = document.getElementById('modalUsuarioCriadoSenha').textContent;
+            navigator.clipboard.writeText('email: ' + email + '\nsenha: ' + senha).then(function() {
+                const btn = document.getElementById('btnCopiarDadosAcesso');
+                if (btn) {
+                    btn.classList.add('text-brand-500');
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    if (window.copyDadosAcessoIconTimer) clearTimeout(window.copyDadosAcessoIconTimer);
+                    window.copyDadosAcessoIconTimer = setTimeout(function() {
+                        btn.classList.remove('text-brand-500');
+                        btn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+                    }, 1000);
+                }
+            }).catch(function() { showError('Nao foi possivel copiar'); });
+        }
+
+        async function enviarConviteUsuario() {
+            const emailInput = document.getElementById('modalUsuarioEmail');
+            const funcaoSelect = document.getElementById('modalUsuarioFuncao');
+            const btnEnviar = document.getElementById('btnEnviarConvite');
+            if (!emailInput || !funcaoSelect || !btnEnviar || !window.supabase) return;
+            const email = (emailInput.value || '').trim();
+            if (!email) { showError('Informe o email'); return; }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Email invalido'); return; }
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { showError('Erro ao obter conta.'); return; }
+            if (!contaId) { showError('Conta nao encontrada.'); return; }
+            const funcao = funcaoSelect.value || 'membro';
+
+            if (usuarioEmEdicao && usuarioEmEdicao.usuarioId) {
+                btnEnviar.disabled = true;
+                btnEnviar.innerHTML = '<span class="loading-spinner-btn" style="display: inline-block;"></span> Salvando...';
+                try {
+                    const { error: updateErr } = await window.supabase
+                        .from('SAAS_Usuarios')
+                        .update({ funcao })
+                        .eq('id', usuarioEmEdicao.usuarioId)
+                        .eq('contaId', contaId);
+                    if (updateErr) { showError(updateErr.message || 'Erro ao atualizar usuario'); return; }
+                    fecharModalAdicionarUsuario();
+                    carregarUsuarios(contaId);
+                    showSuccess('Usuario atualizado com sucesso');
+                } catch (e) {
+                    showError('Erro ao atualizar usuario: ' + (e.message || 'Tente novamente'));
+                } finally {
+                    btnEnviar.disabled = false;
+                    if (usuarioEmEdicao && usuarioEmEdicao.usuarioId) {
+                        btnEnviar.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Salvar alteracoes';
+                    }
+                }
+                return;
+            }
+
+            const { data: { session } } = await window.supabase.auth.getSession();
+            if (!session?.access_token) { showError('Sessao invalida.'); return; }
+            const limiteInfo = await obterLimiteUsuariosConta(contaId);
+            if (limiteUsuariosAtingido(limiteInfo.planoQntUsuarios, limiteInfo.total_usuarios)) {
+                showError('Limite de usuarios do plano atingido.');
+                return;
+            }
+            const { data: checkData, error: checkErr } = await window.supabase.rpc('f_check_email_usuario', { p_email: email, p_conta_id: contaId });
+            if (!checkErr && checkData && checkData.existe) {
+                fecharModalAdicionarUsuario();
+                if (checkData.mesma_conta) { showError('Usuario ja adicionado na conta.'); } else { showError('Usuario ja esta vinculado em outra conta.'); }
+                return;
+            }
+            if (checkErr) { showError('Erro ao verificar email.'); return; }
+            const senhaGerada = gerarSenhaAleatoria();
+            let inserted = null;
+            btnEnviar.disabled = true;
+            btnEnviar.innerHTML = '<span class="loading-spinner-btn" style="display: inline-block;"></span> Adicionando...';
+            try {
+                const { data: insertedData, error: insertErr } = await window.supabase.from('SAAS_Usuarios').insert({ contaId, Email: email, funcao }).select('id').single();
+                if (insertErr) { showError(insertErr.message || 'Erro ao preparar usuario'); return; }
+                inserted = insertedData;
+                const res = await fetch(INVITE_USER_BACKEND_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token }, body: JSON.stringify({ email, password: senhaGerada, funcao, contaId, redirectTo: window.location.origin + '/hublabel/public/configuracoes.html' }) });
+                const rawText = await res.text();
+                let data = {}; try { data = JSON.parse(rawText); } catch (_) { data = { _raw: rawText }; }
+                if (res.status === 200) { fecharModalAdicionarUsuario(); carregarUsuarios(contaId); abrirModalUsuarioCriado(email, senhaGerada); }
+                else { if (inserted?.id) { try { await window.supabase.from('SAAS_Usuarios').delete().eq('id', inserted.id); } catch (_) {} } showError(data.error || 'Erro ao adicionar usuario'); }
+            } catch (e) {
+                if (inserted?.id) { try { await window.supabase.from('SAAS_Usuarios').delete().eq('id', inserted.id); } catch (_) {} }
+                showError('Erro ao adicionar usuario: ' + (e.message || 'Tente novamente'));
+            } finally {
+                btnEnviar.disabled = false;
+                btnEnviar.innerHTML = '<i class="fa-solid fa-user-plus mr-1"></i> Adicionar membro';
+            }
+        }
+
+        // ===== RESPOSTAS RAPIDAS =====
+        let respostaRapidaEditandoId = null;
+
+        async function obterRespostasRapidas(contaId) {
+            if (!window.supabase) return [];
+            const { data, error } = await window.supabase.from('SAAS_Resposta_Rapidas').select('*').eq('contaId', contaId).order('created_at', { ascending: false });
+            if (error) { console.error('Erro ao obter respostas rapidas:', error); return []; }
+            return data || [];
+        }
+
+        async function carregarRespostasRapidas(contaId) { if (!contaId) return; const items = await obterRespostasRapidas(contaId); renderRespostasRapidasList(items); }
+
+        function textoParaExibir(item) {
+            if (item.texto) { const t = (item.texto || '').trim(); return t.length > 50 ? t.substring(0, 50) + '...' : t; }
+            const tipo = item.tipoMedia || 'midia';
+            const labels = { imagem: '[Imagem]', video: '[Video]', documento: '[Documento]', audio: '[Audio]', imagem_video: '[Imagem + Video]' };
+            return labels[tipo] || '[Midia]';
+        }
+
+        function textoCompletoParaTooltip(item) {
+            if (item.texto) return (item.texto || '').trim();
+            const tipo = item.tipoMedia || 'midia';
+            const labels = { imagem: '[Imagem]', video: '[Video]', documento: '[Documento]', audio: '[Audio]', imagem_video: '[Imagem + Video]' };
+            return labels[tipo] || '[Midia]';
+        }
+
+        function renderRespostasRapidasList(items) {
+            const emptyEl = document.getElementById('respostaRapidaListEmpty');
+            const listEl = document.getElementById('respostaRapidaList');
+            if (!emptyEl || !listEl) return;
+            if (!items || items.length === 0) { emptyEl.style.display = 'block'; listEl.style.display = 'none'; return; }
+            emptyEl.style.display = 'none'; listEl.style.display = 'block';
+            window._respostasRapidasLista = items;
+            listEl.innerHTML = items.map((r, i) => {
+                const textoExibir = textoParaExibir(r);
+                const textoFull = textoCompletoParaTooltip(r);
+                const titulo = textoExibir.length < textoFull.length ? textoFull.replace(/"/g, '&quot;') : '';
+                const atalhoTag = r.atalho ? `<span class="text-[11px] font-bold bg-brand-50 text-brand-600 px-2 py-0.5 rounded-md">${(r.atalho || '').replace(/</g, '&lt;')}</span>` : '';
+                const clipIcon = r.arquivo ? '<span class="text-slate-400"><i class="fa-solid fa-paperclip text-xs"></i></span>' : '';
+                return `<div class="grid grid-cols-[auto_minmax(0,1fr)] gap-5 items-center px-5 py-4 hover:bg-slate-50 cursor-pointer transition-colors" onclick="abrirModalRespostaRapidaPorIndice(${i})" title="Clique para editar">
+                    <div class="flex items-center gap-2.5">
+                        <span class="font-medium text-slate-900 text-sm">${(r.nome || 'Sem nome').replace(/</g, '&lt;')}</span>
+                        ${atalhoTag} ${clipIcon}
+                    </div>
+                    <span class="text-xs text-slate-400 truncate" title="${titulo}">${(textoExibir || '-').replace(/</g, '&lt;')}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function abrirModalRespostaRapidaPorIndice(i) { const lista = window._respostasRapidasLista; if (lista && lista[i]) abrirModalRespostaRapida(lista[i]); }
+
+        function abrirModalRespostaRapida(item) {
+            respostaRapidaEditandoId = item ? item.id : null;
+            const modal = document.getElementById('modalRespostaRapidaOverlay');
+            if (!modal) return;
+            document.getElementById('modalRRNome').value = item ? (item.nome || '') : '';
+            document.getElementById('modalRRAtalho').value = item ? (item.atalho || '') : '';
+            document.getElementById('modalRRTexto').value = item ? (item.texto || '') : '';
+            ['imagem', 'video', 'audio', 'documento'].forEach(s => removeMediaRR(s));
+            const tipoMedia = item ? (item.tipoMedia || null) : null;
+            const temArquivo = item && item.arquivo;
+            if (temArquivo && tipoMedia === 'imagem_video') {
+                try {
+                    const j = typeof item.arquivo === 'string' ? JSON.parse(item.arquivo) : item.arquivo;
+                    if (j.imagem) { const inp = document.querySelector('input[data-slot="imagem"]'); if (inp) { inp.setAttribute('data-upload-link', j.imagem); inp.closest('.rr-media-btn')?.classList.add('active'); } }
+                    if (j.video) { const inp = document.querySelector('input[data-slot="video"]'); if (inp) { inp.setAttribute('data-upload-link', j.video); inp.closest('.rr-media-btn')?.classList.add('active'); } }
+                    renderRRPreviewFromSlots();
+                } catch (_) {}
+            } else if (temArquivo) {
+                const url = typeof item.arquivo === 'string' ? item.arquivo : '';
+                const slot = (tipoMedia === 'audio' ? 'audio' : 'documento');
+                const inp = document.querySelector(`input[data-slot="${slot}"]`);
+                if (inp) { inp.setAttribute('data-upload-link', url); inp.closest('.rr-media-btn')?.classList.add('active'); }
+                renderRRPreviewFromSlots();
+            }
+            modal.classList.add('show');
+        }
+
+        function renderRRPreviewFromSlots() {
+            const prev = document.getElementById('modalRRPreviewSection');
+            if (!prev) return;
+            const slots = ['imagem', 'video', 'audio', 'documento'];
+            const labels = { imagem: 'Imagem', video: 'Video', audio: 'Audio', documento: 'Documento' };
+            const icons = { imagem: 'fa-image', video: 'fa-video', audio: 'fa-music', documento: 'fa-file' };
+            const items = [];
+            slots.forEach(slot => {
+                const inp = document.querySelector(`input[data-slot="${slot}"]`);
+                const link = inp?.getAttribute('data-upload-link');
+                if (link) {
+                    const name = inp?.getAttribute('data-file-name') || labels[slot] + ' carregado';
+                    const size = inp?.getAttribute('data-file-size');
+                    const sizeStr = size ? formatFileSize(parseInt(size, 10)) : '';
+                    items.push({ slot, label: labels[slot], name, sizeStr, icon: icons[slot] });
+                }
+            });
+            if (items.length === 0) { prev.innerHTML = ''; return; }
+            prev.innerHTML = items.map(i => `<div class="bg-brand-50 border border-brand-100 rounded-xl p-3 flex items-center justify-between">
+                <span class="flex items-center gap-2.5 text-sm"><i class="fa-solid ${i.icon} text-brand-500"></i>
+                <div><div class="font-medium text-slate-700 text-sm">${(i.name || '').replace(/</g, '&lt;')}</div>${i.sizeStr ? '<div class="text-xs text-slate-400">'+i.sizeStr+'</div>' : ''}</div></span>
+                <button type="button" class="text-red-400 hover:text-red-600 text-sm font-bold transition-colors" onclick="removeMediaRR('${i.slot}')"><i class="fa-solid fa-xmark"></i></button>
+            </div>`).join('');
+        }
+
+        function fecharModalRespostaRapida() { respostaRapidaEditandoId = null; const modal = document.getElementById('modalRespostaRapidaOverlay'); if (modal) modal.classList.remove('show'); }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024; const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        async function handleMediaUploadRR(input, type, slot) {
+            const file = input.files[0]; if (!file) return;
+            if (file.size > 16 * 1024 * 1024) { showError('Arquivo muito grande! Maximo 16MB.'); input.value = ''; return; }
+            const previewEl = document.getElementById('modalRRPreviewSection');
+            const mediaBtn = input.closest('.rr-media-btn');
+            if (!previewEl || !mediaBtn) return;
+            document.querySelectorAll('.rr-media-btn').forEach(b => b.classList.remove('active'));
+            mediaBtn.classList.add('active');
+            previewEl.innerHTML = '<div class="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-center gap-2 text-blue-600 text-sm"><div class="rr-upload-spinner"></div><span>Fazendo upload...</span></div>';
+            try {
+                const formData = new FormData(); formData.append('file', file);
+                const response = await fetch('/hublabel/public/uploadmedia', { method: 'POST', body: formData });
+                const responseText = await response.text();
+                if (!response.ok) throw new Error(responseText || 'Erro no upload');
+                const uploadData = JSON.parse(responseText);
+                if (!uploadData.link) throw new Error('Link nao retornado');
+                if (slot === 'audio' || slot === 'documento') { document.querySelectorAll('input[data-slot]').forEach(inp => { inp.value = ''; inp.removeAttribute('data-upload-link'); }); document.querySelectorAll('.rr-media-btn').forEach(b => b.classList.remove('active')); }
+                else { ['audio', 'documento'].forEach(s => { const i = document.querySelector(`input[data-slot="${s}"]`); if (i) { i.value = ''; i.removeAttribute('data-upload-link'); i.closest('.rr-media-btn')?.classList.remove('active'); } }); }
+                input.setAttribute('data-upload-link', uploadData.link);
+                mediaBtn.classList.add('active');
+                document.querySelectorAll('input[data-slot="imagem"], input[data-slot="video"]').forEach(inp => { if (inp.getAttribute('data-upload-link')) inp.closest('.rr-media-btn')?.classList.add('active'); });
+                input.setAttribute('data-file-name', file.name); input.setAttribute('data-file-size', String(file.size));
+                renderRRPreviewFromSlots(); showSuccess('Arquivo carregado');
+            } catch (e) { input.value = ''; mediaBtn.classList.remove('active'); previewEl.innerHTML = ''; showError('Erro no upload: ' + (e.message || 'Tente novamente')); }
+        }
+
+        function removeMediaRR(slot) {
+            const targetInput = document.querySelector(`input[data-slot="${slot}"]`);
+            const mediaBtn = targetInput?.closest('.rr-media-btn');
+            if (targetInput) { targetInput.value = ''; targetInput.removeAttribute('data-upload-link'); targetInput.removeAttribute('data-file-name'); targetInput.removeAttribute('data-file-size'); }
+            if (mediaBtn) mediaBtn.classList.remove('active');
+            renderRRPreviewFromSlots();
+        }
+
+        async function salvarRespostaRapida() {
+            const nome = (document.getElementById('modalRRNome')?.value || '').trim();
+            if (!nome) { showError('Informe o nome.'); return; }
+            const atalho = (document.getElementById('modalRRAtalho')?.value || '').trim() || null;
+            const textoVal = (document.getElementById('modalRRTexto')?.value || '').trim() || null;
+            const imgLink = document.querySelector('input[data-slot="imagem"]')?.getAttribute('data-upload-link') || '';
+            const vidLink = document.querySelector('input[data-slot="video"]')?.getAttribute('data-upload-link') || '';
+            const audioLink = document.querySelector('input[data-slot="audio"]')?.getAttribute('data-upload-link') || '';
+            const docLink = document.querySelector('input[data-slot="documento"]')?.getAttribute('data-upload-link') || '';
+            let texto = null, arquivo = null, tipoMedia = null;
+            if (audioLink || docLink) {
+                if (audioLink && docLink) { showError('Selecione apenas audio ou documento.'); return; }
+                tipoMedia = audioLink ? 'audio' : 'documento'; arquivo = audioLink || docLink; texto = textoVal;
+            } else if (imgLink || vidLink) {
+                tipoMedia = (imgLink && vidLink) ? 'imagem_video' : (imgLink ? 'imagem' : 'video');
+                arquivo = (imgLink && vidLink) ? JSON.stringify({ imagem: imgLink, video: vidLink }) : (imgLink || vidLink);
+                texto = textoVal;
+            } else { if (!textoVal) { showError('Informe o texto ou envie uma midia.'); return; } texto = textoVal; }
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; throw e; }
+            if (!contaId || !window.supabase) { showError('Sessao invalida'); return; }
+            try {
+                if (respostaRapidaEditandoId) { const { error } = await window.supabase.from('SAAS_Resposta_Rapidas').update({ nome, atalho, texto, arquivo, tipoMedia }).eq('id', respostaRapidaEditandoId); if (error) throw error; showSuccess('Resposta rapida atualizada'); }
+                else { const { error } = await window.supabase.from('SAAS_Resposta_Rapidas').insert({ contaId, nome, atalho, texto, arquivo, tipoMedia }); if (error) throw error; showSuccess('Resposta rapida criada'); }
+                fecharModalRespostaRapida(); await carregarRespostasRapidas(contaId);
+            } catch (e) { showError('Erro ao salvar: ' + (e.message || 'Tente novamente')); }
+        }
+
+        // Carregar dados do usuario
+        async function carregarDadosUsuario() {
+            let contaId;
+            try { contaId = await obterUserIdComStatus(); } catch (error) { if (error.message === 'STATUS_BLOQUEADO') return; throw error; }
+            if (!contaId) { showError('Sessao invalida.'); return; }
+            if (!window.supabase) { showError('Supabase nao inicializado.'); return; }
+            try {
+                const { data: { user: authUser } } = await window.supabase.auth.getUser();
+                if (!authUser?.id) throw new Error('Usuario nao autenticado');
+                const { data: userData, error: userError } = await window.supabase.from('SAAS_Usuarios').select('nome, Email, telefone, funcao').eq('auth_user_id', authUser.id).single();
+                if (userError) throw new Error(userError.message);
+                const { data: planoData, error: planoError } = await window.supabase.from('vw_Contas_Com_Plano').select('*').eq('id', contaId).single();
+                if (planoError) throw new Error(planoError.message);
+                const configData = { ...userData, ...planoData };
+                const limiteInfoPlano = await obterLimiteUsuariosConta(contaId);
+                if (configData.planoQntUsuarios == null) configData.planoQntUsuarios = limiteInfoPlano.planoQntUsuarios;
+                if (configData.total_usuarios == null) configData.total_usuarios = limiteInfoPlano.total_usuarios;
+
+                const nameInput = document.getElementById('userName');
+                if (configData.nome) nameInput.value = configData.nome;
+
+                const headerUserName = document.getElementById('headerUserName');
+                if (headerUserName) {
+                    headerUserName.textContent = configData.nome || authUser?.user_metadata?.name || authUser?.email || 'Usuario';
+                }
+
+                const headerUserInitials = document.getElementById('headerUserInitials');
+                if (headerUserInitials) {
+                    const nomeBase = configData.nome || authUser?.user_metadata?.name || authUser?.email || '';
+                    const iniciais = nomeBase
+                        .trim()
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map((p) => p[0]?.toUpperCase() || '')
+                        .join('');
+                    headerUserInitials.textContent = iniciais || 'U';
+                }
+
+                const headerUserRole = document.getElementById('headerUserRole');
+                if (headerUserRole && configData.funcao) {
+                    headerUserRole.textContent = configData.funcao;
+                }
+
+                const emailInput = document.getElementById('userEmail');
+                if (configData.Email) emailInput.value = configData.Email;
+
+                const phoneInput = document.getElementById('userPhone');
+                if (configData.telefone) { phoneInput.value = configData.telefone; phoneInput.style.borderColor = ''; }
+                else { phoneInput.placeholder = 'Preencher telefone'; phoneInput.style.borderColor = '#ff6b6b'; phoneInput.style.backgroundColor = 'rgba(255, 107, 107, 0.1)'; }
+
+                window.currentUserPassword = configData.senha;
+
+                const currentPlanElement = document.getElementById('currentPlan');
+                const planFeaturesElement = document.querySelector('.plan-features');
+                if (currentPlanElement && configData.plano_nome) currentPlanElement.textContent = configData.plano_nome;
+
+                if (planFeaturesElement) {
+                    function formatQuantity(quantity) {
+                        if (quantity == null || isNaN(quantity)) return null;
+                        return Number(quantity) === 999999999999 ? 'Ilimitado' : Number(quantity).toLocaleString('pt-BR');
+                    }
+                    const planItems = [
+                        { label: 'Disparos', value: configData.plano_qntDisparos },
+                        { label: 'Conexoes', value: configData.plano_qntConexoes },
+                        { label: 'Contatos', value: configData.plano_qntContatos },
+                        { label: 'Usuarios', value: configData.planoQntUsuarios },
+                        { label: 'Listas', value: configData.plano_qntListas },
+                        { label: 'Quadros CRM', value: configData.plano_qntQuadros },
+                        { label: 'Agentes IA', value: configData.planoQntAgentes },
+                        { label: 'Creditos IA', value: configData.planoQntCreditos }
+                    ];
+                    const features = planItems
+                        .map((item) => {
+                            const qty = formatQuantity(item.value);
+                            if (qty == null) return '';
+                            return `<li>${item.label}: ${qty}</li>`;
+                        })
+                        .filter(Boolean);
+                    if (configData.total_usuarios != null) {
+                        const limiteTxt = formatQuantity(configData.planoQntUsuarios);
+                        const usoTxt = Number(configData.total_usuarios || 0).toLocaleString('pt-BR');
+                        features.push(`<li>Usuarios em uso: ${usoTxt}${limiteTxt ? ` / ${limiteTxt}` : ''}</li>`);
+                    }
+                    planFeaturesElement.innerHTML = features.length ? features.join('') : '<li>Plano sem limites configurados</li>';
+                }
+
+                const usageContentElement = document.getElementById('usageContent');
+                if (usageContentElement) {
+                    const usageItems = [];
+                    function createUsageItem(label, used, limit) {
+                        used = used == null || isNaN(used) ? 0 : Number(used); limit = limit == null || isNaN(limit) ? 0 : Number(limit);
+                        const isUnlimited = limit === 999999999999;
+                        const percentage = isUnlimited ? 0 : (limit === 0 ? 0 : Math.min((used / limit) * 100, 100));
+                        let barClass = ''; if (isUnlimited) barClass = 'unlimited'; else if (percentage >= 90) barClass = 'danger'; else if (percentage >= 70) barClass = 'warning';
+                        return `<div class="mb-4 last:mb-0">
+                            <div class="flex justify-between items-center mb-1.5 text-sm">
+                                <span class="text-slate-600 usage-item-label">${label}</span>
+                                <span class="font-bold text-brand-500 usage-item-value">${used.toLocaleString('pt-BR')} / ${isUnlimited ? 'Ilimitado' : limit.toLocaleString('pt-BR')}</span>
+                            </div>
+                            <div class="usage-bar"><div class="usage-fill ${barClass}" style="width: ${isUnlimited ? 100 : percentage}%"></div></div>
+                        </div>`;
+                    }
+                    if (configData.plano_qntDisparos != null && configData.total_disparos != null) usageItems.push(createUsageItem('Disparos', configData.total_disparos, configData.plano_qntDisparos));
+                    if (configData.plano_qntConexoes != null && configData.total_conexoes != null) usageItems.push(createUsageItem('Conexoes', configData.total_conexoes, configData.plano_qntConexoes));
+                    if (configData.plano_qntContatos != null && configData.total_contatos != null) usageItems.push(createUsageItem('Contatos', configData.total_contatos, configData.plano_qntContatos));
+                    if (configData.planoQntUsuarios != null && configData.total_usuarios != null) usageItems.push(createUsageItem('Usuarios', configData.total_usuarios, configData.planoQntUsuarios));
+                    if (configData.plano_qntListas != null && configData.total_listas != null) usageItems.push(createUsageItem('Listas', configData.total_listas, configData.plano_qntListas));
+                    if (configData.plano_qntQuadros != null && configData.total_quadros != null) usageItems.push(createUsageItem('Quadros de CRM', configData.total_quadros, configData.plano_qntQuadros));
+                    if (configData.planoQntAgentes != null && configData.total_agentes != null) usageItems.push(createUsageItem('Agentes de IA', configData.total_agentes, configData.planoQntAgentes));
+                    if (configData.planoQntCreditos != null && configData.total_creditos != null) usageItems.push(createUsageItem('Creditos', configData.total_creditos, configData.planoQntCreditos));
+                    usageContentElement.innerHTML = usageItems.join('');
+                }
+
+                limiteUsuariosContaInfo = {
+                    planoQntUsuarios: configData.planoQntUsuarios != null ? Number(configData.planoQntUsuarios) : null,
+                    total_usuarios: configData.total_usuarios != null ? Number(configData.total_usuarios) : 0
+                };
+
+                carregarWebhooks(contaId); carregarRespostasRapidas(contaId); carregarUsuarios(contaId); carregarCamposPersonalizadosConfig(contaId); carregarEtiquetasConfig(contaId);
+
+                phoneInput.addEventListener('input', function() { if (this.style.borderColor === 'rgb(255, 107, 107)') { this.style.borderColor = ''; this.style.backgroundColor = ''; this.placeholder = 'Digite seu telefone'; } });
+            } catch (error) { showError('Erro ao carregar dados de configuracao.'); }
+        }
+
+        function initPasswordToggles() {
+            const toggleCurrentPassword = document.getElementById('toggleCurrentPassword');
+            const currentPasswordInput = document.getElementById('currentPassword');
+            if (toggleCurrentPassword && currentPasswordInput) { toggleCurrentPassword.addEventListener('click', function() { const type = currentPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password'; currentPasswordInput.setAttribute('type', type); }); }
+            const toggleNewPassword = document.getElementById('toggleNewPassword');
+            const newPasswordInput = document.getElementById('newPassword');
+            if (toggleNewPassword && newPasswordInput) { toggleNewPassword.addEventListener('click', function() { const type = newPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password'; newPasswordInput.setAttribute('type', type); }); newPasswordInput.addEventListener('input', function() { updatePasswordStrength(this.value, 'newPasswordStrength', 'newStrengthFill'); }); }
+            const toggleConfirmNewPassword = document.getElementById('toggleConfirmNewPassword');
+            const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
+            if (toggleConfirmNewPassword && confirmNewPasswordInput) { toggleConfirmNewPassword.addEventListener('click', function() { const type = confirmNewPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password'; confirmNewPasswordInput.setAttribute('type', type); }); }
+        }
+
+        function updatePasswordStrength(password, strengthElementId, fillElementId) {
+            const strengthElement = document.getElementById(strengthElementId);
+            const fillElement = document.getElementById(fillElementId);
+            if (!strengthElement || !fillElement) return;
+            let strengthText = '', strengthColor = '';
+            if (password.length <= 6) { strengthText = 'Muito fraca'; strengthColor = '#ff4757'; }
+            else if (password.length <= 8) { strengthText = 'Fraca'; strengthColor = '#ff6b6b'; }
+            else if (password.length <= 12) { strengthText = 'Media'; strengthColor = '#ffa726'; }
+            else if (password.length <= 16) { strengthText = 'Forte'; strengthColor = '#22c55e'; }
+            else { strengthText = 'Muito forte'; strengthColor = '#16a34a'; }
+            strengthElement.textContent = strengthText; strengthElement.style.color = strengthColor;
+            fillElement.style.width = `${Math.min((password.length / 20) * 100, 100)}%`;
+            fillElement.style.backgroundColor = strengthColor;
+        }
+
+        function validatePassword(password) { return password.length > 6; }
+
+        async function salvarInformacoesPessoais() {
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+            const contaId = await obterUserIdComStatus();
+            if (!contaId) { showError('Sessao invalida.'); return; }
+            if (!name) { showError('Preencha o campo nome'); return; }
+            if (!phone) { showError('Preencha o campo telefone'); return; }
+            if (!window.supabase) { showError('Supabase nao inicializado.'); return; }
+            try {
+                const { data: { user: authUser } } = await window.supabase.auth.getUser();
+                if (!authUser?.id) throw new Error('Usuario nao autenticado');
+                const { error } = await window.supabase.from('SAAS_Usuarios').update({ nome: name, telefone: phone }).eq('auth_user_id', authUser.id);
+                if (error) throw new Error(error.message);
+                showSuccess('Informacoes pessoais salvas com sucesso!');
+            } catch (error) { showError('Erro ao salvar informacoes pessoais.'); }
+        }
+
+        async function redefinirSenha() {
+            const currentPassword = document.getElementById('currentPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value.trim();
+            if (!window.supabase) { showError('Supabase nao inicializado.'); return; }
+            if (!currentPassword) { showError('Digite sua senha atual.'); document.getElementById('currentPassword').focus(); return; }
+            if (!newPassword) { showError('Digite sua nova senha.'); document.getElementById('newPassword').focus(); return; }
+            if (newPassword.length < 6) { showError('A nova senha deve ter pelo menos 6 caracteres.'); return; }
+            if (newPassword !== confirmNewPassword) { showError('As novas senhas nao coincidem.'); return; }
+            if (currentPassword === newPassword) { showError('A nova senha deve ser diferente da senha atual.'); return; }
+            try {
+                const { data: { user }, error: userError } = await window.supabase.auth.getUser();
+                if (userError || !user || !user.email) { showError('Sessao invalida.'); return; }
+                const { error: signInError } = await window.supabase.auth.signInWithPassword({ email: user.email, password: currentPassword });
+                if (signInError) { showError('A senha atual esta incorreta.'); return; }
+                const { error: updateError } = await window.supabase.auth.updateUser({ password: newPassword });
+                if (updateError) { showError('Erro ao atualizar senha: ' + updateError.message); return; }
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmNewPassword').value = '';
+                const strengthFill = document.getElementById('newStrengthFill');
+                const strengthText = document.getElementById('newPasswordStrength');
+                if (strengthFill) strengthFill.style.width = '0%';
+                if (strengthText) strengthText.textContent = '';
+                showSuccess('Senha redefinida com sucesso!');
+            } catch (error) { showError('Erro ao redefinir senha.'); }
+        }
+
+        async function logout() {
+            try { if (window.supabase) { await window.supabase.auth.signOut(); } } catch (error) {}
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idLista=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idConexao=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'idDisparo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            if (typeof clearMenuOcultarCache === 'function') clearMenuOcultarCache();
+            sessionStorage.clear(); localStorage.clear();
+            window.location.href = '/hublabel/public/hublabel/public/hublabel/public/hublabel/public/login';
+        }
+
+        // ===== TOAST NOTIFICATIONS =====
+        function showToast(message, type = 'info') {
+            if (typeof statusBloqueado !== 'undefined' && statusBloqueado) return;
+            const toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) return;
+            const cleanMessage = String(message || '').replace(/^(\u2705|\u274C|\u2139\uFE0F?|\u26A0\uFE0F?)\s*/, '');
+            const safeType = type === 'success' || type === 'error' ? type : 'info';
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification ' + safeType;
+            toast.setAttribute('role', safeType === 'error' ? 'alert' : 'status');
+            toast.setAttribute('aria-live', safeType === 'error' ? 'assertive' : 'polite');
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'toast-message';
+            messageSpan.textContent = cleanMessage;
+            toast.appendChild(messageSpan);
+            toastContainer.appendChild(toast);
+            setTimeout(() => { toast.classList.add('show'); }, 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+            }, 5000);
+        }
+
+        function showSuccess(message) { showToast(message, 'success'); }
+        function showError(message) { if (statusBloqueado) return; showToast(message, 'error'); }
+
+        function showConfirmDialog(message) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:100000;padding:16px;';
+                const box = document.createElement('div');
+                box.style.cssText = 'width:100%;max-width:460px;background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 45px rgba(2,6,23,.3);';
+                box.innerHTML = `
+                    <h3 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;">Confirmar ação</h3>
+                    <p style="margin:0 0 18px 0;font-size:14px;line-height:1.6;color:#334155;">${String(message || '').replace(/</g, '&lt;').replace(/\n/g, '<br>')}</p>
+                    <div style="display:flex;justify-content:flex-end;gap:10px;">
+                        <button type="button" data-cancel style="border:1px solid #cbd5e1;background:#fff;color:#334155;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;">Cancelar</button>
+                        <button type="button" data-confirm style="border:0;background:#dc2626;color:#fff;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;">Confirmar</button>
+                    </div>
+                `;
+                overlay.appendChild(box);
+                document.body.appendChild(overlay);
+                const close = (value) => {
+                    overlay.remove();
+                    resolve(value);
+                };
+                overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) close(false);
+                });
+                box.querySelector('[data-cancel]').addEventListener('click', () => close(false));
+                box.querySelector('[data-confirm]').addEventListener('click', () => close(true));
+            });
+        }
+
+        async function verificarMostrarMenuAdmin() {
+            const el = document.getElementById('menu-item-admin');
+            if (!el || !window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                const { data } = await window.supabase.from('SAAS_Usuarios').select('super_admin').eq('auth_user_id', user.id).limit(1);
+                if (data && data.length > 0 && data[0].super_admin === true) el.style.display = '';
+            } catch (e) {}
+        }
+
+        async function verificarMostrarResetarDados() {
+            const wrapper = document.getElementById('resetarDadosWrapper');
+            if (!wrapper || !window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                let contaId = await obterUserIdComStatus();
+                if (!contaId) return;
+                const { data: meuUsuario } = await window.supabase.from('SAAS_Usuarios').select('funcao').eq('contaId', contaId).eq('auth_user_id', user.id).single();
+                wrapper.style.display = (meuUsuario && meuUsuario.funcao === 'admin') ? '' : 'none';
+            } catch (e) {}
+        }
+
+        async function inicializarPagina() {
+            const uid = await checkAuth();
+            if (!uid) return;
+            verificarMostrarMenuAdmin();
+            verificarMostrarResetarDados();
+            await carregarDadosUsuario();
+            carregarVersao();
+            initPasswordToggles();
+            initEtiquetaConfigColorInputs();
+        }
+
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', inicializarPagina); }
+        else { inicializarPagina(); }
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebarEl');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar.classList.contains('mobile-open')) { closeMobileMenu(); } else { openMobileMenu(); }
+        }
+
+        function openMobileMenu() {
+            const sidebar = document.getElementById('sidebarEl');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.add('mobile-open');
+            overlay.classList.add('active');
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            sidebar.style.pointerEvents = 'auto';
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebarEl');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) {
+                sidebar.classList.remove('mobile-open');
+                sidebar.style.pointerEvents = '';
+            }
+            if (overlay) {
+                overlay.classList.remove('active');
+                overlay.style.display = 'none';
+                overlay.style.pointerEvents = 'none';
+            }
+            document.body.style.overflow = '';
+        }
+
+        // Fechar menu ao redimensionar para desktop
+        (function() {
+            var resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 768) closeMobileMenu();
+                }, 120);
+            });
+        })();
+
+        function initMenuToggleVisibility() {
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            const titleElement = document.querySelector('h1');
+            if (!menuToggle || !titleElement) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { menuToggle.style.display = entry.isIntersecting ? 'block' : 'none'; });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            observer.observe(titleElement);
+        }
+
+        async function initMenuOcultar() {
+            const CACHE_KEY = 'menuOcultarCache';
+            const TTL_MS = 30 * 60 * 1000;
+            const cached = getCookie(CACHE_KEY);
+            if (cached) {
+                try { const obj = JSON.parse(decodeURIComponent(cached)); if (obj && Array.isArray(obj.arr) && obj.exp && Date.now() < obj.exp) { obj.arr.forEach(id => document.body.classList.add('menu-oculta-' + id)); return; } } catch (e) {}
+            }
+            if (!window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                const { data: usuario } = await window.supabase.from('SAAS_Usuarios').select('contaId').eq('auth_user_id', user.id).limit(1).maybeSingle();
+                if (!usuario?.contaId) return;
+                const { data: conta } = await window.supabase.from('SAAS_Contas').select('plano').eq('id', usuario.contaId).limit(1).maybeSingle();
+                if (!conta?.plano) return;
+                const { data: plano } = await window.supabase.from('SAAS_Planos').select('menu_ocultar').eq('id', conta.plano).limit(1).maybeSingle();
+                const arr = Array.isArray(plano?.menu_ocultar) ? plano.menu_ocultar : [];
+                arr.forEach(id => document.body.classList.add('menu-oculta-' + id));
+                setCookie(CACHE_KEY, encodeURIComponent(JSON.stringify({arr, exp: Date.now() + TTL_MS})), 1/48);
+            } catch (e) {}
+        }
+
+        function clearMenuOcultarCache() { document.cookie = 'menuOcultarCache=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; }
+
+        // Sidebar: expandir só quando o mouse está na faixa de 70px (throttle para não travar)
+        (function() {
+            var sidebarCollapseTimer = null;
+            var SIDEBAR_EDGE = 70;
+            var SIDEBAR_EXPANDED_WIDTH = 250;
+            var COLLAPSE_DELAY_MS = 120;
+            var lastMove = 0;
+            var THROTTLE_MS = 80;
+            function onMouseMove(e) {
+                if (window.matchMedia('(max-width: 768px)').matches) return;
+                var sidebar = document.querySelector('.sidebar');
+                if (!sidebar || sidebar.classList.contains('mobile-open')) return;
+                var now = Date.now();
+                if (now - lastMove < THROTTLE_MS) return;
+                lastMove = now;
+                var x = e.clientX;
+                if (x < SIDEBAR_EDGE) {
+                    if (sidebarCollapseTimer) { clearTimeout(sidebarCollapseTimer); sidebarCollapseTimer = null; }
+                    sidebar.classList.add('sidebar-expanded');
+                } else if (x > SIDEBAR_EXPANDED_WIDTH) {
+                    if (sidebarCollapseTimer) return;
+                    sidebarCollapseTimer = setTimeout(function() {
+                        sidebar.classList.remove('sidebar-expanded');
+                        sidebarCollapseTimer = null;
+                    }, COLLAPSE_DELAY_MS);
+                } else {
+                    if (sidebarCollapseTimer) { clearTimeout(sidebarCollapseTimer); sidebarCollapseTimer = null; }
+                }
+            }
+            document.addEventListener('mousemove', onMouseMove, { passive: true });
+        })();
+
+        function initSidebarAndTheme() {
+            initMenuToggleVisibility();
+            initDarkMode();
+            initMenuOcultar();
+
+            // Mobile menu touch handlers
+            var sidebarEl = document.querySelector('.sidebar');
+            if (sidebarEl) {
+                sidebarEl.addEventListener('touchend', function(e) {
+                    if (window.innerWidth > 768) return;
+                    var item = e.target.closest('.menu-item');
+                    if (item) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var onclick = item.getAttribute('onclick');
+                        if (onclick) {
+                            closeMobileMenu();
+                            if (onclick.includes('navigateToPage')) { var m = onclick.match(/navigateToPage\('([^']+)'\)/); if (m) window.location.href = m[1]; }
+                            else if (onclick.includes('logout')) { if (typeof logout === 'function') logout(); }
+                        }
+                    }
+                }, { passive: false });
+                sidebarEl.addEventListener('click', function(e) {
+                    if (window.innerWidth > 768) return;
+                    var item = e.target.closest('.menu-item');
+                    if (item) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var onclick = item.getAttribute('onclick');
+                        if (onclick) {
+                            closeMobileMenu();
+                            if (onclick.includes('navigateToPage')) { var m = onclick.match(/navigateToPage\('([^']+)'\)/); if (m) window.location.href = m[1]; }
+                            else if (onclick.includes('logout')) { if (typeof logout === 'function') logout(); }
+                        }
+                    }
+                }, { capture: true });
+            }
+        }
+
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarAndTheme); }
+        else { initSidebarAndTheme(); }
+
+        // ===== DARK MODE / LIGHT MODE =====
+        function applyDarkMode(isDark) {
+            if (isDark) {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+            }
+            const themeText = document.getElementById('themeToggleText');
+            if (themeText) themeText.textContent = isDark ? 'Modo Escuro' : 'Modo Claro';
+            const themeIcon = document.querySelector('.theme-toggle-item .menu-icon svg');
+            if (themeIcon) {
+                if (isDark) {
+                    themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+                } else {
+                    themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+                }
+            }
+        }
+
+        function initDarkMode() {
+            const toggle = document.getElementById('darkModeToggle');
+            // Read saved preference from cookie
+            const savedMode = getCookie('darkMode');
+            const isDark = savedMode === 'true';
+
+            if (toggle) {
+                toggle.checked = isDark;
+                applyDarkMode(isDark);
+
+                toggle.addEventListener('change', function() {
+                    const newMode = this.checked;
+                    applyDarkMode(newMode);
+                    setCookie('darkMode', newMode ? 'true' : 'false', 365);
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

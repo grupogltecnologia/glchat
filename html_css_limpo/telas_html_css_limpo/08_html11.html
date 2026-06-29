@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Versão limpa: HTML + CSS apenas. JavaScript removido. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Disparo - IA Chatconversa</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="shortcut icon" type="image/png" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    <link rel="apple-touch-icon" href="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/favicon">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    
+    <!-- Chart.js -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    
+    <!-- Alpine.js -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    
+    <style>
+        .main-content, .admin-main-content, .main-content-wrapper { max-width: none !important; width: 100% !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --brand-50: rgba(108, 99, 255, 0.1); --brand-500: #6C63FF; --surface: #fbfcfd; --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.03); }
+        /* Card “Progresso do disparo”: só #6C63FF; degradê = misturas (equivalente a mais/menos “opacidade” da marca) */
+        .status-stats-container {
+            background: var(--brand-500);
+            background: linear-gradient(
+                145deg,
+                color-mix(in srgb, var(--brand-500) 82%, white) 0%,
+                var(--brand-500) 46%,
+                color-mix(in srgb, var(--brand-500) 78%, black) 100%
+            );
+        }
+        body { background: #f4f4f5; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #18181b; -webkit-font-smoothing: antialiased; min-height: 100vh; transition: background 0.3s ease, color 0.3s ease; }
+        body.dark-mode { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: #e2e8f0; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+        .wa-bubble { position: relative; background: #dcf8c6; border-radius: 8px; padding: 12px; max-width: 90%; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .wa-bubble::after { content: ''; position: absolute; top: 0; right: -8px; width: 0; height: 0; border-top: 10px solid #dcf8c6; border-right: 10px solid transparent; border-bottom: 10px solid transparent; }
+
+        /* ===== SIDEBAR (padrão dashboard.html) ===== */
+        .sidebar {
+            width: 72px;
+            overflow: hidden;
+            background: #1A202C;
+            border-right: none;
+            transition: width 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .sidebar.sidebar-expanded { width: 250px; overflow: visible; transition-duration: 0s; }
+        .sidebar-header { padding: 24px 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 96px; }
+        .sidebar-logo-link { display: flex; align-items: center; justify-content: center; width: 32px; height: 40px; min-width: 32px; flex-shrink: 0; transition: width 0.3s ease, min-width 0.3s ease; }
+        .sidebar:hover .sidebar-logo-link, .sidebar.sidebar-expanded .sidebar-logo-link, .sidebar.mobile-open .sidebar-logo-link { width: 100%; min-width: 180px; justify-content: center; padding: 0 16px; }
+        .sidebar-logo-img { width: 32px; height: 32px; min-width: 32px; object-fit: contain; transition: width 0.3s ease, height 0.3s ease; }
+        .sidebar:hover .sidebar-logo-img, .sidebar.sidebar-expanded .sidebar-logo-img, .sidebar.mobile-open .sidebar-logo-img { width: auto; max-width: 100%; height: 45px; min-width: 0; }
+        .sidebar-menu { padding: 4px 0; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0; }
+        .sidebar-nav-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 4px 16px; flex-shrink: 0; }
+        .menu-item { display: flex; align-items: center; justify-content: center; padding: 10px 0; margin: 2px 10px; color: rgba(255,255,255,0.7); text-decoration: none; transition: all 0.2s ease; position: relative; white-space: nowrap; border-radius: 16px; text-align: left; }
+        .sidebar:hover .menu-item, .sidebar.sidebar-expanded .menu-item, .sidebar.mobile-open .menu-item { justify-content: flex-start; padding: 10px 12px; }
+        .menu-item:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+        .menu-item.active { background: #2D3748; color: white; border-right: none; }
+        .menu-item-admin { font-weight: 700 !important; }
+        .menu-badge-admin { display: none; margin-left: auto; font-size: 0.6rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #6C63FF; color: #fff; }
+        .sidebar:hover .menu-badge-admin, .sidebar.sidebar-expanded .menu-badge-admin, .sidebar.mobile-open .menu-badge-admin { display: inline-block; }
+        .menu-icon { width: 25px; text-align: center; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .menu-icon svg { width: 16px; height: 16px; transition: all 0.3s ease; }
+        .menu-item:hover .menu-icon svg { transform: scale(1.1); }
+        .menu-icon .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded', sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: normal;
+            font-style: normal;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-item:hover .menu-icon .material-symbols-rounded { transform: scale(1.1); }
+        .menu-text { margin-left: 0; opacity: 0; width: 0; overflow: hidden; flex: 0; transition: opacity 0.3s ease, margin-left 0.3s ease, width 0.3s ease; }
+        .sidebar:hover .menu-text, .sidebar.sidebar-expanded .menu-text, .sidebar.mobile-open .menu-text { margin-left: 16px; opacity: 1; width: auto; flex: 1; }
+        .menu-badge-novidade { display: none; margin-left: auto; font-size: 0.6rem; font-weight: 500; padding: 2px 8px; border-radius: 999px; background: #6C63FF; color: #fff; }
+        .sidebar:hover .menu-badge-novidade, .sidebar.sidebar-expanded .menu-badge-novidade, .sidebar.mobile-open .menu-badge-novidade { display: inline-block; }
+        .sidebar-footer { margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 10px 0; flex-shrink: 0; }
+        .version-text { color: #666; font-size: 0.6rem; text-align: center; padding: 8px 20px; opacity: 0; transition: opacity 0.3s ease; white-space: nowrap; flex-shrink: 0; }
+        .sidebar:hover .version-text, .sidebar.sidebar-expanded .version-text { opacity: 1; }
+        .logout-item { color: #ff6b6b !important; }
+        .logout-item:hover { background: rgba(255, 107, 107, 0.1) !important; color: #ff6b6b !important; }
+        @media (max-height: 800px) {
+            .sidebar-header { padding: 12px 20px; }
+            .sidebar-logo-img { width: 40px; height: 40px; min-width: 40px; }
+            .sidebar-menu { padding: 12px 0; }
+            .menu-item { padding: 10px 20px; }
+            .menu-icon { width: 26px; }
+            .menu-icon svg { width: 18px; height: 18px; }
+            .menu-icon .material-symbols-rounded { font-size: 18px; }
+            .version-text { padding: 6px 20px; font-size: 0.55rem; }
+            .sidebar-footer { padding: 8px 0; }
+        }
+        @media (max-height: 700px) {
+            .sidebar-header { padding: 8px 20px; }
+            .sidebar-logo-img { width: 36px; height: 36px; min-width: 36px; }
+            .sidebar-menu { padding: 8px 0; }
+            .menu-item { padding: 8px 20px; }
+            .menu-icon { width: 22px; }
+            .menu-icon svg { width: 16px; height: 16px; }
+            .menu-icon .material-symbols-rounded { font-size: 16px; }
+            .menu-text { font-size: 0.85rem; }
+            .version-text { padding: 4px 20px; font-size: 0.5rem; }
+            .sidebar-footer { padding: 6px 0; }
+            .theme-switch { width: 38px; height: 20px; }
+        }
+        @media (max-height: 600px) {
+            .sidebar-header { padding: 6px 20px; }
+            .sidebar-logo-img { width: 32px; height: 32px; min-width: 32px; }
+            .sidebar-menu { padding: 4px 0; }
+            .menu-item { padding: 6px 20px; }
+            .menu-icon { width: 20px; }
+            .menu-icon svg { width: 14px; height: 14px; }
+            .menu-icon .material-symbols-rounded { font-size: 14px; }
+            .menu-text { font-size: 0.8rem; margin-left: 10px; }
+            .version-text { padding: 2px 20px; font-size: 0.45rem; }
+            .sidebar-footer { padding: 4px 0; }
+            .theme-switch { width: 34px; height: 18px; }
+        }
+        .theme-toggle-item { cursor: default; }
+        .theme-toggle-item:hover { background: transparent !important; color: inherit !important; }
+        .theme-switch { display: none; position: relative; width: 44px; height: 24px; margin-left: auto; }
+        .sidebar:hover .theme-switch, .sidebar.sidebar-expanded .theme-switch, .sidebar.mobile-open .theme-switch { display: inline-block; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .theme-switch .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: 0.3s; border-radius: 24px; }
+        .theme-switch .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+        .theme-switch input:checked + .slider { background-color: #22c55e; }
+        .theme-switch input:checked + .slider:before { transform: translateX(20px); }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu-toggle { display: none; position: fixed; top: 5px; left: 20px; z-index: 10001; background: transparent; border: none; border-radius: 0; padding: 10px; cursor: pointer; transition: all 0.3s ease; opacity: 0; visibility: hidden; }
+        .mobile-menu-toggle.visible { opacity: 1; visibility: visible; }
+        .mobile-menu-toggle:hover { background: transparent; }
+        .mobile-menu-toggle svg { width: 20px; height: 20px; color: #6C63FF; }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9998; }
+        .sidebar-overlay.active { display: block; }
+        .mobile-close-btn { display: none; position: absolute; top: 15px; right: 15px; z-index: 10001; background: rgba(0, 0, 0, 0.5); border: none; border-radius: 50%; width: 35px; height: 35px; color: #6C63FF; cursor: pointer; transition: all 0.3s ease; align-items: center; justify-content: center; }
+        .mobile-close-btn:hover { background: rgba(108, 99, 255, 0.2); color: #6C63FF; }
+        .mobile-close-btn svg { transition: all 0.3s ease; }
+        @media (max-width: 768px) {
+            .mobile-menu-toggle { display: block !important; opacity: 1 !important; visibility: visible !important; }
+            .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100vh; z-index: 9999; transition: left 0.3s ease; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3); pointer-events: none; }
+            .sidebar.mobile-open { left: 0; width: 250px; pointer-events: auto; }
+            .sidebar.mobile-open .menu-text { opacity: 1 !important; }
+            .sidebar.mobile-open .sidebar-logo-link { width: 100% !important; min-width: 180px !important; }
+            .sidebar.mobile-open .version-text { opacity: 1 !important; }
+            .sidebar:hover { width: 250px !important; left: -250px !important; }
+            .menu-item:hover { background: transparent !important; color: #ccc !important; }
+            .menu-item:hover .menu-icon svg { transform: none !important; }
+            .menu-item:hover .menu-icon .material-symbols-rounded { transform: none !important; }
+            .main-content, main.main-area { margin-left: 0 !important; padding: 20px; }
+            .mobile-close-btn { display: flex; }
+            .mobile-close-btn:hover { background: rgba(108, 99, 255, 0.2); }
+            .mobile-menu-toggle { top: 15px; left: 15px; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(10px); }
+            .mobile-menu-toggle svg { width: 20px; height: 20px; color: #6C63FF; }
+            .mobile-menu-toggle:hover { background: rgba(108, 99, 255, 0.2); border-color: rgba(108, 99, 255, 0.3); }
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .app-layout { display: flex; min-height: 100vh; }
+        .main-content { margin-left: 72px; flex: 1; padding: 32px 40px; overflow-y: auto; min-height: 100vh; background: #f4f4f5; }
+
+        /* Previsão de finalização — ícone por status */
+        .previsao-finaliz-icon-wrap { width: 2.75rem; height: 2.75rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background-color 0.2s ease, color 0.2s ease; }
+        @media (min-width: 640px) {
+            .previsao-finaliz-icon-wrap { width: 3rem; height: 3rem; border-radius: 1.125rem; }
+        }
+        .previsao-finaliz-icon-wrap.is-finalizado { background: #ecfdf5; color: #059669; }
+        .previsao-finaliz-icon-wrap.is-pendente { background: #fffbeb; color: #d97706; }
+        .previsao-finaliz-icon-wrap.is-cancelado { background: #fef2f2; color: #dc2626; }
+        .previsao-finaliz-icon-wrap.is-vazio { background: #f1f5f9; color: #94a3b8; }
+        .previsao-finaliz-icon-wrap.is-data { background: #e0f2fe; color: #0284c7; }
+        .previsao-finaliz-icon-wrap.is-alerta { background: #fff7ed; color: #ea580c; }
+        .finalizacao-value.definir { color: #d97706 !important; }
+        .finalizacao-value.cancelado { color: #ef4444 !important; }
+
+        /* ===== DARK MODE OVERRIDES ===== */
+        body.dark-mode .main-content { background: transparent; }
+        body.dark-mode .bg-white { background-color: #1e293b !important; }
+        body.dark-mode .bg-surface { background-color: #0f172a !important; }
+        body.dark-mode .bg-slate-50, body.dark-mode .bg-slate-50\/50, body.dark-mode .bg-slate-50\/30 { background-color: rgba(255,255,255,0.05) !important; }
+        body.dark-mode .text-slate-900 { color: #f1f5f9 !important; }
+        body.dark-mode .text-slate-700 { color: #cbd5e1 !important; }
+        body.dark-mode .text-slate-500 { color: #94a3b8 !important; }
+        body.dark-mode .text-slate-400 { color: #64748b !important; }
+        body.dark-mode .border-slate-100, body.dark-mode .border-slate-200, body.dark-mode .border-slate-50 { border-color: rgba(255,255,255,0.1) !important; }
+        body.dark-mode .shadow-soft { box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important; }
+        body.dark-mode .divide-slate-50 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(255,255,255,0.05) !important; }
+        .stat-cell-delivery { border: 1px solid #f1f5f9; border-radius: 0.875rem; background: rgba(248, 250, 252, 0.6); }
+        body.dark-mode .stat-cell-delivery { border-color: rgba(255,255,255,0.1) !important; background: rgba(255,255,255,0.04) !important; }
+        body.dark-mode #taxaEntregaPct { color: #7dd3fc !important; }
+        body.dark-mode .previsao-finaliz-icon-wrap.is-finalizado { background: rgba(16,185,129,0.18) !important; color: #34d399 !important; }
+        body.dark-mode .previsao-finaliz-icon-wrap.is-pendente { background: rgba(245,158,11,0.15) !important; color: #fbbf24 !important; }
+        body.dark-mode .previsao-finaliz-icon-wrap.is-cancelado { background: rgba(239,68,68,0.15) !important; color: #f87171 !important; }
+        body.dark-mode .previsao-finaliz-icon-wrap.is-vazio { background: rgba(148,163,184,0.12) !important; color: #94a3b8 !important; }
+        body.dark-mode .previsao-finaliz-icon-wrap.is-data { background: rgba(14,165,233,0.15) !important; color: #38bdf8 !important; }
+        body.dark-mode .previsao-finaliz-icon-wrap.is-alerta { background: rgba(249,115,22,0.15) !important; color: #fb923c !important; }
+        body.dark-mode .finalizacao-value.definir { color: #fbbf24 !important; }
+        body.dark-mode .finalizacao-value.cancelado { color: #f87171 !important; }
+        body.dark-mode input[type="text"] { background-color: #1e293b !important; color: #e2e8f0 !important; border-color: rgba(255,255,255,0.15) !important; }
+        body.dark-mode .hover\:bg-slate-50:hover { background-color: rgba(255,255,255,0.05) !important; }
+        body.dark-mode .hover\:bg-slate-50\/80:hover { background-color: rgba(255,255,255,0.05) !important; }
+        body.dark-mode .conexoes-aviso { background: rgba(127,29,29,0.3) !important; border-color: #dc2626 !important; }
+        body.dark-mode #popupExportar > div, body.dark-mode #popupConexoes > div { background-color: #1e293b !important; border-color: rgba(255,255,255,0.1) !important; }
+        body.dark-mode .btn-opcao-exportar { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.1) !important; color: #e2e8f0 !important; }
+        body.dark-mode .btn-opcao-exportar:hover { border-color: #6C63FF !important; background: rgba(37,211,102,0.1) !important; }
+
+        /* Pill de status da campanha (cabeçalho) — dark mode */
+        body.dark-mode #campaignStatusPill[data-pill="finalizado"] {
+            background: rgba(16, 185, 129, 0.16) !important;
+            border-color: rgba(108, 99, 255, 0.35) !important;
+            color: #6C63FF !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="finalizado"] .status-dot {
+            background-color: #6C63FF !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="pausado"] {
+            background: rgba(148, 163, 184, 0.14) !important;
+            border-color: rgba(148, 163, 184, 0.32) !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="pausado"] .status-dot {
+            background-color: #94a3b8 !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="cancelado"] {
+            background: rgba(239, 68, 68, 0.16) !important;
+            border-color: rgba(248, 113, 113, 0.38) !important;
+            color: #fca5a5 !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="cancelado"] .status-dot {
+            background-color: #f87171 !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="aguardando"] {
+            background: rgba(59, 130, 246, 0.16) !important;
+            border-color: rgba(96, 165, 250, 0.38) !important;
+            color: #93c5fd !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="aguardando"] .status-dot {
+            background-color: #60a5fa !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="andamento"] {
+            background: rgba(245, 158, 11, 0.16) !important;
+            border-color: rgba(251, 191, 36, 0.38) !important;
+            color: #fcd34d !important;
+        }
+        body.dark-mode #campaignStatusPill[data-pill="andamento"] .status-dot {
+            background-color: #fbbf24 !important;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-notification { padding: 12px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateX(100px); transition: all 0.3s ease; background: #1e293b; color: #f1f5f9; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        .toast-notification.show { opacity: 1; transform: translateX(0); }
+        .toast-notification.success { background: #065f46; color: #d1fae5; }
+        .toast-notification.error { background: #7f1d1d; color: #fecaca; }
+
+        /* ===== MESSAGE CARD ===== */
+        .message-card { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 16px; cursor: pointer; transition: all 0.3s ease; }
+        .message-card:hover { border-color: #6C63FF; background: rgba(37,211,102,0.04); }
+        .message-card.active { border-color: #6C63FF; background: rgba(37,211,102,0.08); box-shadow: 0 0 0 3px rgba(37,211,102,0.15); }
+        .message-type { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+        .message-type.texto { background: rgba(37,211,102,0.15); color: #6C63FF; }
+        .message-type.imagem { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .message-type.video { background: rgba(168,85,247,0.15); color: #a855f7; }
+        .message-type.audio { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .message-type.documento { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .message-preview { cursor: help; border-bottom: 1px dotted rgba(0,0,0,0.2); }
+        .message-preview:hover { color: #6C63FF !important; }
+        body.dark-mode .message-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+        body.dark-mode .message-card:hover { border-color: #6C63FF; background: rgba(37,211,102,0.1); }
+        body.dark-mode .message-card.active { border-color: #6C63FF; background: rgba(37,211,102,0.15); }
+
+        /* ===== MENU DE AÇÕES (padrão cards / dashboard) ===== */
+        .actions-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            z-index: 60;
+            min-width: 220px;
+            padding: 6px;
+            border-radius: 16px;
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            box-shadow: var(--shadow-soft, 0 8px 32px rgba(0, 0, 0, 0.08));
+        }
+        .actions-dropdown.show {
+            display: block;
+        }
+        .actions-menu-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #334155;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            text-align: left;
+        }
+        .actions-menu-item:hover {
+            background: #f8fafc;
+        }
+        .actions-menu-item .actions-menu-item-icon {
+            width: 1.125rem;
+            text-align: center;
+            color: #94a3b8;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+        }
+        .actions-menu-item--brand:hover {
+            background: rgba(108, 99, 255, 0.08);
+            color: #047857;
+        }
+        .actions-menu-item--brand .actions-menu-item-icon {
+            color: #6C63FF;
+        }
+        .actions-menu-item--warning {
+            color: #92400e;
+        }
+        .actions-menu-item--warning:hover {
+            background: #fffbeb;
+        }
+        .actions-menu-item--warning .actions-menu-item-icon {
+            color: #d97706;
+        }
+        .actions-menu-item--success {
+            color: #065f46;
+        }
+        .actions-menu-item--success:hover {
+            background: #ecfdf5;
+        }
+        .actions-menu-item--success .actions-menu-item-icon {
+            color: #6C63FF;
+        }
+        .actions-menu-item--danger {
+            color: #991b1b;
+        }
+        .actions-menu-item--danger:hover {
+            background: #fef2f2;
+        }
+        .actions-menu-item--danger .actions-menu-item-icon {
+            color: #ef4444;
+        }
+        body.dark-mode .actions-dropdown {
+            background: #1e293b;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        }
+        body.dark-mode .actions-menu-item {
+            color: #e2e8f0;
+        }
+        body.dark-mode .actions-menu-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        body.dark-mode .actions-menu-item .actions-menu-item-icon {
+            color: #94a3b8;
+        }
+        body.dark-mode .actions-menu-item--brand:hover {
+            background: rgba(108, 99, 255, 0.12);
+            color: #6C63FF;
+        }
+        body.dark-mode .actions-menu-item--brand .actions-menu-item-icon {
+            color: #6C63FF;
+        }
+        body.dark-mode .actions-menu-item--warning:hover {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fcd34d;
+        }
+        body.dark-mode .actions-menu-item--warning .actions-menu-item-icon {
+            color: #fbbf24;
+        }
+        body.dark-mode .actions-menu-item--success:hover {
+            background: rgba(16, 185, 129, 0.12);
+            color: #6C63FF;
+        }
+        body.dark-mode .actions-menu-item--success .actions-menu-item-icon {
+            color: #6C63FF;
+        }
+        body.dark-mode .actions-menu-item--danger:hover {
+            background: rgba(239, 68, 68, 0.12);
+            color: #fca5a5;
+        }
+        body.dark-mode .actions-menu-item--danger .actions-menu-item-icon {
+            color: #f87171;
+        }
+
+        /* ===== PILL STATUS ===== */
+        .pill { padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pill-enviado { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+        .pill-falha { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .pill-pendente { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        body.dark-mode .pill-enviado { background: rgba(16,185,129,0.15); color: #34d399; border-color: rgba(16,185,129,0.3); }
+        body.dark-mode .pill-falha { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3); }
+        body.dark-mode .pill-pendente { background: rgba(245,158,11,0.15); color: #fbbf24; border-color: rgba(245,158,11,0.3); }
+
+        /* Paginação (referência gemini.html) */
+        .page-number { width: 2rem; height: 2rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; background: #fff; color: #64748b; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s, border-color 0.15s; cursor: pointer; }
+        .page-number:hover { background: #f8fafc; }
+        .page-number.active { border-color: #6C63FF; background: #ecfdf5; color: #059669; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+        body.dark-mode .page-number { background: #1e293b; border-color: rgba(255,255,255,0.1); color: #94a3b8; }
+        body.dark-mode .page-number:hover { background: rgba(255,255,255,0.06); }
+        body.dark-mode .page-number.active { border-color: #6C63FF; background: rgba(37,211,102,0.12); color: #6C63FF; }
+
+        tr.historico-row-falha { background: rgba(254, 242, 242, 0.85); }
+        body.dark-mode tr.historico-row-falha { background: rgba(239, 68, 68, 0.1) !important; }
+
+        /* ===== PHONE CELL ===== */
+        .phone-cell { font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace; color: #6C63FF; font-size: 11px; }
+        .sem-conexao { color: #ef4444; font-weight: 600; }
+        body.dark-mode .phone-cell { color: #6C63FF !important; }
+
+        /* ===== LIGHT MODE (sidebar e base — padrão dashboard.html) ===== */
+        body.light-mode {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            color: #333;
+        }
+        body.light-mode .main-content {
+            background: #f4f4f5;
+        }
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        body.light-mode .menu-item {
+            color: #666;
+        }
+        body.light-mode .menu-item:hover {
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+        }
+        body.light-mode .menu-item.active {
+            background: rgba(108, 99, 255, 0.15);
+            color: #6C63FF;
+        }
+        body.light-mode .version-text {
+            color: #999;
+        }
+        body.light-mode .menu-badge-admin {
+            background: #6C63FF;
+            color: #fff;
+        }
+        body.light-mode .menu-badge-novidade {
+            background: #6C63FF;
+            color: #fff;
+        }
+        body.menu-oculta-chat [data-menu-id="chat"] { display: none !important; }
+        body.menu-oculta-agentes-ia [data-menu-id="agentes-ia"] { display: none !important; }
+        body.menu-oculta-crm [data-menu-id="crm"] { display: none !important; }
+        body.menu-oculta-conexoes [data-menu-id="conexoes"] { display: none !important; }
+        body.menu-oculta-disparos [data-menu-id="disparos"] { display: none !important; }
+        body.menu-oculta-contatos [data-menu-id="contatos"] { display: none !important; }
+        body.menu-oculta-listas [data-menu-id="listas"] { display: none !important; }
+        body.menu-oculta-ajuda [data-menu-id="ajuda"] { display: none !important; }
+        body.menu-oculta-configuracoes [data-menu-id="configuracoes"] { display: none !important; }
+        body.light-mode .sidebar-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body.light-mode .sidebar-nav-divider {
+            background: rgba(0, 0, 0, 0.12);
+        }
+        body.light-mode .logout-item {
+            color: #ff6b6b !important;
+        }
+        body.light-mode .logout-item:hover {
+            background: rgba(255, 107, 107, 0.15) !important;
+            color: #ff6b6b !important;
+        }
+        body.light-mode .theme-switch .slider {
+            background-color: #ccc;
+        }
+        body.light-mode .theme-switch input:checked + .slider {
+            background-color: #6C63FF;
+        }
+        body.light-mode .theme-switch .slider:before {
+            background-color: white;
+        }
+
+        /* === Dropdowns <select>: fundo branco e texto preto (light e dark) === */
+        body.light-mode select,
+        body.dark-mode select,
+        body:not(.light-mode) select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select option,
+        body.dark-mode select option,
+        body:not(.light-mode) select option,
+        body.light-mode select optgroup,
+        body.dark-mode select optgroup,
+        body:not(.light-mode) select optgroup {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.light-mode select[class],
+        body.dark-mode select[class],
+        body:not(.light-mode) select[class] {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select[class] option,
+        body.dark-mode select[class] option,
+        body:not(.light-mode) select[class] option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        /* Detalhes disparo: filtro de status (sobrescreve select branco/preto no dark) */
+        body.dark-mode select#statusFilter,
+        body:not(.light-mode) select#statusFilter {
+            background-color: rgba(15, 23, 42, 0.65) !important;
+            border-color: rgba(71, 85, 105, 0.55) !important;
+            color: #e2e8f0 !important;
+            -webkit-text-fill-color: #e2e8f0 !important;
+            color-scheme: dark;
+        }
+        body.dark-mode select#statusFilter:focus,
+        body:not(.light-mode) select#statusFilter:focus {
+            border-color: #6C63FF !important;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+        body.dark-mode select#statusFilter option,
+        body:not(.light-mode) select#statusFilter option {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode div:has(> #statusFilter) > .fa-chevron-down,
+        body:not(.light-mode) div:has(> #statusFilter) > .fa-chevron-down {
+            color: #94a3b8 !important;
+        }
+
+        body.dark-mode .disparos-conexao-badge,
+        body:not(.light-mode) .disparos-conexao-badge {
+            background-color: rgba(51, 65, 85, 0.55) !important;
+            color: #cbd5e1 !important;
+            border-color: rgba(100, 116, 139, 0.45) !important;
+        }
+    </style>
+
+    <!-- Supabase Init -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    <style>
+        .toast-container{position:fixed!important;top:max(20px,env(safe-area-inset-top,0px))!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;z-index:200100!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;width:min(380px,calc(100vw - 28px))!important;pointer-events:none!important;box-sizing:border-box!important}
+        .toast-notification{pointer-events:auto!important;margin:0!important;padding:10px 14px 10px 0!important;border-radius:12px!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif!important;font-size:13px!important;line-height:1.35!important;letter-spacing:-.01em!important;font-weight:400!important;display:flex!important;align-items:center!important;gap:0!important;opacity:0!important;transform:translateY(-8px) scale(.98)!important;transition:opacity .22s ease,transform .22s ease!important;color:rgba(0,0,0,.88)!important;background:rgba(255,255,255,.76)!important;backdrop-filter:saturate(180%) blur(22px)!important;-webkit-backdrop-filter:saturate(180%) blur(22px)!important;border:1px solid rgba(0,0,0,.09)!important;box-shadow:0 4px 16px rgba(0,0,0,.1),0 0 0 .5px rgba(0,0,0,.04) inset!important;max-width:none!important}
+        .toast-notification.show{opacity:1!important;transform:translateY(0) scale(1)!important}
+        .toast-notification::before{content:''!important;align-self:stretch!important;width:4px!important;min-height:2.5em!important;margin:6px 12px 6px 8px!important;border-radius:3px!important;flex-shrink:0!important;background:rgba(0,122,255,.95)!important}
+        .toast-notification.info::before{background:rgba(0,122,255,.95)!important}.toast-notification.success::before{background:rgba(52,199,89,.95)!important}.toast-notification.error::before{background:rgba(255,59,48,.95)!important}
+        .toast-notification .toast-message{flex:1!important;min-width:0!important;word-break:break-word!important;padding-right:4px!important}
+        body.dark-mode .toast-notification{color:rgba(255,255,255,.92)!important;background:rgba(44,44,46,.78)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 0 .5px rgba(255,255,255,.06) inset!important}
+        body.dark-mode .toast-notification.info::before{background:rgba(10,132,255,.95)!important}body.dark-mode .toast-notification.success::before{background:rgba(48,209,88,.95)!important}body.dark-mode .toast-notification.error::before{background:rgba(255,69,58,.95)!important}
+    </style>
+    <link rel="stylesheet" href="dropdowns-global.css">
+</head>
+<body>
+    <!-- Tema antes da primeira pintura: evita flash claro (cookie darkMode, mesma lógica que getCookie) -->
+    
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+    <div class="toast-container fixed top-6 right-6 z-[9999] flex flex-col gap-3" id="toastContainer"></div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Botão de fechar para mobile -->
+            <button class="mobile-close-btn" id="mobileCloseBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo-link">
+                    <img class="sidebar-logo-img" src="https://qlennkosykcblbhpbmqt.supabase.co/storage/v1/object/public/arquivos/logo" alt="IA Chatconversa">
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item" title="Dashboard">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">analytics</span>
+                    </span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="chat">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+                    </span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="agentes-ia">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">network_intel_node</span>
+                    </span>
+                    <span class="menu-text">Agentes IA</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="crm">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">view_kanban</span>
+                    </span>
+                    <span class="menu-text">CRM</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="conexoes">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">qr_code</span>
+                    </span>
+                    <span class="menu-text">Conexões</span>
+                </a>
+                <a href="#" class="menu-item active" data-menu-id="disparos">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+                    </span>
+                    <span class="menu-text">Disparos</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="contatos">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">contacts</span>
+                    </span>
+                    <span class="menu-text">Contatos</span>
+                </a>
+                <div class="sidebar-nav-divider"></div>
+                <a href="#" class="menu-item" data-menu-id="ajuda">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">help</span>
+                    </span>
+                    <span class="menu-text">Ajuda</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="configuracoes">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Configurações</span>
+                </a>
+                <a href="#" id="menu-item-admin" class="menu-item menu-item-admin" style="display: none;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">admin_panel_settings</span>
+                    </span>
+                    <span class="menu-text">Administração</span>
+                    <span class="menu-badge-admin">Admin</span>
+                </a>
+            </nav>
+            <div class="version-text" id="versaoAtualTexto">Versão atual: -</div>
+            <div class="sidebar-footer">
+                <!-- Dark Mode Toggle -->
+                <div class="menu-item theme-toggle-item">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text" id="themeToggleText">Modo Escuro</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#" class="menu-item logout-item">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Sair</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content custom-scroll">
+            <div class="max-w-[1400px] mx-auto w-full">
+
+            <!-- Breadcrumb & Header -->
+            <div class="mb-8">
+                <div class="flex items-center gap-2 text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest">
+                    <a href="#" class="hover:text-brand-500 transition-colors">Disparos</a>
+                    <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    <span class="text-brand-500">Detalhes da Campanha</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">
+                                <span id="campaignTitle">Carregando...</span>
+                            </h1>
+                            <span id="campaignStatusPill" class="status-pill bg-amber-50 border border-amber-200 text-amber-700 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide flex items-center gap-1.5 whitespace-nowrap" data-pill="andamento">
+                                <span id="campaignStatusDot" class="status-dot w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                <span id="campaignStatusLabel">Carregando…</span>
+                            </span>
+                        </div>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Acompanhe o progresso e estatísticas em tempo real.</p>
+                    </div>
+                    
+                    <div class="header-actions flex flex-wrap items-center gap-3">
+                        <a href="#" class="btn-voltar bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2 no-underline">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar
+                        </a>
+                        <div class="disparo-actions relative">
+                            <div class="actions-menu">
+                                <button type="button" class="actions-trigger w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-brand-600 hover:border-brand-200 hover:bg-brand-50 flex items-center justify-center transition-all shadow-sm" aria-expanded="false" aria-haspopup="true" aria-controls="actionsDropdown">
+                                    <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
+                                </button>
+                                <div class="actions-dropdown" id="actionsDropdown" role="menu" aria-label="Ações da campanha">
+                                    <button type="button" class="actions-menu-item actions-menu-item--brand" role="menuitem">
+                                        <i class="fa-solid fa-rotate-right actions-menu-item-icon" aria-hidden="true"></i>
+                                        <span>Atualizar dados</span>
+                                    </button>
+                                    <div id="dynamicActions" class="flex flex-col gap-0.5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Skeleton -->
+            <div id="loadingContainer" class="space-y-6">
+                <!-- Row 1: KPI skeletons -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-soft border border-slate-100 animate-pulse">
+                        <div class="h-3 w-24 bg-slate-200 rounded mb-4"></div>
+                        <div class="h-10 w-32 bg-slate-200 rounded mb-6"></div>
+                        <div class="h-2 w-full bg-slate-200 rounded"></div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-soft border border-slate-100 animate-pulse">
+                        <div class="h-3 w-24 bg-slate-200 rounded mb-4"></div>
+                        <div class="flex gap-6 mt-4">
+                            <div><div class="h-2 w-12 bg-slate-200 rounded mb-2"></div><div class="h-8 w-16 bg-slate-200 rounded"></div></div>
+                            <div><div class="h-2 w-12 bg-slate-200 rounded mb-2"></div><div class="h-8 w-16 bg-slate-200 rounded"></div></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-soft border border-slate-100 animate-pulse">
+                        <div class="h-3 w-32 bg-slate-200 rounded mb-4"></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="h-12 bg-slate-200 rounded-xl"></div>
+                            <div class="h-12 bg-slate-200 rounded-xl"></div>
+                            <div class="h-12 bg-slate-200 rounded-xl"></div>
+                            <div class="h-12 bg-slate-200 rounded-xl"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-soft border border-slate-100 animate-pulse">
+                        <div class="h-3 w-28 bg-slate-200 rounded mb-4"></div>
+                        <div class="h-10 w-full bg-slate-200 rounded"></div>
+                    </div>
+                </div>
+                <!-- Row 2: Chart skeletons -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-soft border border-slate-100 animate-pulse h-[300px]">
+                        <div class="h-4 w-48 bg-slate-200 rounded mb-6"></div>
+                        <div class="h-full w-full bg-slate-100 rounded-xl"></div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-soft border border-slate-100 animate-pulse h-[300px]">
+                        <div class="h-4 w-24 bg-slate-200 rounded mb-4"></div>
+                        <div class="space-y-3">
+                            <div class="h-20 bg-slate-100 rounded-xl"></div>
+                            <div class="h-20 bg-slate-100 rounded-xl"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Row 3: Table skeleton -->
+                <div class="bg-white rounded-3xl shadow-soft border border-slate-100 animate-pulse overflow-hidden">
+                    <div class="p-5 border-b border-slate-100"><div class="h-4 w-40 bg-slate-200 rounded"></div></div>
+                    <div class="p-4 space-y-3">
+                        <div class="h-10 bg-slate-100 rounded"></div>
+                        <div class="h-10 bg-slate-100 rounded"></div>
+                        <div class="h-10 bg-slate-100 rounded"></div>
+                        <div class="h-10 bg-slate-100 rounded"></div>
+                        <div class="h-10 bg-slate-100 rounded"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connection Warning -->
+            <div class="conexoes-aviso bg-red-50 border-2 border-red-300 rounded-2xl p-6 mb-6 relative overflow-hidden" id="conexoesAviso" style="display: none;">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-400 via-red-500 to-red-400 animate-pulse"></div>
+                <div class="flex items-center gap-4">
+                    <div class="flex-shrink-0 text-red-500 animate-pulse">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="aviso-title text-red-600 text-lg font-extrabold uppercase tracking-wide mb-1">Disparo cancelado por falta de conexões ativas</div>
+                        <div class="aviso-subtitle text-red-500/80 text-sm font-medium">Todos Whatsapps selecionados no disparo foram desconectados ou bloqueados</div>
+                    </div>
+                    <button id="btnAdicionarConexoes" class="flex-shrink-0 bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-sm">
+                        Adicionar Conexões
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="dashboard" id="dashboardGrid" style="display: none;">
+                
+                <!-- ROW 1: KPIs -->
+                <div class="stats-row grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+
+                    <!-- Progress Card (Brand Green) -->
+                    <div class="status-stats-container rounded-3xl p-6 md:p-7 shadow-soft relative overflow-hidden flex flex-col min-h-[180px] border border-white/10">
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white rounded-full opacity-[0.08] pointer-events-none"></div>
+                        <div class="absolute right-5 top-5 opacity-[0.18] pointer-events-none">
+                            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                        </div>
+                        <div class="disparo-status relative z-10 flex flex-col gap-4 flex-1 justify-between w-full min-w-0">
+                            <div>
+                                <h3 class="text-[11px] font-bold text-white/80 uppercase tracking-[0.12em] mb-3">Progresso do disparo</h3>
+                                <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                                    <span id="statusGeralProcessados" class="text-[2.5rem] sm:text-5xl font-black text-white tabular-nums leading-none tracking-tight">0</span>
+                                    <span class="text-base sm:text-lg font-semibold text-white/75">de</span>
+                                    <span id="statusGeralTotalMeta" class="text-2xl sm:text-3xl font-bold text-white tabular-nums leading-none">0</span>
+                                </div>
+                                <p class="text-[12px] text-white/65 font-medium mt-2 leading-snug max-w-[260px]">Contatos já processados na fila (enviados + falhas) em relação ao total da campanha.</p>
+                            </div>
+                            <div class="w-full pt-1">
+                                <div class="flex items-center justify-between gap-2 mb-2">
+                                    <span id="statusGeralPct" class="text-[11px] font-bold text-white/80 uppercase tracking-wide">0% concluído</span>
+                                </div>
+                                <div class="h-2.5 rounded-full bg-black/15 overflow-hidden ring-1 ring-white/10" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="statusGeralProgressWrap">
+                                    <div id="statusGeralBar" class="h-full rounded-full bg-white shadow-sm transition-[width] duration-500 ease-out" style="width: 0%; min-width: 0;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Stats Card -->
+                    <div class="stats-section bg-white rounded-3xl p-6 shadow-soft border border-slate-100 flex flex-col items-center min-h-[160px] text-center">
+                        <h3 class="section-title text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 w-full shrink-0 text-center">Taxa de entrega</h3>
+                        <div class="flex-1 w-full flex items-center justify-center min-h-0 py-1">
+                            <div class="stats-compact-delivery grid grid-cols-2 gap-3 w-full max-w-[280px] mx-auto">
+                            <div class="stat-cell-delivery px-2 sm:px-3 py-3 min-w-0 flex flex-col items-center text-center">
+                                <div class="flex items-center justify-center gap-1 mb-1.5">
+                                    <span class="w-2 h-2 rounded-full shrink-0" style="background:#6C63FF;" aria-hidden="true"></span>
+                                    <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide leading-tight">Enviados</span>
+                                </div>
+                                <span class="text-lg sm:text-2xl font-black text-slate-900 tabular-nums leading-tight tracking-tight" id="enviados">0</span>
+                            </div>
+                            <div class="stat-cell-delivery px-2 sm:px-3 py-3 min-w-0 flex flex-col items-center text-center">
+                                <div class="flex items-center justify-center gap-1 mb-1.5">
+                                    <span class="w-2 h-2 rounded-full shrink-0 bg-amber-500" aria-hidden="true"></span>
+                                    <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide leading-tight">Pendentes</span>
+                                </div>
+                                <span class="text-lg sm:text-2xl font-black text-amber-600 tabular-nums leading-tight tracking-tight" id="pendentes">0</span>
+                            </div>
+                            <div class="stat-cell-delivery px-2 sm:px-3 py-3 min-w-0 flex flex-col items-center text-center">
+                                <div class="flex items-center justify-center gap-1 mb-1.5">
+                                    <span class="w-2 h-2 rounded-full shrink-0 bg-red-500" aria-hidden="true"></span>
+                                    <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide leading-tight">Falhas</span>
+                                </div>
+                                <span class="text-lg sm:text-2xl font-black text-red-500 tabular-nums leading-tight tracking-tight" id="falhas">0</span>
+                            </div>
+                            <div class="stat-cell-delivery px-2 sm:px-3 py-3 min-w-0 flex flex-col items-center text-center">
+                                <div class="flex items-center justify-center gap-1 mb-1.5">
+                                    <span class="w-2 h-2 rounded-full shrink-0 bg-sky-500" aria-hidden="true"></span>
+                                    <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide leading-tight">% entrega</span>
+                                </div>
+                                <span class="text-lg sm:text-2xl font-black text-sky-600 tabular-nums leading-tight tracking-tight" id="taxaEntregaPct">—</span>
+                            </div>
+                            </div>
+                        </div>
+                        <span class="sr-only" id="totalDisparos">0</span>
+                    </div>
+
+                    <!-- Config Card -->
+                    <div class="config-section-inline bg-white rounded-3xl p-6 shadow-soft border border-slate-100 min-h-[160px]">
+                        <h3 class="section-title text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-300"><path d="M4 21v-7"></path><path d="M4 10V3"></path><path d="M12 21v-9"></path><path d="M12 8V3"></path><path d="M20 21v-5"></path><path d="M20 12V3"></path><path d="M1 14h6"></path><path d="M9 8h6"></path><path d="M17 16h6"></path></svg>
+                            Parâmetros da Campanha
+                        </h3>
+                        <div class="config-grid-inline grid grid-cols-2 gap-2.5" id="configContainer">
+                            <div class="config-row contents">
+                                <div class="config-item bg-slate-50 rounded-xl p-2.5 border border-slate-100">
+                                    <p class="config-label text-[8px] font-bold text-slate-400 uppercase mb-0.5">Intervalo</p>
+                                    <p class="config-value text-[13px] font-bold text-slate-700 leading-tight" id="intervaloDisparo">-</p>
+                                </div>
+                                <div class="config-item bg-slate-50 rounded-xl p-2.5 border border-slate-100">
+                                    <p class="config-label text-[8px] font-bold text-slate-400 uppercase mb-0.5">Pausa</p>
+                                    <p class="config-value text-[13px] font-bold text-slate-700 leading-tight" id="pausaDisparo">-</p>
+                                </div>
+                            </div>
+                            <div class="config-row contents">
+                                <div class="config-item bg-slate-50 rounded-xl p-2.5 border border-slate-100">
+                                    <p class="config-label text-[8px] font-bold text-slate-400 uppercase mb-0.5">Horário</p>
+                                    <p class="config-value text-[13px] font-bold text-slate-700 leading-tight" id="horarioDisparo">-</p>
+                                </div>
+                                <div class="config-item bg-slate-50 rounded-xl p-2.5 border border-slate-100">
+                                    <p class="config-label text-[8px] font-bold text-slate-400 uppercase mb-0.5">Conexões</p>
+                                    <p class="config-value text-[13px] font-bold text-slate-700 leading-tight" id="conexoesDisparo">-</p>
+                                </div>
+                            </div>
+                            <div class="config-row contents">
+                                <div class="config-item config-item-full col-span-2 bg-slate-50 rounded-xl p-2.5 border border-slate-100">
+                                    <p class="config-label text-[8px] font-bold text-slate-400 uppercase mb-0.5">Dias da semana</p>
+                                    <p class="config-value text-[13px] font-bold text-slate-700 leading-tight" id="diasDisparo">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Completion Forecast Card -->
+                    <div class="finalizacao-section bg-white rounded-3xl p-6 shadow-soft border border-slate-100 flex flex-col min-h-[160px]">
+                        <h3 class="section-title text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 w-full text-left shrink-0">Previsão de Finalização</h3>
+                        <div class="finalizacao-info flex-1 flex flex-col items-center justify-center text-center gap-3 sm:gap-3.5 w-full min-h-0">
+                            <div class="previsao-finaliz-icon-wrap is-vazio shrink-0" id="previsaoFinalizacaoIconWrap" aria-hidden="true">
+                                <i class="fa-solid fa-minus text-[1.15rem] sm:text-xl" id="previsaoFinalizacaoIcon"></i>
+                            </div>
+                            <div class="finalizacao-value text-lg sm:text-2xl font-extrabold text-slate-900 leading-snug min-w-0 max-w-full" id="previsaoFinalizacao">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROW 2: Charts & Messages -->
+                <div class="table-messages-row grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Chart Section -->
+                    <div class="table-section lg:col-span-2 bg-white rounded-3xl p-6 shadow-soft border border-slate-100 flex flex-col">
+                        <div class="chart-title flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-area text-slate-300"></i> Rendimento (Envios / Hora)
+                            </h3>
+                            <div class="flex items-center gap-3 text-[10px] font-bold">
+                                <div class="flex items-center gap-1.5 text-slate-500"><div class="w-2 h-2 rounded-full bg-brand-500"></div> Sucesso</div>
+                                <div class="flex items-center gap-1.5 text-slate-500"><div class="w-2 h-2 rounded-full bg-red-500"></div> Falha</div>
+                            </div>
+                        </div>
+                        <div class="chart-container flex-1 min-h-[220px]">
+                            <canvas id="hourlyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Status doughnut + preview mensagem (canvas visível — Chart.js precisa de layout) -->
+                    <div class="messages-section-side bg-white rounded-3xl p-6 shadow-soft border border-slate-100 flex flex-col gap-6">
+                        <div>
+                            <div class="chart-title mb-3">
+                                <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-pie text-slate-300"></i> Status dos envios
+                                </h3>
+                            </div>
+                            <div class="relative w-full min-h-[200px] max-h-[240px]">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="flex-1 flex flex-col min-h-0 border-t border-slate-100 pt-5">
+                            <div class="chart-title mb-4">
+                                <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-regular fa-comment-dots text-slate-300"></i> Prévia da mensagem
+                                </h3>
+                            </div>
+                            <div class="messages-grid-compact flex-1 space-y-3 overflow-y-auto custom-scroll min-h-[200px]" id="messagesGrid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROW 3: Table -->
+                <div class="table-section bg-white rounded-3xl shadow-soft border border-slate-100 flex flex-col overflow-hidden mb-12">
+                    <!-- Table Toolbar -->
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-50/30">
+                        <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2 shrink-0">
+                            <i class="fa-solid fa-list-ul text-slate-400"></i> Histórico de Envios
+                        </h3>
+                        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto sm:justify-end">
+                            <div class="relative flex-1 min-w-[200px] max-w-full sm:max-w-xs">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fa-solid fa-search text-slate-400 text-xs"></i>
+                                </div>
+                                <input type="text" id="buscaHistoricoEnvios" class="bg-white border border-slate-200 text-slate-900 text-xs font-medium w-full pl-9 pr-4 py-2 rounded-lg outline-none focus:border-brand-500 shadow-sm" placeholder="Buscar telefone ou mensagem..." autocomplete="off">
+                            </div>
+                            <div class="relative shrink-0">
+                                <select id="statusFilter" class="appearance-none bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer">
+                                    <option value="all">Status: Todos</option>
+                                    <option value="sent">Enviados</option>
+                                    <option value="failed">Falhas</option>
+                                    <option value="pending">Pendentes</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                            </div>
+                            <button type="button" id="btnExportar" class="bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-colors flex items-center gap-2 shrink-0" title="Exportar contatos">
+                                <i class="fa-solid fa-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-wrapper overflow-x-auto custom-scroll">
+                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[980px]">
+                            <thead>
+                                <tr class="bg-slate-50/50 border-b border-slate-100">
+                                    <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Contato / Telefone</th>
+                                    <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Mensagem</th>
+                                    <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Status</th>
+                                    <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Data / Hora</th>
+                                    <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Conexão utilizada</th>
+                                </tr>
+                            </thead>
+                            <tbody id="disparosTableBody" class="divide-y divide-slate-50"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="table-pagination p-5 border-t border-slate-100 bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div class="pagination-info flex flex-col gap-0.5">
+                            <span id="historicoRangeContatos" class="text-xs font-bold text-slate-500">Exibindo 0 de 0 contatos</span>
+                            <span id="paginationInfo" class="text-[11px] font-semibold text-slate-400">Página 1 de 1</span>
+                        </div>
+                        <div class="pagination-controls flex items-center gap-2">
+                            <button id="prevPage" class="pagination-btn w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-400 flex items-center justify-center hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                            </button>
+                            <div class="page-numbers flex gap-1" id="pageNumbers"></div>
+                            <button id="nextPage" class="pagination-btn w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-400 flex items-center justify-center hover:bg-slate-50 transition-colors">
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Popup -->
+    <div id="popupExportar" class="fixed inset-0 z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-sm" style="display:none;">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-extrabold text-slate-900"><i class="fa-solid fa-download mr-2 text-brand-500"></i> Exportar Contatos</h3>
+                <button class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-sm text-slate-500 mb-6">Selecione quais contatos deseja exportar em CSV:</p>
+            <div class="space-y-3">
+                <button class="btn-opcao-exportar w-full bg-slate-50 border border-slate-200 hover:border-brand-500 hover:bg-brand-50 text-slate-700 hover:text-brand-600 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3"><i class="fa-solid fa-users text-slate-400"></i> Todos os contatos</button>
+                <button class="btn-opcao-exportar w-full bg-slate-50 border border-slate-200 hover:border-brand-500 hover:bg-brand-50 text-slate-700 hover:text-brand-600 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3"><i class="fa-solid fa-clock text-amber-400"></i> Apenas pendentes</button>
+                <button class="btn-opcao-exportar w-full bg-slate-50 border border-slate-200 hover:border-brand-500 hover:bg-brand-50 text-slate-700 hover:text-brand-600 px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3"><i class="fa-solid fa-circle-xmark text-red-400"></i> Apenas falhas</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connections Popup -->
+    <div id="popupConexoes" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] items-center justify-center" style="display:none;">
+        <div class="bg-white rounded-2xl p-8 max-w-lg w-full mx-4 shadow-2xl max-h-[80vh] overflow-y-auto custom-scroll">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-extrabold text-slate-900"><i class="fa-solid fa-link mr-2 text-brand-500"></i> Conexões Disponíveis</h3>
+                <button class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="conexoesGrid" class="space-y-3 mb-6"></div>
+            <button class="w-full bg-brand-500 hover:bg-brand-600 text-white py-3 rounded-xl font-bold text-sm transition-colors shadow-sm">
+                <i class="fa-solid fa-check mr-2"></i> Vincular Conexões Selecionadas
+            </button>
+        </div>
+    </div>
+
+        
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+
+        
+<!-- scripts removidos para manter somente HTML + CSS -->
+
+
+    </body>
+</html>

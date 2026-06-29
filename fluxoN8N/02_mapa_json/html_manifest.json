@@ -1,0 +1,170 @@
+[
+  {
+    "index": 1,
+    "node": "HTML1",
+    "id": "9060eb43-8107-43db-a309-90f7c249b933",
+    "title": "Criar Nova Campanha - IA Chatconversa",
+    "file": "01_html_extraido/01_criar_nova_campanha_ia_chatconversa.html",
+    "chars": 304530
+  },
+  {
+    "index": 2,
+    "node": "HTML2",
+    "id": "fd1e50d1-2240-4b22-a77d-cd2bd58e213a",
+    "title": "Login - IA Chatconversa",
+    "file": "01_html_extraido/02_login_ia_chatconversa.html",
+    "chars": 40987
+  },
+  {
+    "index": 3,
+    "node": "HTML4",
+    "id": "2bd6c0f9-78f6-40be-87f5-a88961d612f8",
+    "title": "Conexões - IA Chatconversa",
+    "file": "01_html_extraido/03_conexões_ia_chatconversa.html",
+    "chars": 267592
+  },
+  {
+    "index": 4,
+    "node": "HTML5",
+    "id": "68ae4444-060d-4028-8eb4-a31c9b6c5060",
+    "title": "Disparos em Grupos - IA Chatconversa",
+    "file": "01_html_extraido/04_disparos_em_grupos_ia_chatconversa.html",
+    "chars": 260316
+  },
+  {
+    "index": 5,
+    "node": "HTML6",
+    "id": "9dc10bf8-4d69-4d2b-8121-a6a06d70b326",
+    "title": "Disparos - IA Chatconversa",
+    "file": "01_html_extraido/05_disparos_ia_chatconversa.html",
+    "chars": 165872
+  },
+  {
+    "index": 6,
+    "node": "HTML7",
+    "id": "ab9f9306-48df-4c29-b13a-8b1718159139",
+    "title": "Dashboard - IA Chatconversa",
+    "file": "01_html_extraido/06_dashboard_ia_chatconversa.html",
+    "chars": 201355
+  },
+  {
+    "index": 7,
+    "node": "HTML9",
+    "id": "bcf87a60-b21f-4122-a645-09fee86fb13b",
+    "title": "Contatos - IA Chatconversa",
+    "file": "01_html_extraido/07_contatos_ia_chatconversa.html",
+    "chars": 380477
+  },
+  {
+    "index": 8,
+    "node": "HTML11",
+    "id": "5d8c7074-1d6f-4de3-a183-0d5b1d0a5709",
+    "title": "Detalhes do Disparo - IA Chatconversa",
+    "file": "01_html_extraido/08_detalhes_do_disparo_ia_chatconversa.html",
+    "chars": 211490
+  },
+  {
+    "index": 9,
+    "node": "HTML12",
+    "id": "ef08ea6b-695f-4b1c-af59-83e46cfab8ad",
+    "title": "Configurações - IA Chatconversa",
+    "file": "01_html_extraido/09_configurações_ia_chatconversa.html",
+    "chars": 280442
+  },
+  {
+    "index": 10,
+    "node": "HTML13",
+    "id": "94ada8f0-6848-4c1f-84a7-5ddfb055f158",
+    "title": "Administração - IA Chatconversa",
+    "file": "01_html_extraido/10_administração_ia_chatconversa.html",
+    "chars": 656371
+  },
+  {
+    "index": 11,
+    "node": "HTML14",
+    "id": "01172409-3784-491b-ad28-f3df969cd988",
+    "title": "Criar Cadastro - IA Chatconversa",
+    "file": "01_html_extraido/11_criar_cadastro_ia_chatconversa.html",
+    "chars": 38365
+  },
+  {
+    "index": 12,
+    "node": "HTML",
+    "id": "057c6a2a-b1ed-4720-bddc-eed8532e9467",
+    "title": "CRM - IA Chatconversa",
+    "file": "01_html_extraido/12_crm_ia_chatconversa.html",
+    "chars": 155827
+  },
+  {
+    "index": 13,
+    "node": "HTML3",
+    "id": "b1e1a21b-11a6-4dcd-96c9-e26162423386",
+    "title": "Agente IA - IA Chatconversa",
+    "file": "01_html_extraido/13_agente_ia_ia_chatconversa.html",
+    "chars": 578506
+  },
+  {
+    "index": 14,
+    "node": "HTML15",
+    "id": "585f2ac3-8427-41f3-b2b7-150c1ad11518",
+    "title": "Etapas do Quadro - IA Chatconversa",
+    "file": "01_html_extraido/14_etapas_do_quadro_ia_chatconversa.html",
+    "chars": 364214
+  },
+  {
+    "index": 15,
+    "node": "HTML16",
+    "id": "e79df56f-b1e1-4271-8f79-3ba09ecb7856",
+    "title": "Chat - IA Chatconversa",
+    "file": "01_html_extraido/15_chat_ia_chatconversa.html",
+    "chars": 790585
+  },
+  {
+    "index": 16,
+    "node": "HTML17",
+    "id": "34cefd8c-8dac-4f60-ae9c-f473be4fccbf",
+    "title": "Redefinir Senha - IA Chatconversa",
+    "file": "01_html_extraido/16_redefinir_senha_ia_chatconversa.html",
+    "chars": 23811
+  },
+  {
+    "index": 17,
+    "node": "HTML18",
+    "id": "8844dc74-fbe1-48db-8055-e21fab78976d",
+    "title": "Acesso Bloqueado - IA Chatconversa",
+    "file": "01_html_extraido/17_acesso_bloqueado_ia_chatconversa.html",
+    "chars": 8453
+  },
+  {
+    "index": 18,
+    "node": "HTML19",
+    "id": "2bb60f61-fcf7-4d06-888a-8b0c29c11242",
+    "title": "Definir Super Admin - IA Chatconversa",
+    "file": "01_html_extraido/18_definir_super_admin_ia_chatconversa.html",
+    "chars": 8094
+  },
+  {
+    "index": 19,
+    "node": "EMAIL USUARIO CRIADO",
+    "id": "81e572d1-e8ba-4784-bdb3-7923ec24e5c9",
+    "title": "",
+    "file": "01_html_extraido/19_email_usuario_criado.html",
+    "chars": 35
+  },
+  {
+    "index": 20,
+    "node": "EMAIL USUARIO CRIADO1",
+    "id": "f3ebb33a-400a-41ca-85f0-d94579f53d4f",
+    "title": "",
+    "file": "01_html_extraido/20_email_usuario_criado1.html",
+    "chars": 22
+  },
+  {
+    "index": 21,
+    "node": "HTML20",
+    "id": "d6c3bf96-da7a-44a0-9d12-a74514776965",
+    "title": "Ajuda - IA Chatconversa",
+    "file": "01_html_extraido/21_ajuda_ia_chatconversa.html",
+    "chars": 148861
+  }
+]

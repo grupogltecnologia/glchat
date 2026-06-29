@@ -1,0 +1,786 @@
+[
+  {
+    "name": "Webhook",
+    "id": "46c4a381-3d4e-44bf-aea5-e72efb99e1eb",
+    "method": "GET",
+    "path": "disparos-individuais",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      1600
+    ],
+    "connected_html_nodes": [
+      "HTML1"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook"
+    ]
+  },
+  {
+    "name": "LOGIN",
+    "id": "a1151e6c-19f7-45f4-928e-762fe264c499",
+    "method": "GET",
+    "path": "login",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      1312
+    ],
+    "connected_html_nodes": [
+      "HTML2"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook2"
+    ]
+  },
+  {
+    "name": "LOGIN1",
+    "id": "e3683c11-056a-49a0-a452-84c9c5737d38",
+    "method": "GET",
+    "path": "conexoes",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      1904
+    ],
+    "connected_html_nodes": [
+      "HTML4"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook3"
+    ]
+  },
+  {
+    "name": "DISPAROS GRUPOS",
+    "id": "c61a7ddd-08b2-40a6-be72-ba5fdd58c281",
+    "method": "GET",
+    "path": "disparos-grupos",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      2208
+    ],
+    "connected_html_nodes": [
+      "HTML5"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook4"
+    ]
+  },
+  {
+    "name": "HISTORICO DISPAROS",
+    "id": "d0aae0c7-5ef2-4154-b76c-e93d301ba987",
+    "method": "GET",
+    "path": "disparos",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      2496
+    ],
+    "connected_html_nodes": [
+      "HTML6"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook5"
+    ]
+  },
+  {
+    "name": "DASHBOARD",
+    "id": "8c76a2c3-76e0-40ff-a114-ecabb5e8c28f",
+    "method": "GET",
+    "path": "dashboard",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      2816
+    ],
+    "connected_html_nodes": [
+      "HTML7"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook6"
+    ]
+  },
+  {
+    "name": "CRIAR CONEXAO2",
+    "id": "7936237b-e485-45ad-91c2-d71e2a06a120",
+    "method": "POST",
+    "path": "criarconexaoback",
+    "responseMode": "lastNode",
+    "position": [
+      48,
+      1856
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "LISTAR GRUPOS",
+    "id": "b3a7dc4e-d904-40d5-bbc4-95f69edd3f67",
+    "method": "POST",
+    "path": "listar-grupos",
+    "responseMode": "lastNode",
+    "position": [
+      32,
+      2896
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "CONTAR PARTICIPANTES",
+    "id": "16863027-67b6-48f9-9b16-9ceed333e13e",
+    "method": "POST",
+    "path": "contar-participantes",
+    "responseMode": "lastNode",
+    "position": [
+      32,
+      3072
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "EXPORTAR PARTICIPANTES",
+    "id": "193e4e9a-8a84-406b-906a-f059a4cf7919",
+    "method": "POST",
+    "path": "exportar-participantes",
+    "responseMode": "lastNode",
+    "position": [
+      32,
+      3280
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "PUXAR CONTATOS4",
+    "id": "4a50351b-e7d7-4fab-a625-821f6eb68fdf",
+    "method": "POST",
+    "path": "puxarcontato-wpp",
+    "responseMode": "lastNode",
+    "position": [
+      32,
+      3456
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "DISPARAR MENSAGEM",
+    "id": "1c7f87a9-c084-4262-8f00-576233b63061",
+    "method": "POST",
+    "path": "disparar",
+    "responseMode": null,
+    "position": [
+      2464,
+      1456
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "DETALHES DISPARO",
+    "id": "528f6ea9-5a32-4242-bb79-7c209eb2cc5f",
+    "method": "GET",
+    "path": "detalhes-disparo",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      3424
+    ],
+    "connected_html_nodes": [
+      "HTML11"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook10"
+    ]
+  },
+  {
+    "name": "DISPARAR MENSAGEM1",
+    "id": "0e6da9cc-50e9-424d-a020-cc70829070bd",
+    "method": "POST",
+    "path": "disparar-grupos",
+    "responseMode": null,
+    "position": [
+      2416,
+      3072
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "UPLOAD MEDIA",
+    "id": "89a81a0b-1eba-4296-9c9f-fc751a89cc73",
+    "method": "POST",
+    "path": "uploadmedia",
+    "responseMode": "lastNode",
+    "position": [
+      1056,
+      1392
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "CRIAR CADASTRO",
+    "id": "11db5191-0354-4e79-8b47-77652b8a1818",
+    "method": "POST",
+    "path": "usuario-gratis",
+    "responseMode": "responseNode",
+    "position": [
+      32,
+      1392
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": [
+      "Respond to Webhook13"
+    ]
+  },
+  {
+    "name": "DETALHES DISPARO1",
+    "id": "013fd60c-9fde-435b-819e-ab5331463939",
+    "method": "GET",
+    "path": "configuracoes",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      3744
+    ],
+    "connected_html_nodes": [
+      "HTML12"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook11"
+    ]
+  },
+  {
+    "name": "TELA ADMIN",
+    "id": "24b5a151-5597-4fef-9d5c-657e6c393f9c",
+    "method": "GET",
+    "path": "adminpannel",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      6240
+    ],
+    "connected_html_nodes": [
+      "HTML13"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook12"
+    ]
+  },
+  {
+    "name": "CRIAR CADASTRO1",
+    "id": "33960b24-1dcb-41e4-80b6-002c183034f4",
+    "method": "POST",
+    "path": "criar-usuario",
+    "responseMode": "lastNode",
+    "position": [
+      2384,
+      4032
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "CRIAR CADASTRO2",
+    "id": "f4423949-cd58-4d5d-ae74-caea0acf78f2",
+    "method": "GET",
+    "path": "cadastrar",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      4048
+    ],
+    "connected_html_nodes": [
+      "HTML14"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook17"
+    ]
+  },
+  {
+    "name": "CRM",
+    "id": "0453e454-7f79-4ee0-b88c-ec5a57bc6a7c",
+    "method": "GET",
+    "path": "crm",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      4352
+    ],
+    "connected_html_nodes": [
+      "HTML"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook19"
+    ]
+  },
+  {
+    "name": "CRM1",
+    "id": "e10404d4-9b14-4312-8bec-54fb7cb2e06a",
+    "method": "GET",
+    "path": "agentes-ia",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      4992
+    ],
+    "connected_html_nodes": [
+      "HTML3"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook20"
+    ]
+  },
+  {
+    "name": "CRM2",
+    "id": "4b63c882-fcd8-4e6d-97d0-e7a0a16ef507",
+    "method": "GET",
+    "path": "crm-etapas",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      4672
+    ],
+    "connected_html_nodes": [
+      "HTML15"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook21"
+    ]
+  },
+  {
+    "name": "CALCULAR TOKEN IA",
+    "id": "cc2a1c6a-3a25-4115-bebd-7135e9656635",
+    "method": "POST",
+    "path": "calcular-token",
+    "responseMode": null,
+    "position": [
+      16,
+      4016
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "Webhook1",
+    "id": "82b88e84-8061-432a-bc34-479fc8b25df2",
+    "method": "POST",
+    "path": "agente-no-whatsapp",
+    "responseMode": null,
+    "position": [
+      2224,
+      5632
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "ALTERAR OPEN AI",
+    "id": "b5d1d418-dec0-42e5-8403-29f2b687a01f",
+    "method": "POST",
+    "path": "alterar-openai",
+    "responseMode": "lastNode",
+    "position": [
+      2368,
+      4864
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "TESTAR OPEN AI",
+    "id": "cc057b82-15a0-44de-8c87-294d44299905",
+    "method": "POST",
+    "path": "testar-openai",
+    "responseMode": "lastNode",
+    "position": [
+      2384,
+      4208
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "INSERIR CONHECIMENTO",
+    "id": "e3137df8-f76e-42bf-bedb-a2ae7b074d67",
+    "method": "POST",
+    "path": "inserir-conhecimento",
+    "responseMode": "lastNode",
+    "position": [
+      16,
+      4192
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "CRIAR INSTRUCAO IA",
+    "id": "b6e3f6fb-3c9d-4744-9aab-977000c4c1fb",
+    "method": "POST",
+    "path": "criar-instrucao",
+    "responseMode": "lastNode",
+    "position": [
+      16,
+      4560
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "SALVAR FOTO E TELEFONE",
+    "id": "20858142-aaa8-4701-84e1-5db01db3dfe2",
+    "method": "POST",
+    "path": "salvarfoto",
+    "responseMode": "lastNode",
+    "position": [
+      32,
+      2560
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "ENVIAR MENSAGEM",
+    "id": "658817ba-02db-4098-af67-c41588b67103",
+    "method": "POST",
+    "path": "enviar-mensagem",
+    "responseMode": "lastNode",
+    "position": [
+      48,
+      5008
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "CHAT",
+    "id": "c41566d7-976a-43c9-83f0-a5f8a715ebc6",
+    "method": "GET",
+    "path": "chat",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      5312
+    ],
+    "connected_html_nodes": [
+      "HTML16"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook22"
+    ]
+  },
+  {
+    "name": "CHAT1",
+    "id": "cd325ad3-d46d-4a08-acb3-ac281ee2ddc5",
+    "method": "GET",
+    "path": "redefinir-senha",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      5616
+    ],
+    "connected_html_nodes": [
+      "HTML17"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook23"
+    ]
+  },
+  {
+    "name": "ACESSO BLOQUEADO",
+    "id": "42eb858d-6227-4478-9e2d-4e1c6e0f4f29",
+    "method": "GET",
+    "path": "acesso-bloqueado",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      5936
+    ],
+    "connected_html_nodes": [
+      "HTML18"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook24"
+    ]
+  },
+  {
+    "name": "SINCRONIZAR CONTATOS",
+    "id": "2eff3218-f1d2-4456-bf2c-5e4c6c540af3",
+    "method": "POST",
+    "path": "sincronizar-contatos",
+    "responseMode": "lastNode",
+    "position": [
+      48,
+      2208
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "RECEBER WEBHOOK",
+    "id": "63cbfaa9-371c-4b70-a61d-ac460868e557",
+    "method": "POST",
+    "path": "token",
+    "responseMode": null,
+    "position": [
+      32,
+      6208
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "ENVIAR MIDIA",
+    "id": "20ef27be-4cef-4965-953b-0b0b4d5b5ea7",
+    "method": "POST",
+    "path": "enviar-audio",
+    "responseMode": "lastNode",
+    "position": [
+      48,
+      5408
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "GERAR MENSAGEM IA - DISPAROS",
+    "id": "9aa9a238-75be-4fa9-9eb0-2e12181a4284",
+    "method": "POST",
+    "path": "gerarmensagem-ia",
+    "responseMode": "lastNode",
+    "position": [
+      16,
+      3824
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "SINCRONIZAR MENSAGENS",
+    "id": "9c5c281a-8fc7-4c32-8954-b4dab40f5b5e",
+    "method": "POST",
+    "path": "sincronizar-mensagens",
+    "responseMode": "lastNode",
+    "position": [
+      16,
+      5792
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "ATUALIZAR SQL",
+    "id": "5bd13ed2-df89-47d1-9d28-86e0e02344c0",
+    "method": "POST",
+    "path": "atualizar-sql",
+    "responseMode": "lastNode",
+    "position": [
+      4128,
+      4016
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "ADICIONAR USUÁRIO1",
+    "id": "6b3d06ab-93d7-4ca1-a82c-b3a079660ae3",
+    "method": "POST",
+    "path": "adicionar-usuario",
+    "responseMode": "responseNode",
+    "position": [
+      32,
+      992
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": [
+      "Respond to Webhook14"
+    ]
+  },
+  {
+    "name": "SUPER ADMIN",
+    "id": "6202d11b-ca44-40a4-b242-0d624f47863d",
+    "method": "GET",
+    "path": "asnn883b28d23dmifbudom",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      6832
+    ],
+    "connected_html_nodes": [
+      "HTML19"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook15"
+    ]
+  },
+  {
+    "name": "PERSONALIZAR PV",
+    "id": "dfd55d18-abf9-481e-bc76-d276a62bb68a",
+    "method": "POST",
+    "path": "personalizar-pv",
+    "responseMode": "lastNode",
+    "position": [
+      2384,
+      4528
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "CRIAR PV",
+    "id": "b3813afc-1077-4d6f-af81-c6d42ad17edd",
+    "method": "POST",
+    "path": "criar-pv",
+    "responseMode": "lastNode",
+    "position": [
+      2384,
+      4368
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "BUSCAR PV",
+    "id": "305dd372-734f-4f4d-8f82-5f3a4d5e19f1",
+    "method": "GET",
+    "path": "buscar-pv",
+    "responseMode": "responseNode",
+    "position": [
+      3040,
+      4368
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": [
+      "Respond to Webhook1"
+    ]
+  },
+  {
+    "name": "PERSONALIZAR PAGINA",
+    "id": "e61bdf66-38f6-44f0-96a7-6a669e731652",
+    "method": "POST",
+    "path": "personalizar-pagina",
+    "responseMode": "lastNode",
+    "position": [
+      3040,
+      4544
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "INTEGRACAO PAGAMENTO",
+    "id": "24bf9e0a-6801-4607-b41a-6fdebc1288f4",
+    "method": "POST",
+    "path": "integracao",
+    "responseMode": null,
+    "position": [
+      32,
+      6672
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "SINCRONIZAR SMTP SUPABASE",
+    "id": "1599775d-4ee5-44d2-a919-604f0318801b",
+    "method": "POST",
+    "path": "sincronizar-supabase",
+    "responseMode": "lastNode",
+    "position": [
+      3488,
+      4000
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "ALTERAR CREDENCIAL",
+    "id": "650fb561-3e19-4bc9-bd75-0c564d362e75",
+    "method": "POST",
+    "path": "alterar-credencial-smtp",
+    "responseMode": "lastNode",
+    "position": [
+      2368,
+      4688
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "TESTAR EMAIL",
+    "id": "33a700ec-62a2-4893-a441-8f13cdbe75b2",
+    "method": "POST",
+    "path": "enviar-teste-email",
+    "responseMode": "lastNode",
+    "position": [
+      3584,
+      5040
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "PERSONALIZAR SAAS",
+    "id": "3a734da4-0a8b-4882-8022-ddec3e23c97f",
+    "method": "POST",
+    "path": "personalizar-saas",
+    "responseMode": "lastNode",
+    "position": [
+      2368,
+      5040
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "EMAIL RESET PASSWORD SUPABASE",
+    "id": "cfae31e9-ff9a-4630-adcc-95276f392e13",
+    "method": "POST",
+    "path": "email-supabase",
+    "responseMode": "lastNode",
+    "position": [
+      3520,
+      4208
+    ],
+    "connected_html_nodes": [],
+    "respond_nodes": []
+  },
+  {
+    "name": "CONTATOS",
+    "id": "aa33d23f-8622-4029-b8f4-eeedb177eaa6",
+    "method": "GET",
+    "path": "contatos",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      3120
+    ],
+    "connected_html_nodes": [
+      "HTML9"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook8"
+    ]
+  },
+  {
+    "name": "TELA AJUDA",
+    "id": "efec4e31-6b74-4617-ab0e-8e0be959d34e",
+    "method": "GET",
+    "path": "ajuda",
+    "responseMode": "responseNode",
+    "position": [
+      -800,
+      6528
+    ],
+    "connected_html_nodes": [
+      "HTML20"
+    ],
+    "respond_nodes": [
+      "Respond to Webhook16"
+    ]
+  }
+]

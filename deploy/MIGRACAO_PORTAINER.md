@@ -18,11 +18,17 @@ No proxy do EasyPanel/Portainer, direcione:
 
 ## 2. Ajustar o stack
 
-Antes de subir, edite `docker-compose.portainer.yml`:
+Antes de subir, configure as variáveis da stack no Portainer:
 
-- Troque `glchat.seudominio.com` pelo domínio real.
-- Troque todas as senhas `troque_*`.
-- Se a rede externa do proxy não se chamar `proxy`, altere o nome em `networks.proxy.external`.
+- `APP_URL`: domínio público do app, exemplo `https://glchat.seudominio.com`
+- `DB_PASS`: senha do usuário MySQL `glchat`
+- `MYSQL_ROOT_PASSWORD`: senha root do MySQL
+- `JWT_SECRET`: chave grande e aleatória para sessões/realtime
+- `MINIO_ROOT_PASSWORD`: senha do usuário MinIO `glchat_minio`
+- `MINIO_CONSOLE_URL`: domínio público do console MinIO, exemplo `https://minio-console.seudominio.com`
+- `PROXY_NETWORK`: nome da rede externa do proxy, padrão `proxy`
+
+Se a rede externa do proxy não se chamar `proxy`, altere `PROXY_NETWORK`.
 
 ## 3. Subir no Portainer
 

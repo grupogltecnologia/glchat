@@ -31,8 +31,7 @@ services:
       - glchat_storage:/var/www/html/storage
       - glchat_public_uploads:/var/www/html/public/uploads
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     networks:
       - glchat
       - proxy
@@ -60,8 +59,7 @@ services:
       REALTIME_HOST: 0.0.0.0
       REALTIME_PORT: 8090
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     networks:
       - glchat
       - proxy

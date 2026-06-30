@@ -1,10 +1,6 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: deploy/Dockerfile
-    container_name: glchat-app
-    restart: unless-stopped
+    image: php:8.2-apache
     environment:
       APP_NAME: GLChat
       APP_ENV: production
@@ -27,6 +23,42 @@ services:
       SMTP_PASS: ""
       SMTP_FROM_EMAIL: ""
       SMTP_FROM_NAME: GLChat
+    command:
+      - /bin/sh
+      - -lc
+      - |
+        set -e
+        apt-get update
+        apt-get install -y --no-install-recommends git unzip libzip-dev
+        docker-php-ext-install pdo_mysql mysqli zip
+        a2enmod rewrite headers
+        rm -rf /var/www/html/*
+        git clone --depth 1 https://github.com/grupogltecnologia/glchat.git /tmp/glchat
+        cp -a /tmp/glchat/. /var/www/html/
+        mkdir -p /var/www/html/storage/uploads /var/www/html/public/uploads
+        chown -R www-data:www-data /var/www/html/storage /var/www/html/public/uploads
+        cat >/etc/apache2/sites-available/000-default.conf <<'EOF'
+        <VirtualHost *:80>
+            ServerName localhost
+            DocumentRoot /var/www/html/public
+
+            <Directory /var/www/html/public>
+                AllowOverride All
+                Require all granted
+                Options FollowSymLinks
+            </Directory>
+
+            Alias /storage/uploads /var/www/html/storage/uploads
+            <Directory /var/www/html/storage/uploads>
+                Require all granted
+                Options FollowSymLinks
+            </Directory>
+
+            ErrorLog $${APACHE_LOG_DIR}/error.log
+            CustomLog $${APACHE_LOG_DIR}/access.log combined
+        </VirtualHost>
+        EOF
+        apache2-foreground
     volumes:
       - glchat_storage:/var/www/html/storage
       - glchat_public_uploads:/var/www/html/public/uploads
@@ -37,12 +69,19 @@ services:
       - proxy
 
   websocket:
-    build:
-      context: .
-      dockerfile: deploy/Dockerfile
-    container_name: glchat-websocket
-    restart: unless-stopped
-    command: ["php", "bin/chat-websocket-server.php"]
+    image: php:8.2-cli
+    command:
+      - /bin/sh
+      - -lc
+      - |
+        set -e
+        apt-get update
+        apt-get install -y --no-install-recommends git
+        docker-php-ext-install pdo_mysql
+        rm -rf /app
+        git clone --depth 1 https://github.com/grupogltecnologia/glchat.git /app
+        cd /app
+        php bin/chat-websocket-server.php
     environment:
       APP_NAME: GLChat
       APP_ENV: production
@@ -66,8 +105,6 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: glchat-mysql
-    restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_DATABASE: glchat
@@ -87,8 +124,6 @@ services:
 
   minio:
     image: minio/minio:latest
-    container_name: glchat-minio
-    restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: glchat_minio
@@ -102,7 +137,6 @@ services:
 
   minio-init:
     image: minio/mc:latest
-    container_name: glchat-minio-init
     depends_on:
       - minio
     entrypoint: >

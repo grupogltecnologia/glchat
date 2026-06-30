@@ -32,7 +32,6 @@ services:
         apt-get install -y --no-install-recommends git unzip libzip-dev
         docker-php-ext-install pdo_mysql mysqli zip
         a2enmod rewrite headers
-        rm -rf /var/www/html/*
         git clone --depth 1 https://github.com/grupogltecnologia/glchat.git /tmp/glchat
         cp -a /tmp/glchat/. /var/www/html/
         mkdir -p /var/www/html/storage/uploads /var/www/html/public/uploads
